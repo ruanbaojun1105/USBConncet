@@ -23,4 +23,25 @@
     <string name="title_activity_usb_main">UsbMainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="jagkjk">配置成功</string>
+    <string name="fava">设备未连接,请检查</string>
+    <string name="vaddf">红</string>
+    <string name="gaf">黄</string>
+    <string name="vaf">蓝</string>
+    <string name="vafg">混色</string>
+    <string name="vfag">请选择颜色▼</string>
+    <string name="vvag">上下滚</string>
+    <string name="vaga">左右滚</string>
+    <string name="vaggagkjoo">固定</string>
+    <string name="ajkjkk">请选择模式▼</string>
+    <string name="vfagbfgf">速度显示</string>
+    <string name="fdggggg">电量显示</string>
+    <string name="fjigjj">版本号</string>
+    <string name="vagttew">基础显示选择▼</string>
+    <string name="bfdfhdhdhf">图片样式选择▼</string>
+    <string name="vjkkjagkl">状态</string>
+    <string name="bfijj">类型</string>
+    <string name="ojgajktkj">颜色选择</string>
+    <string name="fkak">模式</string>
+    <string name="okfkkat">点击修改</string>
 </resources>

@@ -38,7 +38,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
     protected void convert(BaseViewHolder helper, AbsTypeMod item) {
         item.setId(helper.getAdapterPosition());
         RecyclerView.LayoutParams layoutParams= (RecyclerView.LayoutParams) helper.itemView.getLayoutParams();
-        layoutParams.height= (ScreenParamsUtil.getInstance((Activity) mContext).screenHeight- Application.dip2px(150))/7;
+        layoutParams.height= (ScreenParamsUtil.getInstance((Activity) mContext).screenHeight- Application.dip2px(150))/8;
         helper.itemView.requestLayout();
 
         SmoothCheckBox scb = helper.getView(R.id.checkBox);
@@ -52,7 +52,11 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         });
 
         CustomSpinner colorSpinner1 = helper.getView(R.id.spinner1);
-        colorSpinner1.initializeStringValues(new String[]{"红","黄","蓝","混色"},"请选择颜色▼");
+        colorSpinner1.initializeStringValues(new String[]{
+                mContext.getString(R.string.vaddf),
+                mContext.getString(R.string.gaf),
+                mContext.getString(R.string.vaf),
+                mContext.getString(R.string.vafg)},mContext.getString(R.string.vfag));
         colorSpinner1.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
             @Override
             public void onSpinnerOpened() {
@@ -66,7 +70,11 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         colorSpinner1.setSelection(item.getColor());
 
         CustomSpinner colorSpinner2 = helper.getView(R.id.spinner2);
-        colorSpinner2.initializeStringValues(new String[]{"上下滚","左右滚","固定"},"请选择模式▼");
+        colorSpinner2.initializeStringValues(new String[]{
+                mContext.getString(R.string.vvag),
+                mContext.getString(R.string.vaga),
+                mContext.getString(R.string.vaggagkjoo)},
+                mContext.getString(R.string.ajkjkk));
         colorSpinner2.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
             @Override
             public void onSpinnerOpened() {
@@ -112,7 +120,10 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             case AbsTypeMod.PRESET:
                 PresetMod presetMod= (PresetMod) item;
                 CustomSpinner choce_spinner = helper.getView(R.id.choce_spinner);
-                choce_spinner.initializeStringValues(new String[]{"速度显示","电量显示","版本号"},"基础显示选择▼");
+                choce_spinner.initializeStringValues(new String[]{
+                        mContext.getString(R.string.vfagbfgf),
+                        mContext.getString(R.string.fdggggg),
+                        mContext.getString(R.string.fjigjj)},mContext.getString(R.string.vagttew));
                 choce_spinner.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
                     @Override
                     public void onSpinnerOpened() {
@@ -129,7 +140,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             case AbsTypeMod.IMGFONT:
                 ImageFontMod imageFontMod= (ImageFontMod) item;
                 CustomSpinner choce_spinner1 = helper.getView(R.id.choce_spinner);
-                choce_spinner1.initializeStringValues(new String[]{"八卦.bin","花朵.bin","旋风.bin"},"图片样式选择▼");
+                choce_spinner1.initializeStringValues(new String[]{"八卦.bin","花朵.bin","旋风.bin"},
+                        mContext.getString(R.string.bfdfhdhdhf));
                 choce_spinner1.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
                     @Override
                     public void onSpinnerOpened() {
@@ -137,7 +149,21 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
                     @Override
                     public void onSpinnerClosed() {
+//                        data.add(new ImageFontMod("file:///android_asset/八卦.bin"));
+//                        data.add(new ImageFontMod("file:///android_asset/花朵.bin"));
+//                        data.add(new ImageFontMod("file:///android_asset/旋风.bin"));
                         imageFontMod.setFontId(choce_spinner1.getSelectedItemPosition());
+                        switch (choce_spinner1.getSelectedItemPosition()){
+                            case 0:
+                                imageFontMod.setImagePath("file:///android_asset/八卦.bin");
+                                break;
+                            case 1:
+                                imageFontMod.setImagePath("file:///android_asset/花朵.bin");
+                                break;
+                            case 2:
+                                imageFontMod.setImagePath("file:///android_asset/旋风.bin");
+                                break;
+                        }
                     }
                 });
                 choce_spinner1.setBackgroundResource(R.drawable.setting_btnbg4);

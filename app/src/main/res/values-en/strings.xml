@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hand Spinner Configuration</string>
+    <string name="hello_blank_fragment">深圳市红微芯科技有限公司</string>
+    <string name="jagkjk">Ok.</string>
+    <string name="fava">Device not connect</string>
+    <string name="vaddf">Red</string>
+    <string name="gaf">Yellow</string>
+    <string name="vaf">Blue</string>
+    <string name="vafg">Mix color</string>
+    <string name="vfag">Please choose color▼</string>
+    <string name="vvag">Rotate to up and down</string>
+    <string name="vaga">Rotate to right and left</string>
+    <string name="vaggagkjoo">Fixed roll</string>
+    <string name="ajkjkk">Please choose mode▼</string>
+    <string name="vfagbfgf">Speed</string>
+    <string name="fdggggg">Battery</string>
+    <string name="fjigjj">Version</string>
+    <string name="vagttew">Basic display options▼</string>
+    <string name="bfdfhdhdhf">Image style selection▼</string>
+    <string name="vjkkjagkl">Status</string>
+    <string name="bfijj">Type</string>
+    <string name="ojgajktkj">Color selection</string>
+    <string name="fkak">Mode</string>
+    <string name="okfkkat">OK</string>
+</resources>

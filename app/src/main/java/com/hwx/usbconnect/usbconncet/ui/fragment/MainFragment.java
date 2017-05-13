@@ -71,9 +71,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         ACache aCache = ACache.get(getContext());
         Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
         if (obj == null) {
-            data.add(new ImageFontMod("file:///android_asset/八卦.bin"));
-            data.add(new ImageFontMod("file:///android_asset/花朵.bin"));
-            data.add(new ImageFontMod("file:///android_asset/旋风.bin"));
+            data.add(new ImageFontMod());
+            data.add(new ImageFontMod());
+            data.add(new ImageFontMod());
             data.add(new TextMod());
             data.add(new TextMod());
             data.add(new TextMod());
@@ -142,9 +142,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     }
                 }
                 if (UsbMainActivity.mScanHelper.isScanConn())
-                     Toast.makeText(v.getContext(),"发送成功", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(v.getContext(), R.string.jagkjk, Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(v.getContext(),"设备未连接,请检查", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), R.string.fava, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
