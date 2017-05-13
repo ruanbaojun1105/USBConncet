@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hwx.usbconnect.usbconncet.ui.activity.MainActivity"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="请输入修改的文字"
+        tools:layout_editor_absoluteX="83dp"
+        tools:layout_editor_absoluteY="144dp"
+        android:maxLength="180"/>
+    <Button
+        android:id="@+id/set_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="修改" />
+    <com.hwx.usbconnect.usbconncet.font.LedView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:text="测试专用"
+        app:scrollDirection="left"
+        app:textColor="#f0DA"
+        app:scroll="true"
+        app:speed="slow"
+        />
+
+</LinearLayout>
