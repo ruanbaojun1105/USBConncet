@@ -28,7 +28,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
     public MultipleItemQuickAdapter(List data) {
         super(data);
-        addItemType(AbsTypeMod.TEXT, R.layout.type_main_text);
+        addItemType(AbsTypeMod.TEXT, R.layout.type_main_text);//跟新
         addItemType(AbsTypeMod.IMG, R.layout.type_main_image);
         addItemType(AbsTypeMod.PRESET, R.layout.type_main_preset);
         addItemType(AbsTypeMod.IMGFONT, R.layout.type_main_preset);
