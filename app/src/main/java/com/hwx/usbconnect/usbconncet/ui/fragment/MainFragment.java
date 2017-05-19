@@ -2,6 +2,7 @@ package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.hwx.usbconnect.usbconncet.ui.adapter.MultipleItemQuickAdapter;
 import com.hwx.usbconnect.usbconncet.utils.ACache;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
 
+import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -64,16 +66,20 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         initView(rootView);
         return rootView;
     }
-
+    public static String getInnerSDCardPath() {
+        return Environment.getExternalStorageDirectory().getPath();
+    }
     private void initView(View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_list);
         List<AbsTypeMod> data = new ArrayList<>();
         ACache aCache = ACache.get(getContext());
         Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
         if (obj == null) {
-            data.add(new ImageFontMod());
-            data.add(new ImageFontMod());
-            data.add(new ImageFontMod());
+            String itemPath=getInnerSDCardPath()+"/居一格/";
+            String[] fileArr=getFileAll(new File(itemPath));
+            data.add(new ImageFontMod(fileArr));
+            data.add(new ImageFontMod(fileArr));
+            data.add(new ImageFontMod(fileArr));
             data.add(new TextMod());
             data.add(new TextMod());
             data.add(new TextMod());
@@ -93,6 +99,32 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setAdapter(multipleItemAdapter);
         updateData = (Button) rootView.findViewById(R.id.updateData);
         updateData.setOnClickListener(this);
+    }
+
+    /**
+     * 读取单个文件夹的所有文件
+     * @return
+     */
+    private String[] getFileAll(File file) {
+        if (file==null)
+            return null;
+        if (!file.exists())
+            return null;
+        String[] filelist = file.list();
+        List<String> alist=new ArrayList<>();
+        for (int i = 0; i < filelist.length; i++) {
+            File readfile = new File(file.getPath() + "/" + filelist[i]);
+            if (!readfile.isDirectory()) {
+                if (readfile.getPath().endsWith(".mp4"))
+                    alist.add(readfile.getPath());
+            }
+        }
+        String[] files = new String[alist.size()];
+        for (int i = 0; i <alist.size() ; i++) {
+            files[i]=alist.get(i);
+        }
+
+        return files;
     }
 
     @Override

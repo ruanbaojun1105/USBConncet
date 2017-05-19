@@ -2,6 +2,7 @@ package com.hwx.usbconnect.usbconncet.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,9 @@ public class InfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView=inflater.inflate(R.layout.fragment_info, container, false);
         this_info= (TextView) rootView.findViewById(R.id.this_info);
+        this_info.setText(getString(R.string.dvaf));
+        this_info.append(getString(R.string.about_me));
+        this_info.setMovementMethod(LinkMovementMethod.getInstance());
         return rootView;
     }
 

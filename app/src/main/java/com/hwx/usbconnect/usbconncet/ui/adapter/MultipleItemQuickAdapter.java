@@ -140,7 +140,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             case AbsTypeMod.IMGFONT:
                 ImageFontMod imageFontMod= (ImageFontMod) item;
                 CustomSpinner choce_spinner1 = helper.getView(R.id.choce_spinner);
-                choce_spinner1.initializeStringValues(new String[]{"八卦.bin","花朵.bin","旋风.bin"},
+                //fileName = fName.substring(fName.lastIndexOf("\\")+1);
+                choce_spinner1.initializeStringValues(imageFontMod.getFileArr()!=null?imageFontMod.getFileArr():new String[]{"八卦.bin","花朵.bin","旋风.bin"},
                         mContext.getString(R.string.bfdfhdhdhf));
                 choce_spinner1.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
                     @Override

@@ -55,6 +55,8 @@
         android:layout_height="wrap_content"
         android:text="@string/okfkkat"
         android:layout_margin="10dp"
+        android:textColor="@color/white"
+        android:background="@drawable/setting_btnbg5"
         />
 
 </LinearLayout>

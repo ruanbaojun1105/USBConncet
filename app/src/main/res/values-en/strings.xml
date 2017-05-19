@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hand Spinner Configuration</string>
-    <string name="hello_blank_fragment">深圳市红微芯科技有限公司</string>
+    <string name="hello_blank_fragment">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD</string>
+    <string name="action_settings">Instructions</string>
     <string name="jagkjk">Ok.</string>
     <string name="fava">Device not connect</string>
     <string name="vaddf">Red</string>
@@ -23,4 +24,21 @@
     <string name="ojgajktkj">Color selection</string>
     <string name="fkak">Mode</string>
     <string name="okfkkat">OK</string>
+    <string name="vdaf">Exit</string>
+    <string name="dvaf">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD is committed to providing technology and services to the development of high-tech industry, providing embedded technology software and hardware development tools and solutions for our customers and to the development and application of the ARM core series CPU. We commit ourselves to provide low-power, cost-effective embedded products and to provide targeted,  customized design.
+   Our company has a wealth of hardware and software talents proficient in computer, electronics, communications, medical equipment, industrial control and embedded system development ,bringing together the talent elite master in embedded product solutions .
+   Based on secondary development, RED MICROCHIP TECHNOLOGY has been widely used in vehicular and handheld, GIS platform, Data Servers, VOIP, network terminals, medical equipment, security monitoring and other embedded high-end applications. With high-quality services and rich professional skills, our company provides customers with special requirements as well as different product solutions in consumption, medical, industrial control, communications and other industries. </string>
+    <string name="ddavv">Instructions</string>
+    <string name="vavdgsdgsa">1.battery charging:\n
+        Connect both ends of the USB cable with the hand spinner and Android phone, and then hand spinner can be charged.
+\n\n\n2.Set up:\n
+ After entering charging status, turn the center bearing of the spinner one circle, then it will entering into set up mode.\n
+ Enter into the APP set up interface to choose the image style, color, rotate mode ,battery state.
+and edit the letters or numbers that you want to show.\n
+  After editing, click OK to confirm the new set up, the new configuration of the hand spinner will take effect.</string>
+    <string name="about_me">\n\n\nWEBSITE：<a href="http://www.sz-hkj.com/">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD\nhttp://www.sz-hkj.com</a> \n\nTEL：<a href="https://szhwxdzkj.1688.com/">0755-28306546</a></string>
+    <string name="vdadg">Display configuration</string>
+    <string name="fgaata">Company profile</string>
+    <string name="vfahta">Instruction</string>
+    <string name="ttrta">Hand Spinner</string>
 </resources>

@@ -63,6 +63,11 @@ public class ScanHelper {
                         mScanListener.scan(msg.obj.toString());
                     }
                     break;
+                case 110:
+                    outEndpoint=null;
+                    isScanConn=false;
+                    Toast.makeText(mContext,"连接失败，请检查",Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -130,7 +135,8 @@ public class ScanHelper {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int out = connection.bulkTransfer(outEndpoint, data, data.length, 3000);
+                    int out = connection.bulkTransfer(outEndpoint, data, data.length, 0);//0秒超时说明可一直等待
+                    LogUtils.e("--------"+out);
                 }
             }).start();
         }
@@ -193,8 +199,14 @@ public class ScanHelper {
                 int vid = dev.getVendorId();
                 if (hasDevice(vids,pids,vid,pid)) {
                     if(!mManager.hasPermission(dev)){
-                        PendingIntent mPermissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                        mManager.requestPermission(dev,mPermissionIntent);
+                        new Handler(mContext.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                                mManager.requestPermission(dev,mPermissionIntent);
+                            }
+                        },1500);
+
                         return null;
                     }
                     return dev;
@@ -222,6 +234,8 @@ public class ScanHelper {
     public void startScan(final UsbDevice device){
         if(device == null)
             return;
+        if (outEndpoint!=null)
+            return;
         isScanConn = true;
         new Thread(){
             @Override
@@ -229,13 +243,21 @@ public class ScanHelper {
                 while (isScanConn){
                     UsbInterface usbInterface= device.getInterface(0);
                     //UsbEndpoint endpoint= usbInterface.getEndpoint(0);//0是输入1是输出
-                    UsbEndpoint inEndpoint = usbInterface.getEndpoint(0);  //读数据节点
-                    outEndpoint = usbInterface.getEndpoint(1); //写数据节点
-                    connection= mManager.openDevice(device);
+                    UsbEndpoint inEndpoint = null;  //读数据节点
+                    try {
+                        inEndpoint = usbInterface.getEndpoint(0);
+                        outEndpoint = usbInterface.getEndpoint(1); //写数据节点
+                        connection= mManager.openDevice(device);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        mHandler.sendEmptyMessage(110);
+                        return;
+                    }
                     if(connection == null){
                         //Toast.makeText(mContext,"不能打开连接!", Toast.LENGTH_SHORT).show();
                         stopScan();
                         LogUtils.e("不能打开连接!");
+                        mHandler.sendEmptyMessage(110);
                         return;
                     }
                     connection.claimInterface(usbInterface, true);

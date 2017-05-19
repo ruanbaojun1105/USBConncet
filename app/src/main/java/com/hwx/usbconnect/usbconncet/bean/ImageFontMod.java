@@ -10,6 +10,15 @@ import android.os.Parcelable;
 public class ImageFontMod extends AbsTypeMod implements Parcelable {
     int fontId;
     String imagePath;
+    String[] fileArr;
+
+    public String[] getFileArr() {
+        return fileArr;
+    }
+
+    public void setFileArr(String[] fileArr) {
+        this.fileArr = fileArr;
+    }
 
     public String getImagePath() {
         return imagePath;
@@ -22,6 +31,11 @@ public class ImageFontMod extends AbsTypeMod implements Parcelable {
     public ImageFontMod(String imagePath) {
         this.imagePath = imagePath;
     }
+
+    public ImageFontMod(String[] fileArr) {
+        this.fileArr = fileArr;
+    }
+
     public ImageFontMod() {
     }
     public int getFontId() {
@@ -37,6 +51,7 @@ public class ImageFontMod extends AbsTypeMod implements Parcelable {
         return IMGFONT;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -45,13 +60,17 @@ public class ImageFontMod extends AbsTypeMod implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.fontId);
+        dest.writeString(this.imagePath);
+        dest.writeStringArray(this.fileArr);
     }
 
     protected ImageFontMod(Parcel in) {
         this.fontId = in.readInt();
+        this.imagePath = in.readString();
+        this.fileArr = in.createStringArray();
     }
 
-    public static final Parcelable.Creator<ImageFontMod> CREATOR = new Parcelable.Creator<ImageFontMod>() {
+    public static final Creator<ImageFontMod> CREATOR = new Creator<ImageFontMod>() {
         @Override
         public ImageFontMod createFromParcel(Parcel source) {
             return new ImageFontMod(source);

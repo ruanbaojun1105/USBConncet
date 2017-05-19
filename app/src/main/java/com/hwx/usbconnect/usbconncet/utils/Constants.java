@@ -8,8 +8,9 @@ package com.hwx.usbconnect.usbconncet.utils;
  */
 
 public class Constants {
-
-    public static final int[] DEVICE_PIDS = {22352};
-    public static final int[] DEVICE_VIDS = {1155};
+    //#define USBD_VID  0x28e9
+    //#define USBD_PID  0x028A
+    public static final int[] DEVICE_PIDS = {650};//650//393
+    public static final int[] DEVICE_VIDS = {10473};//104773
     public static final String SAVE_DATA_KEY="SAVE_DATA_KEY";
 }
