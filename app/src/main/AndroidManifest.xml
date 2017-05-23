@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <!-- <uses-permission android:name="android.permission.HARDWARE_TEST" /> -->
     <uses-feature android:name="android.hardware.usb.host" />
@@ -25,6 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <meta-data android:value="5923b6a807fe654fdf000a83" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="test" android:name="UMENG_CHANNEL"/>
         <activity android:name=".ui.activity.MainActivity" />
         <activity
             android:name=".ui.activity.UsbMainActivity"

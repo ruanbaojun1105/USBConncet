@@ -25,17 +25,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.hwx.usbconnect.usbconncet.bluetooth.ScaleActivity;
+import com.umeng.analytics.MobclickAgent;
 
 
-public class Application extends android.app.Application implements
-        Thread.UncaughtExceptionHandler{
-    @Override
-    public void uncaughtException(Thread thread, Throwable throwable) {
-        Intent intent = new Intent(this, ScaleActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
+public class Application extends android.app.Application{
+
     public static Context mContext;
     private static Application _instance;
     public static Application getInstance() {
@@ -60,8 +54,9 @@ public class Application extends android.app.Application implements
                         try {
                             Log.d("Cockroach", thread + "\n" + throwable.toString());
                             throwable.printStackTrace();
+                            MobclickAgent.reportError(mContext,throwable);
                             // Toast.makeText(Application.this, "Exception Happend\n" + thread + "\n" + throwable.toString(), Toast.LENGTH_SHORT).show();
-//                        throw new RuntimeException("..."+(i++));
+//                          throw new RuntimeException("..."+(i++));
                         } catch (Throwable e) {
                         }
                     }

@@ -23,7 +23,7 @@
         android:singleLine="true"
         android:ellipsize="end"
         app:x_disableEmoji="true"
-        android:maxLength="25"
+        android:maxLength="50"
         />
 
     <com.piotrek.customspinner.CustomSpinner

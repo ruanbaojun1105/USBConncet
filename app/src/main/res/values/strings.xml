@@ -59,4 +59,7 @@
     <string name="tatttewa">正在配置...</string>
     <string name="dtadtat">配置成功</string>
     <string name="dsttaat">连接失败，请检查</string>
+    <string name="ftdttt">当前设置成功次数超过20次,请授权</string>
+    <string name="dttadfdc">确定</string>
+    <string name="gdadtt">取消</string>
 </resources>

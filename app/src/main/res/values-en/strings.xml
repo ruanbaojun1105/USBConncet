@@ -45,4 +45,7 @@ and edit the letters or numbers that you want to show.\n
     <string name="tatttewa">Start</string>
     <string name="dtadtat">Ok</string>
     <string name="dsttaat">Connection failed. Check, please</string>
+    <string name="ftdttt">The current settings have been successfully exceeded 20 times. Please authorize.</string>
+    <string name="dttadfdc">ok</string>
+    <string name="gdadtt">back</string>
 </resources>

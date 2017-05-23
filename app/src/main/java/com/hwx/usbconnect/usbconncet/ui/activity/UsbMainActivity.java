@@ -17,6 +17,7 @@ import com.hwx.usbconnect.usbconncet.ui.fragment.InfoFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.MainFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.UseFragment;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,19 @@ public class UsbMainActivity extends AppCompatActivity {
         mScanHelper.registerReceiver();
         mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS,Constants.DEVICE_PIDS));
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_usb_main, menu);
