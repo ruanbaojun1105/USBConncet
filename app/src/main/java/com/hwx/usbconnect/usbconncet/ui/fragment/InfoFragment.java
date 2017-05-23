@@ -26,6 +26,8 @@ public class InfoFragment extends Fragment {
     public void setThis_info(String str) {
         if (TextUtils.isEmpty(str))
             return;
+        if (this_info==null)
+            return;
         this_info.post(new Runnable() {
             @Override
             public void run() {

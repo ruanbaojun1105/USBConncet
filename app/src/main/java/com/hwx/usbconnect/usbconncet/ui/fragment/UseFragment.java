@@ -6,9 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hwx.usbconnect.usbconncet.R;
+import com.hwx.usbconnect.usbconncet.utils.LogUtils;
+
+import net.youmi.android.nm.bn.BannerManager;
+import net.youmi.android.nm.bn.BannerViewListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +61,35 @@ public class UseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_info, container, false);
+        rootView = inflater.inflate(R.layout.fragment_use, container, false);
         initView(rootView);
+
+        // 获取广告条
+        View bannerView = BannerManager.getInstance(getContext())
+                .getBannerView(getContext(), new BannerViewListener() {
+
+                    @Override
+                    public void onRequestSuccess() {
+                        LogUtils.e("请求广告条成功");
+
+                    }
+
+                    @Override
+                    public void onSwitchBanner() {
+                        LogUtils.e("广告条切换");
+                    }
+
+                    @Override
+                    public void onRequestFailed() {
+                        LogUtils.e("请求广告条失败");
+                    }
+                });
+
+// 获取要嵌入广告条的布局
+        LinearLayout bannerLayout = (LinearLayout) rootView.findViewById(R.id.ll_banner);
+// 将广告条加入到布局中
+        bannerLayout.addView(bannerView);
+
         return rootView;
     }
 

@@ -24,13 +24,17 @@
     <application
         android:name=".Application"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/tuoluo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <meta-data android:value="5923b6a807fe654fdf000a83" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="test" android:name="UMENG_CHANNEL"/>
+        <meta-data android:value="bj" android:name="UMENG_CHANNEL"/>
+        <meta-data
+            android:name="YOUMI_CHANNEL"
+            android:value="110" >
+        </meta-data>
         <activity android:name=".ui.activity.MainActivity" />
         <activity
             android:name=".ui.activity.UsbMainActivity"

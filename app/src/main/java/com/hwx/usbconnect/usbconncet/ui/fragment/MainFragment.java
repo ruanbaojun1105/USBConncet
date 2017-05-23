@@ -156,17 +156,19 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.updateData:
-                int a=AppConfig.getInstance().getInt("success",1);
-                if (a>20){
-                    new AlertDialog.Builder(getContext()).setMessage(R.string.ftdttt)
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .setNegativeButton(R.string.gdadtt, null)
-                            .show();
-                    return;
+                if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
+                    int a=AppConfig.getInstance().getInt("success",1);
+                    if (a > 20) {
+                        new AlertDialog.Builder(getContext()).setMessage(R.string.ftdttt)
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .setNegativeButton(R.string.gdadtt, null)
+                                .show();
+                        return;
+                    }
                 }
                 new Thread(new Runnable() {
                     @Override

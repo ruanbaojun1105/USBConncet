@@ -96,17 +96,19 @@ public class ScanHelper {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    int a=AppConfig.getInstance().getInt("success",1);
-                    AppConfig.getInstance().putInt("success",a+1);
-                    if (a>20){
-                        new AlertDialog.Builder(mContext).setMessage("当前设置成功次数超过20次,请授权")
-                                .setIcon(android.R.drawable.ic_dialog_info)
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                })
-                                .setNegativeButton("取消", null)
-                                .show();
+                    if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
+                        int a = AppConfig.getInstance().getInt("success", 1);
+                        AppConfig.getInstance().putInt("success", a + 1);
+                        if (a > 20) {
+                            new AlertDialog.Builder(mContext).setMessage("当前设置成功次数超过20次,请授权")
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .setNegativeButton("取消", null)
+                                    .show();
+                        }
                     }
                     break;
                 case 112:
