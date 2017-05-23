@@ -2,6 +2,7 @@ package com.hwx.usbconnect.usbconncet.font;
 
 import android.content.Context;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -136,15 +137,6 @@ public class FontUtils {
         return data;  
     }
 
-    public static byte[] readFile(Context context,String filePath) {
-        byte[] data = new byte[240];
-        try {
-            InputStream in = context.getResources().getAssets().open(filePath);
-            in.read(data, 0, 240);
-            in.close();
-        } catch (Exception ex) {
-        }
-        return data;
-    }
+
 
 }  

@@ -55,4 +55,8 @@
     <string name="fgaata">公司介绍</string>
     <string name="vfahta">使用说明</string>
     <string name="ttrta">指尖陀螺</string>
+    <string name="vfaddt">出现错误，请重试!</string>
+    <string name="tatttewa">正在配置...</string>
+    <string name="dtadtat">配置成功</string>
+    <string name="dsttaat">连接失败，请检查</string>
 </resources>

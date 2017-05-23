@@ -1,10 +1,17 @@
 package com.hwx.usbconnect.usbconncet.ui;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
@@ -13,13 +20,21 @@ import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
+import com.hwx.usbconnect.usbconncet.font.Font16;
+import com.hwx.usbconnect.usbconncet.utils.AnimTextView;
+import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
 import com.hwx.usbconnect.usbconncet.utils.DebugLog;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ToastUtils;
+import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
 import java.io.IOException;
 import java.lang.annotation.ElementType;
@@ -49,7 +64,12 @@ public class ScanHelper {
     private UsbManager mManager;
     private UsbDeviceConnection connection;
     private ScanListener mScanListener;
-    private UsbEndpoint outEndpoint;
+    private UsbEndpoint outEndpoint;//发送数据
+    private UsbEndpoint inEndpoint;//接收数据
+
+    private Dialog dialog;
+    private AnimTextView animTextView;
+    private MagicProgressCircle magicProgressCircle;
 
 
     private static final int HANDLER_SCAN_INPUT = 1;
@@ -66,11 +86,81 @@ public class ScanHelper {
                 case 110:
                     outEndpoint=null;
                     isScanConn=false;
-                    Toast.makeText(mContext,"连接失败，请检查",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.dsttaat,Toast.LENGTH_SHORT).show();
+                    break;
+                case 111:
+                    tag=0;
+                    Toast.makeText(mContext, R.string.dtadtat,Toast.LENGTH_SHORT).show();
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    int a=AppConfig.getInstance().getInt("success",1);
+                    AppConfig.getInstance().putInt("success",a+1);
+                    if (a>20){
+                        new AlertDialog.Builder(mContext).setMessage("当前设置成功次数超过20次,请授权")
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .setNegativeButton("取消", null)
+                                .show();
+                    }
+                    break;
+                case 112:
+                    outEndpoint=null;
+                    isScanConn=false;
+                    tag=0;
+                    Toast.makeText(mContext, R.string.vfaddt,Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    break;
+                case 113:
+                    //mProgressDialog = ProgressDialog.show(mContext, null, null);
+                    dialog = new Dialog(mContext);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.dialog_edit_image);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.setCancelable(false);
+                    dialog.setCanceledOnTouchOutside(false);
+                    //Display d = ((Activity)mContext).getWindowManager().getDefaultDisplay(); // 为获取屏幕宽、高
+                    //WindowManager.LayoutParams p = dialog.getWindow().getAttributes(); // 获取对话框当前的参数值
+                    //p.width =(int)( d.getWidth()*0.3);
+                    //p.height =(int)( d.getHeight()*0.6);
+                    //dialog.getWindow().setAttributes(p);
+                    magicProgressCircle= (MagicProgressCircle) dialog.findViewById(R.id.demo_mpc);
+                    magicProgressCircle.setSmoothPercent(0);
+                    animTextView= (AnimTextView) dialog.findViewById(R.id.demo_tv);
+                    animTextView.setSmoothPercent(0);
+                    dialog.show();
+                    Toast.makeText(mContext, R.string.tatttewa,Toast.LENGTH_SHORT).show();
+                    break;
+                case 114:
+                    try {
+                        starPross();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }
     };
+
+    public void starPross() {
+        LogUtils.e((tag+1)/amit*100+"progress");
+        if (animTextView!=null)
+            animTextView.setProgress((int) (((((float)tag)+1)/((float)amit))*100));
+        if (magicProgressCircle!=null)
+            magicProgressCircle.setSmoothPercent(animTextView.getPercent());
+    }
+
+    public void star() {
+        mHandler.sendEmptyMessage(113);
+    }
+    public void close() {
+        mHandler.sendEmptyMessage(110);
+    }
     /**
      * 设备权限的广播
      */
@@ -79,7 +169,6 @@ public class ScanHelper {
      * 插入USB的广播
      */
     private static final String ACTION_USB_ATTACHED="android.hardware.usb.action.USB_DEVICE_ATTACHED";
-
     private static final String ACTION_USB_UNPIN="android.hardware.usb.action.USB_STATE";
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         @Override
@@ -109,15 +198,12 @@ public class ScanHelper {
 
         }
     };
-
     public ScanHelper(Context context){
         mContext = context;
         isScanConn = true;
 
 //        init();
     }
-
-
     public ScanListener getScanListener() {
         return mScanListener;
     }
@@ -130,16 +216,130 @@ public class ScanHelper {
             return outEndpoint!=null&&connection!=null;
     }
 
-    public void sendData(final byte[] data) {
-        if (outEndpoint!=null&&connection!=null){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int out = connection.bulkTransfer(outEndpoint, data, data.length, 0);//0秒超时说明可一直等待
-                    LogUtils.e("--------"+out);
-                }
-            }).start();
+    /**
+     * 拆分byte数组
+     * @param bytes
+     * @param copies
+     * @return
+     */
+    static byte[][] split_bytes(byte[] bytes, int copies) {
+
+        double split_length = Double.parseDouble(copies + "");
+
+        int array_length = (int) Math.ceil(bytes.length / split_length);
+        byte[][] result = new byte[array_length][];
+
+        int from, to;
+
+        for (int i = 0; i < array_length; i++) {
+
+            from = (int) (i * split_length);
+            to = (int) (from + split_length);
+
+            //if (to > bytes.length)
+            //to = bytes.length;
+
+            result[i] = Arrays.copyOfRange(bytes, from, to);
         }
+
+        return result;
+    }
+
+    /*public void sendData(final byte[] data) {
+        if (outEndpoint!=null&&connection!=null){
+                   *//*byte aaa[]=new byte[240];
+                    for (int i = 0; i < 240; i++) {
+                        aaa[i]=(byte)i;
+                    }
+                    aaa[238]=(byte)0x0c;
+                    aaa[239]=(byte)0x0d;*//*
+            //int out = connection.bulkTransfer(outEndpoint,(byte[]) aaa, 80, 0);
+            int out = connection.bulkTransfer(outEndpoint, data, data.length, 0);//0秒超时说明可一直等待
+            LogUtils.e("--------"+out);
+            getData();
+        }
+    }*/
+    int tag=0;
+    int amit=0;
+    public void sendData(final byte[] data) {
+        if (outEndpoint!=null&&connection!=null) {
+            /*byte aaa[] = new byte[996];
+            for (int i = 0; i < 996; i++) {
+                aaa[i] = (byte)0x88;
+            }*/
+            LogUtils.e("总共内容长度"+data.length);
+            byte[][] bytes = split_bytes(data,64);
+            amit=bytes.length;
+//            for (int i = 0; i < bytes.length; i++) {
+//                for (int j = 0; j < bytes[i].length; j++) {
+//                    System.out.print(bytes[i][j] + " ");
+//                }
+//                click.click(bytes[i]);
+//            }
+            Onclick click=new Onclick() {
+                @Override
+                public void click(byte aaa[]) {
+                    LogUtils.e("当前"+tag+"---总共"+amit);
+                    if (tag>=amit) {
+                        tag=0;
+                        return;
+                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            int out = connection.bulkTransfer(outEndpoint, aaa, aaa.length, 0);
+                            LogUtils.e(tag+"--------"+out);
+                            if (out>0){
+                                mHandler.sendEmptyMessage(114);
+                                tag++;
+                                if (tag>=amit) {
+                                    mHandler.sendEmptyMessage(111);//传输结束
+                                    return;
+                                }
+                                click(bytes[tag]);
+                            }else {
+                                LogUtils.e("--------中途失败补一1");
+                                int out1 = connection.bulkTransfer(outEndpoint, aaa, aaa.length, 0);
+                                if (out1>0){
+                                    LogUtils.e("--------中途失败补一OK1");
+                                    tag++;
+                                    if (tag>=amit) {
+                                        mHandler.sendEmptyMessage(111);//传输结束
+                                        return;
+                                    }
+                                    click(bytes[tag]);
+                                }else {
+                                    LogUtils.e("--------中途失败补一2");
+                                    int out2 = connection.bulkTransfer(outEndpoint, aaa, aaa.length, 0);
+                                    if (out2>0){
+                                        LogUtils.e("--------中途失败补一OK2");
+                                        tag++;
+                                        if (tag>=amit) {
+                                            mHandler.sendEmptyMessage(111);//传输结束
+                                            return;
+                                        }
+                                        click(bytes[tag]);
+                                    }else {
+                                        mHandler.sendEmptyMessage(112);//失败本次传输
+                                    }
+                                }
+                            }
+                        }
+                    }).start();
+                }
+            };
+            click.click(bytes[0]);
+            getData();
+        }
+    }
+
+    interface  Onclick{
+        void click(byte aaa[]);
     }
 
     /**
@@ -160,6 +360,23 @@ public class ScanHelper {
         byte[] a= BluetoothService.sysCopy(list);
         sendData(a);
     }
+
+    public static byte[] sendDataSSS(byte function,byte[] content,boolean isAutoSafeCode) {
+        isAutoSafeCode=true;//所有都自动算出来
+        byte[] head=new byte[]{BluetoothService.starCode,BluetoothService.addrCode,function,(byte) (content.length/256),(byte) (content.length%256)};
+        byte safe=BluetoothService.safeCode;
+        if (isAutoSafeCode)
+            safe=BluetoothService.checkSafeCod(content);
+        byte[] end=new byte[]{safe,BluetoothService.endCode[0],BluetoothService.endCode[1]};
+        List<byte[]> list=new ArrayList<byte[]>();
+        list.add(head);
+        list.add(content);
+        list.add(end);
+
+        byte[] a= BluetoothService.sysCopy(list);
+        return a;
+    }
+
 
     public void registerReceiver() {
         IntentFilter filter= new IntentFilter();
@@ -227,6 +444,17 @@ public class ScanHelper {
         return false;
     }
 
+    void getData(){
+        //读取数据1   两种方法读取数据
+        byte[] byte2 = new byte[64];
+        int ret = connection.bulkTransfer(inEndpoint, byte2, byte2.length, 3000);
+        Log.e("ret", "ret:"+ret);
+        for(Byte byte1 : byte2){
+            System.err.println(byte1);
+        }
+        LogUtils.e("",""+new String(byte2));
+    }
+
     /**
      * 开启USB接收和发送
      * @param device
@@ -243,7 +471,7 @@ public class ScanHelper {
                 while (isScanConn){
                     UsbInterface usbInterface= device.getInterface(0);
                     //UsbEndpoint endpoint= usbInterface.getEndpoint(0);//0是输入1是输出
-                    UsbEndpoint inEndpoint = null;  //读数据节点
+                    //UsbEndpoint inEndpoint = null;  //读数据节点
                     try {
                         inEndpoint = usbInterface.getEndpoint(0);
                         outEndpoint = usbInterface.getEndpoint(1); //写数据节点
@@ -254,7 +482,6 @@ public class ScanHelper {
                         return;
                     }
                     if(connection == null){
-                        //Toast.makeText(mContext,"不能打开连接!", Toast.LENGTH_SHORT).show();
                         stopScan();
                         LogUtils.e("不能打开连接!");
                         mHandler.sendEmptyMessage(110);
@@ -264,7 +491,9 @@ public class ScanHelper {
                     if(device != null){
                         //收数据
                         byte[] bytes = new byte[512];
-                        connection.bulkTransfer(inEndpoint, bytes, bytes.length, 2000);//do in another thread
+                        int at=connection.bulkTransfer(inEndpoint, bytes, bytes.length, 0);//do in another thread
+                        if (at>0)
+                            LogUtils.e("get-----",""+at);
                         int len = 2;
                         for (;len < bytes.length ; len++){
                             if(bytes[len] == '\r'){
@@ -277,8 +506,9 @@ public class ScanHelper {
                         message.what = HANDLER_SCAN_INPUT;
                         message.obj = str;
                         mHandler.sendMessage(message);
-                        if(connection != null)
-                            connection.close();
+                        //LogUtils.e("get-----",str);
+                        /*if(connection != null)
+                            connection.close();*/
                     }
                 }
             }

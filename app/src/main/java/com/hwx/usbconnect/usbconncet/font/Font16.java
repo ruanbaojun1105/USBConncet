@@ -70,10 +70,27 @@ public class Font16 {
 				continue;
 			}
 			code = getByteCode(str.substring(i, i + 1));
-			byte[] tag = read(code[0], code[1]);
+			byte[] tag = read16_DZK(code[0], code[1]);
 			res=byteMerger(res,tag);
 		}
 		return res;
+	}
+	private static String dotMatrixFont = "GBK16.DZK";
+	private int wordByteByDots = 32;//12*12/24----16*16/32
+	protected byte[] read16_DZK(int areaCode, int posCode) {
+		byte[] data = null;
+		try {
+			int area = areaCode - 0x81;
+			int pos = posCode - (posCode<0x7f?0x40:0x41);
+			InputStream in = context.getResources().getAssets().open(dotMatrixFont);
+			long offset = wordByteByDots * (area * 190 + pos);
+			in.skip(offset);
+			data = new byte[wordByteByDots];
+			in.read(data, 0, wordByteByDots);
+			in.close();
+		} catch (Exception ex) {
+		}
+		return data;
 	}
 
 	public static byte[] byteMerger(byte[] byte_1, byte[] byte_2){

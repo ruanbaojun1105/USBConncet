@@ -11,7 +11,7 @@ public class FontUtilsTest {
     /*
      * 字库名
      */
-    private static String dotMatrixFont = "GBK12.dzk";
+    private static String dotMatrixFont = "GBK16.DZK";
     /*
      * 编码 GB2312
      */
@@ -25,7 +25,7 @@ public class FontUtilsTest {
     /*
      * 一个字用点表示需要多少字节，16X16的字体需要32个字节
      */
-    private int wordByteByDots = 24;//12*12/8
+    private int wordByteByDots = 32;//12*12/24----16*16/32
     //java 合并两个byte数组
     public static byte[] byteMerger(byte[] byte_1, byte[] byte_2){
         byte[] byte_3 = new byte[byte_1.length+byte_2.length];

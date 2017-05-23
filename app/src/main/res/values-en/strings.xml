@@ -41,4 +41,8 @@ and edit the letters or numbers that you want to show.\n
     <string name="fgaata">Company profile</string>
     <string name="vfahta">Instruction</string>
     <string name="ttrta">Hand Spinner</string>
+    <string name="vfaddt">Error,please retry!</string>
+    <string name="tatttewa">Start</string>
+    <string name="dtadtat">Ok</string>
+    <string name="dsttaat">Connection failed. Check, please</string>
 </resources>

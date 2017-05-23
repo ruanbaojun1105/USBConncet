@@ -1,6 +1,9 @@
 package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -13,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.Application;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
@@ -22,12 +26,19 @@ import com.hwx.usbconnect.usbconncet.bean.TextMod;
 import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
 import com.hwx.usbconnect.usbconncet.font.Font16;
 import com.hwx.usbconnect.usbconncet.font.FontUtils;
+import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
 import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.MultipleItemQuickAdapter;
 import com.hwx.usbconnect.usbconncet.utils.ACache;
+import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
+import com.hwx.usbconnect.usbconncet.utils.FileUtil;
+import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -75,11 +86,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         ACache aCache = ACache.get(getContext());
         Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
         if (obj == null) {
-            String itemPath=getInnerSDCardPath()+"/居一格/";
-            String[] fileArr=getFileAll(new File(itemPath));
-            data.add(new ImageFontMod(fileArr));
-            data.add(new ImageFontMod(fileArr));
-            data.add(new ImageFontMod(fileArr));
+            String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
+            String[] fileArr=getFileAll(new File(itemPath),false);
+            String[] fileArrname=getFileAll(new File(itemPath),true);
+            data.add(new ImageFontMod(fileArr,fileArrname));
+            data.add(new ImageFontMod(fileArr,fileArrname));
+            data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new TextMod());
             data.add(new TextMod());
             data.add(new TextMod());
@@ -105,18 +117,31 @@ public class MainFragment extends Fragment implements View.OnClickListener {
      * 读取单个文件夹的所有文件
      * @return
      */
-    private String[] getFileAll(File file) {
+    private String[] getFileAll(File file,boolean isName) {
         if (file==null)
             return null;
-        if (!file.exists())
-            return null;
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        if (!AppConfig.getInstance().getBoolean("isCopy",false)){
+            try {
+                FileUtil.copyFile(getResources().getAssets().open("xuanfeng.bin"),file.getPath()+"/xuanfeng.bin");
+                FileUtil.copyFile(getResources().getAssets().open("shu.bin"),file.getPath()+"/shu.bin");
+                AppConfig.getInstance().putBoolean("isCopy",true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         String[] filelist = file.list();
+        if (filelist==null)
+            return null;
         List<String> alist=new ArrayList<>();
         for (int i = 0; i < filelist.length; i++) {
             File readfile = new File(file.getPath() + "/" + filelist[i]);
             if (!readfile.isDirectory()) {
-                if (readfile.getPath().endsWith(".mp4"))
-                    alist.add(readfile.getPath());
+                if (readfile.getPath().endsWith(".bin"))
+                    alist.add(isName?readfile.getName():readfile.getPath());
             }
         }
         String[] files = new String[alist.size()];
@@ -131,53 +156,102 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.updateData:
-                List<AbsTypeMod> listAbs=multipleItemAdapter.getData();
-                ACache aCache = ACache.get(getContext());
-                //aCache.remove(Constants.SAVE_DATA_KEY);
-                aCache.put(Constants.SAVE_DATA_KEY, (Serializable) listAbs);
-                for (int i = 0; i < listAbs.size(); i++) {
-                    //url="file:///android_asset/video.mp4";
-                    AbsTypeMod abs=listAbs.get(i);
-                    //图片
-                    if (abs instanceof ImageMod) {
-                        ImageMod item1= (ImageMod) abs;
-                        byte[] fileB=FontUtils.readFile(v.getContext(),item1.getImagePath());
-                        byte [] data=Font16.byteMerger(new byte[]{item1.isCheck()?(byte)0x01:(byte)0x00,(byte)item1.getColor(),(byte)item1.getModel()},fileB);
-                        UsbMainActivity.mScanHelper.sendData((byte)i,data,false);
-                    }
-                    //预定模式
-                    if (abs instanceof PresetMod){
-                        PresetMod item2= (PresetMod) abs;
-                        UsbMainActivity.mScanHelper.sendData((byte)i,new byte[]{item2.isCheck()?(byte)0x01:(byte)0x00,(byte)item2.getColor(),(byte)item2.getModel(),(byte)item2.getType()},false);
-                    }
-                    //文本
-                    if (abs instanceof TextMod){
-                        TextMod item3= (TextMod) abs;
-                        if (!TextUtils.isEmpty(item3.getText())) {
-                            try {
-                                byte [] data1=Font16.byteMerger(new byte[]{item3.isCheck()?(byte)0x01:(byte)0x00,(byte)item3.getColor(),(byte)item3.getModel()},item3.getText().getBytes("GB2312"));
-                                byte [] data12=new Font16(v.getContext()).getStringFontByte(item3.getText());
-                                UsbMainActivity.mScanHelper.sendData((byte) i,Font16.byteMerger(data1,data12),false);
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                        }else {
-                            UsbMainActivity.mScanHelper.sendData((byte) i,new byte[]{item3.isCheck()?(byte)0x01:(byte)0x00,(byte)item3.getColor(),(byte)item3.getModel()},false);
-                        }
-                    }
-                    //预定图
-                    if (abs instanceof ImageFontMod){
-                        ImageFontMod item4= (ImageFontMod) abs;
-                        byte[] fileB=FontUtils.readFile(v.getContext(),item4.getImagePath());
-                        byte [] data=Font16.byteMerger(new byte[]{item4.isCheck()?(byte)0x01:(byte)0x00,(byte)item4.getColor(),(byte)item4.getModel()},fileB);
-                        UsbMainActivity.mScanHelper.sendData((byte)i,data,false);
-                    }
+                int a=AppConfig.getInstance().getInt("success",1);
+                if (a>20){
+                    new AlertDialog.Builder(getContext()).setMessage("当前设置成功次数超过20次,请授权")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                    return;
                 }
-                if (UsbMainActivity.mScanHelper.isScanConn())
-                     Toast.makeText(v.getContext(), R.string.jagkjk, Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(v.getContext(), R.string.fava, Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<AbsTypeMod> listAbs=multipleItemAdapter.getData();
+                        ACache aCache = ACache.get(getContext());
+                        //aCache.remove(Constants.SAVE_DATA_KEY);
+                        aCache.put(Constants.SAVE_DATA_KEY, (Serializable) listAbs);
+                        dataMain=new byte[0];
+                        TextMain=new byte[0];
+                        if (!UsbMainActivity.mScanHelper.isScanConn()){
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), R.string.dsttaat,Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return;
+                        }
+                        UsbMainActivity.mScanHelper.star();
+                        for (int i = 0; i < listAbs.size(); i++) {
+                            detailData(listAbs.get(i),v,i);
+                            LogUtils.e("log comment","abs"+listAbs.get(i).getId());
+                        }
+                        UsbMainActivity.mScanHelper.sendData(Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte) 0x09,TextMain,false)));
+                    }
+                }).start();
+
                 break;
         }
+    }
+
+    byte[] dataMain=new byte[0];
+    byte[] TextMain=new byte[0];
+
+    private void detailData(AbsTypeMod absTypeMod,View v,int i) {
+        //url="file:///android_asset/video.mp4";
+        AbsTypeMod abs=absTypeMod;
+        //图片
+        if (abs instanceof ImageMod) {
+            ImageMod item1= (ImageMod) abs;
+            byte[] fileB=readFile(v.getContext(),item1.getImagePath());
+            byte [] data=Font16.byteMerger(new byte[]{item1.isCheck()?(byte)0x01:(byte)0x00,(byte)item1.getColor(),(byte)item1.getModel()},fileB);
+            dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte)item1.getId(),data,false));
+        }
+        //预定模式
+        if (abs instanceof PresetMod){
+            PresetMod item2= (PresetMod) abs;
+            dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte)item2.getId(),new byte[]{item2.isCheck()?(byte)0x01:(byte)0x00,(byte)item2.getColor(),(byte)item2.getModel(),(byte)item2.getType()},false));
+        }
+        //文本
+        if (abs instanceof TextMod){
+            TextMod item3= (TextMod) abs;
+            if (!TextUtils.isEmpty(item3.getText())) {
+                try {
+                    byte [] data1=Font16.byteMerger(new byte[]{item3.isCheck()?(byte)0x01:(byte)0x00,(byte)item3.getColor(),(byte)item3.getModel()},item3.getText().getBytes("GB2312"));
+                    byte [] data12=new Font16(v.getContext()).getStringFontByte(item3.getText());
+                    dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte) item3.getId(),data1,false));
+                    TextMain=Font16.byteMerger(TextMain,data12);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte) item3.getId(),new byte[]{item3.isCheck()?(byte)0x01:(byte)0x00,(byte)item3.getColor(),(byte)item3.getModel()},false));
+            }
+        }
+        //预定图
+        if (abs instanceof ImageFontMod){
+            ImageFontMod item4= (ImageFontMod) abs;
+            byte[] fileB=readFile(v.getContext(),item4.getImagePath());
+            byte [] data=Font16.byteMerger(new byte[]{item4.isCheck()?(byte)0x01:(byte)0x00,(byte)item4.getColor(),(byte)item4.getModel()},fileB);
+            dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte)item4.getId(),data,false));
+        }
+    }
+
+    public static byte[] readFile(Context context, String filePath) {
+        byte[] data = new byte[240];
+        try {
+            LogUtils.e("file---"+filePath);
+            //InputStream in = context.getResources().getAssets().open(filePath);
+            InputStream in =new FileInputStream(filePath);
+            in.read(data, 0, 240);
+            in.close();
+        } catch (Exception ex) {
+        }
+        return data;
     }
 }

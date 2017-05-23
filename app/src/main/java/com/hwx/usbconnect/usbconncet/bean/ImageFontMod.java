@@ -11,6 +11,15 @@ public class ImageFontMod extends AbsTypeMod implements Parcelable {
     int fontId;
     String imagePath;
     String[] fileArr;
+    String[] fileName;
+
+    public String[] getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String[] fileName) {
+        this.fileName = fileName;
+    }
 
     public String[] getFileArr() {
         return fileArr;
@@ -32,8 +41,9 @@ public class ImageFontMod extends AbsTypeMod implements Parcelable {
         this.imagePath = imagePath;
     }
 
-    public ImageFontMod(String[] fileArr) {
+    public ImageFontMod(String[] fileArr, String[] fileName) {
         this.fileArr = fileArr;
+        this.fileName = fileName;
     }
 
     public ImageFontMod() {

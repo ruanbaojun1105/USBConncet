@@ -16,6 +16,7 @@ import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bean.PresetMod;
 import com.hwx.usbconnect.usbconncet.bean.TextMod;
+import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ScreenParamsUtil;
 import com.piotrek.customspinner.CustomSpinner;
 import com.xw.repo.XEditText;
@@ -140,8 +141,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             case AbsTypeMod.IMGFONT:
                 ImageFontMod imageFontMod= (ImageFontMod) item;
                 CustomSpinner choce_spinner1 = helper.getView(R.id.choce_spinner);
-                //fileName = fName.substring(fName.lastIndexOf("\\")+1);
-                choce_spinner1.initializeStringValues(imageFontMod.getFileArr()!=null?imageFontMod.getFileArr():new String[]{"八卦.bin","花朵.bin","旋风.bin"},
+                //fileName = fName.substring(fName.lastIndexOf("//")+1);
+                choce_spinner1.initializeStringValues(imageFontMod.getFileName()!=null?imageFontMod.getFileName():new String[]{"八卦.bin","花朵.bin","旋风.bin"},
                         mContext.getString(R.string.bfdfhdhdhf));
                 choce_spinner1.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
                     @Override
@@ -153,8 +154,15 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 //                        data.add(new ImageFontMod("file:///android_asset/八卦.bin"));
 //                        data.add(new ImageFontMod("file:///android_asset/花朵.bin"));
 //                        data.add(new ImageFontMod("file:///android_asset/旋风.bin"));
+                        LogUtils.e("----选择了"+choce_spinner1.getSelectedItemPosition());
                         imageFontMod.setFontId(choce_spinner1.getSelectedItemPosition());
-                        switch (choce_spinner1.getSelectedItemPosition()){
+                        if (choce_spinner1.getSelectedItemPosition()==0)
+                            return;
+                        if (imageFontMod.getFileArr()==null)
+                            return;
+                        else
+                            imageFontMod.setImagePath(imageFontMod.getFileArr()[choce_spinner1.getSelectedItemPosition()-1]);
+                        /*switch (choce_spinner1.getSelectedItemPosition()){
                             case 0:
                                 imageFontMod.setImagePath("file:///android_asset/八卦.bin");
                                 break;
@@ -164,7 +172,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                             case 2:
                                 imageFontMod.setImagePath("file:///android_asset/旋风.bin");
                                 break;
-                        }
+                        }*/
                     }
                 });
                 choce_spinner1.setBackgroundResource(R.drawable.setting_btnbg4);

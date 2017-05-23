@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="120dp"
+android:layout_height="120dp"
+android:layout_gravity="center_horizontal"
+android:layout_margin="30dp"
+    >
+
+<com.liulishuo.magicprogresswidget.MagicProgressCircle
+    android:id="@+id/demo_mpc"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:mpc_start_color="@color/mpc_start_color"
+    app:mpc_end_color="@color/mpc_end_color"
+    app:mpc_stroke_width="@dimen/mpc_stroke_width"
+    app:mpc_default_color="@color/mpc_default_color"
+    />
+
+<com.hwx.usbconnect.usbconncet.utils.AnimTextView
+    android:id="@+id/demo_tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:text="0"
+    android:textColor="@color/white"
+    android:textSize="36sp" />
+</RelativeLayout>
