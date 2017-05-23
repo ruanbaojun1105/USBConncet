@@ -35,7 +35,9 @@
             android:name="YOUMI_CHANNEL"
             android:value="110" >
         </meta-data>
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.activity.UsbMainActivity"
             android:configChanges="keyboardHidden|screenSize"
