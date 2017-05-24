@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -43,19 +44,31 @@ public class UsbMainActivity extends AppCompatActivity {
         if (!com.hwx.usbconnect.usbconncet.Constants.isOpenEN)
             return;
         // 本地语言设置"zh" : "en"
-        Locale myLocale = new Locale("en");
+        /*Locale myLocale = new Locale("en");
         Resources res = context.getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
+        res.updateConfiguration(conf, dm);*/
+
+        Resources resources = context.getResources();
+        Configuration config = resources.getConfiguration();
+        Locale locale = new Locale("en");
+        Locale.setDefault(locale);
+        config.locale = locale; //简体中文
+        resources.updateConfiguration(config, null);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_usb_main);
         changeAppLanguage(this);
+        setContentView(R.layout.activity_usb_main);
         fragmentList.clear();
         fragmentList.add(MainFragment.newInstance());
         if (!com.hwx.usbconnect.usbconncet.Constants.isOpenCutInfo) {
@@ -63,7 +76,7 @@ public class UsbMainActivity extends AppCompatActivity {
             fragmentList.add(infoFragment);
         }
         fragmentList.add(UseFragment.newInstance(getString(R.string.ddavv),getString(R.string.vavdgsdgsa)));
-        mSectionsPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),new String[]{getString(R.string.vdadg),getString(R.string.fgaata),getString(R.string.vfahta)},fragmentList);
+        mSectionsPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), com.hwx.usbconnect.usbconncet.Constants.isOpenCutInfo?new String[]{getString(R.string.vdadg),getString(R.string.vfahta)}:new String[]{getString(R.string.vdadg),getString(R.string.fgaata),getString(R.string.vfahta)},fragmentList);
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -99,6 +112,18 @@ public class UsbMainActivity extends AppCompatActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            // MobclickAgent.onKillProcess(Context context);//如果开发者调用
+            // Process.kill 或者 System.exit 之类的方法杀死进程，请务必在此之前调用此方法，用来保存统计数据。
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onDestroy() {
@@ -114,6 +139,8 @@ public class UsbMainActivity extends AppCompatActivity {
         SpotManager.getInstance(this).onAppExit();
         // 视频广告（包括普通视频广告、原生视频广告）
         VideoAdManager.getInstance(this).onAppExit();
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0);
     }
 
     @Override

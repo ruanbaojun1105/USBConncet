@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.hwx.usbconnect.usbconncet.Application;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 
@@ -34,6 +35,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // 移除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         UsbMainActivity.changeAppLanguage(this);
+        UsbMainActivity.changeAppLanguage(Application.getContext());
         setContentView(R.layout.activity_welcome);
         AdManager.getInstance(this).init("c76ea937d89eaa7d", "93645cbf2bb5c272", true);
         SplashViewSettings splashViewSettings = new SplashViewSettings();
@@ -105,7 +107,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 WelcomeActivity.this.finish();
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
-        },4000);
+        },2500);
     }
     public static int getRandomNumber(int min, int max) {
         return new Random().nextInt(max) % (max - min + 1) + min;

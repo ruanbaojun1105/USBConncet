@@ -1,12 +1,20 @@
 package com.hwx.usbconnect.usbconncet.ui.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -91,7 +99,24 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         switch (helper.getItemViewType()) {
             case AbsTypeMod.TEXT:
                 TextMod itemOd= (TextMod) item;
-                XEditText editText = helper.getView(R.id.biucontainer);
+                TextView editText = helper.getView(R.id.biucontainer);
+                /*editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean b) {
+                        editText.clearFocus();
+                    }
+                });*/
+                editText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showEditDialog(((Activity) mContext), mContext.getString(R.string.gdjiadstjj), itemOd.getText(), new EditOnclick() {
+                            @Override
+                            public void onClick(String str) {
+                                itemOd.setText(str);
+                            }
+                        });
+                    }
+                });
                 String tag=itemOd.getText();
                 if (!TextUtils.isEmpty(tag)) {
                     editText.post(new Runnable() {
@@ -101,7 +126,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                         }
                     });
                 }
-                editText.addTextChangedListener(new TextWatcher() {
+
+                /*editText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -114,7 +140,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                     public void afterTextChanged(Editable editable) {
 
                     }
-                });
+                });*/
                 break;
             case AbsTypeMod.IMG:
                 break;
@@ -181,4 +207,39 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         }
     }
 
+    interface  EditOnclick{
+        void onClick(String str);
+    }
+
+    public void showEditDialog(final Activity activity, String title,String content, final EditOnclick onclickInterFace){
+        final EditText et = new EditText(activity);
+        et.setMaxLines(5);
+        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+        if (!TextUtils.isEmpty(content)) {
+            et.setText(content);
+            et.setSelection(content.length());
+        }
+        //et.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+        new AlertDialog.Builder(activity).setTitle(title)
+                //.setIcon(android.R.drawable.ic_menu_send)
+                .setView(et)
+                .setPositiveButton(R.string.dtaddssd, (dialog, which) -> {
+                    if (activity==null)
+                        return;
+                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                    final String input = et.getText().toString();
+                    if (TextUtils.isEmpty(input))
+                        return;
+                    if (onclickInterFace!=null){
+                        activity.runOnUiThread(() -> onclickInterFace.onClick(input));
+                    }
+
+                })
+                .setNegativeButton(R.string.dadttsadts, (dialogInterface, i) -> {
+                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                })
+                .show();
+    }
 }

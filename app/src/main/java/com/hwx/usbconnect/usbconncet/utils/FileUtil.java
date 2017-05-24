@@ -156,6 +156,12 @@ public class FileUtil {
     public static boolean copyFile(InputStream inStream, String newPath) {
         boolean isok = true;
         try {
+            File file=new File(newPath);
+            if (file!=null) {
+                if (file.exists()) {//如果存在就不再复制
+                    return true;
+                }
+            }
             int bytesum = 0;
             int byteread = 0;
             FileOutputStream fs = new FileOutputStream(newPath);

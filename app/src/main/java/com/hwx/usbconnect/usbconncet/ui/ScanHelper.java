@@ -19,12 +19,14 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.Application;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
 import com.hwx.usbconnect.usbconncet.font.Font16;
@@ -112,11 +114,16 @@ public class ScanHelper {
                     }
                     break;
                 case 112:
-                    outEndpoint=null;
-                    isScanConn=false;
-                    tag=0;
+                    LogUtils.e("-----------------------112");
                     Toast.makeText(mContext, R.string.vfaddt,Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+//                    outEndpoint=null;
+//                    isScanConn=false;
+                    tag=0;
                     break;
                 case 113:
                     //mProgressDialog = ProgressDialog.show(mContext, null, null);
@@ -290,7 +297,7 @@ public class ScanHelper {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(500);
+                                Thread.sleep(100);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -327,6 +334,7 @@ public class ScanHelper {
                                         }
                                         click(bytes[tag]);
                                     }else {
+                                        LogUtils.e("--------中途失败补第三次，不补了");
                                         mHandler.sendEmptyMessage(112);//失败本次传输
                                     }
                                 }
@@ -388,6 +396,7 @@ public class ScanHelper {
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         mContext.registerReceiver(mUsbReceiver, filter);
+        //LocalBroadcastManager.getInstance(Application.getContext()).registerReceiver(mUsbReceiver, filter);
     }
 
     public void unregisterReceiver(){
@@ -418,14 +427,8 @@ public class ScanHelper {
                 int vid = dev.getVendorId();
                 if (hasDevice(vids,pids,vid,pid)) {
                     if(!mManager.hasPermission(dev)){
-                        new Handler(mContext.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                                mManager.requestPermission(dev,mPermissionIntent);
-                            }
-                        },1500);
-
+                        PendingIntent mPermissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                        mManager.requestPermission(dev,mPermissionIntent);
                         return null;
                     }
                     return dev;
@@ -489,7 +492,8 @@ public class ScanHelper {
                         mHandler.sendEmptyMessage(110);
                         return;
                     }
-                    connection.claimInterface(usbInterface, true);
+                    boolean isconn=connection.claimInterface(usbInterface, true);
+                    LogUtils.e(isconn?"已打开连接!":"打开连接失败");
                     if(device != null){
                         //收数据
                         byte[] bytes = new byte[512];

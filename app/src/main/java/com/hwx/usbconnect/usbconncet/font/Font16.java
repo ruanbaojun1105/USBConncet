@@ -60,14 +60,15 @@ public class Font16 {
 		byte[] res=new byte[0];
 
 		for (int i = 0; i < str.length(); i++) {
-			try {
-				byte[] data=str.substring(i, i + 1).getBytes(ENCODE);
-				res=byteMerger(res,data);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
 			if (str.charAt(i) < 0x80) {
 				continue;
+			}else {
+				try {
+					byte[] data=str.substring(i, i + 1).getBytes(ENCODE);
+					res=byteMerger(res,data);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 			code = getByteCode(str.substring(i, i + 1));
 			byte[] tag = read16_DZK(code[0], code[1]);

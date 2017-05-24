@@ -12,7 +12,18 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="5dp"/>
-    <com.xw.repo.XEditText
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/biucontainer"
+        android:textColorHint="@color/gray_1"
+        android:textColor="@color/colorPrimary"
+        android:lines="1"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
+    <!--<com.xw.repo.XEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -24,7 +35,7 @@
         android:ellipsize="end"
         app:x_disableEmoji="true"
         android:maxLength="50"
-        />
+        />-->
 
     <com.piotrek.customspinner.CustomSpinner
         android:id="@+id/spinner1"

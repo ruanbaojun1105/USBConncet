@@ -13,10 +13,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.hwx.usbconnect.usbconncet.Application;
+import com.hwx.usbconnect.usbconncet.BuildConfig;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
@@ -111,6 +113,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setAdapter(multipleItemAdapter);
         updateData = (Button) rootView.findViewById(R.id.updateData);
         updateData.setOnClickListener(this);
+        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
+            }
+        });
     }
 
     /**
@@ -252,6 +261,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             InputStream in =new FileInputStream(filePath);
             in.read(data, 0, 240);
             in.close();
+            if (BuildConfig.DEBUG) {
+                StringBuilder buil = new StringBuilder("");
+                for (int i = 0; i < 240; i++) {
+                    //data[i]=(byte) i;
+                    buil.append((i % 15 == 0 ? "\n" : " ")/*+i+"- "+data[i]+"-"*/ + Integer.toHexString(data[i]));
+                }
+                LogUtils.e("------" + buil.toString());
+            }
         } catch (Exception ex) {
         }
         return data;

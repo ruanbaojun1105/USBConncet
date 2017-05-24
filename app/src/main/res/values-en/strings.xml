@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hand Spinner Configuration</string>
+    <string name="app_name">HWX Hand Spinner Configuration</string>
     <string name="hello_blank_fragment">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD</string>
     <string name="action_settings">Instructions</string>
     <string name="jagkjk">Ok.</string>
@@ -46,6 +46,9 @@ and edit the letters or numbers that you want to show.\n
     <string name="dtadtat">Ok</string>
     <string name="dsttaat">Connection failed. Check, please</string>
     <string name="ftdttt">The current settings have been successfully exceeded 20 times. Please authorize.</string>
-    <string name="dttadfdc">ok</string>
+    <string name="dttadfdc">Ok</string>
     <string name="gdadtt">back</string>
+    <string name="dtaddssd">Ok</string>
+    <string name="dadttsadts">Cancel</string>
+    <string name="gdjiadstjj">Edit</string>
 </resources>
