@@ -40,7 +40,7 @@ public class WelcomeActivity extends AppCompatActivity {
         AdManager.getInstance(this).init("c76ea937d89eaa7d", "93645cbf2bb5c272", true);
         SplashViewSettings splashViewSettings = new SplashViewSettings();
         splashViewSettings.setAutoJumpToTargetWhenShowFailed(false);//默认自动跳转
-        splashViewSettings.setTargetClass(UsbMainActivity.class);
+        splashViewSettings.setTargetClass(WelcomeActivity.class);
         // 使用默认布局参数
         final FrameLayout splashLayout = (FrameLayout) findViewById(R.id.container);
 //        FrameLayout.LayoutParams params =

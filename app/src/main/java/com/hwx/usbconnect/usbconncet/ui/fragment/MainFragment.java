@@ -94,9 +94,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
-            data.add(new TextMod());
-            data.add(new TextMod());
-            data.add(new TextMod());
+            data.add(new TextMod("Hello word"));
+            data.add(new TextMod("Hello word"));
+            data.add(new TextMod("Hello word"));
             data.add(new PresetMod());
         } else {
             data = (List<AbsTypeMod>) obj;
@@ -113,13 +113,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setAdapter(multipleItemAdapter);
         updateData = (Button) rootView.findViewById(R.id.updateData);
         updateData.setOnClickListener(this);
-        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        /*mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
             }
-        });
+        });*/
     }
 
     /**

@@ -35,6 +35,15 @@
             android:name="YOUMI_CHANNEL"
             android:value="110" >
         </meta-data>
+        <!-- 有米视频播放Activity暂时不支持Android N的分屏模式，需要显示声明不支持(android:resizeableActivity="false")-->
+        <activity
+            android:name="net.youmi.android.nm.vdo.VideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
+            android:resizeableActivity="false"
+            android:screenOrientation="landscape"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity >
         <activity android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
             />
@@ -49,7 +58,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activity.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

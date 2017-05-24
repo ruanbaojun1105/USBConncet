@@ -100,12 +100,6 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             case AbsTypeMod.TEXT:
                 TextMod itemOd= (TextMod) item;
                 TextView editText = helper.getView(R.id.biucontainer);
-                /*editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean b) {
-                        editText.clearFocus();
-                    }
-                });*/
                 editText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -113,18 +107,20 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                             @Override
                             public void onClick(String str) {
                                 itemOd.setText(str);
+                                view.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((TextView)view).setText(str);
+                                        notifyDataSetChanged();
+                                    }
+                                });
                             }
                         });
                     }
                 });
                 String tag=itemOd.getText();
                 if (!TextUtils.isEmpty(tag)) {
-                    editText.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            editText.setText(tag);
-                        }
-                    });
+                    editText.setText(tag);
                 }
 
                 /*editText.addTextChangedListener(new TextWatcher() {
@@ -212,7 +208,9 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
     }
 
     public void showEditDialog(final Activity activity, String title,String content, final EditOnclick onclickInterFace){
-        final EditText et = new EditText(activity);
+        XEditText et=new XEditText(activity);
+        et.setDisableEmoji(true);
+        //final EditText et = new EditText(activity);
         et.setMaxLines(5);
         et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
         if (!TextUtils.isEmpty(content)) {

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,12 @@ import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 
 import net.youmi.android.nm.bn.BannerManager;
 import net.youmi.android.nm.bn.BannerViewListener;
+import net.youmi.android.nm.cm.ErrorCode;
+import net.youmi.android.nm.vdo.VideoAdListener;
+import net.youmi.android.nm.vdo.VideoAdManager;
+import net.youmi.android.nm.vdo.VideoAdSettings;
+
+import static com.hwx.usbconnect.usbconncet.Constants.isOpenVideo;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,6 +97,7 @@ public class UseFragment extends Fragment {
 // 将广告条加入到布局中
         bannerLayout.addView(bannerView);
 
+        setupVideoAd(rootView);
         return rootView;
     }
 
@@ -99,5 +107,72 @@ public class UseFragment extends Fragment {
         name.setText(mParam1);
         name.setTextColor(getResources().getColor(R.color.colorPrimary));
         this_info.setText(mParam2);
+    }
+
+    /**
+     * 设置视频广告
+     */
+    private void setupVideoAd(View rootView) {
+        Button btnShowVideoAd = (Button) rootView.findViewById(R.id.btn_show_video_ad);
+        if (!isOpenVideo) {
+            btnShowVideoAd.setVisibility(View.GONE);
+            return;
+        }
+        // 设置视频广告
+        final VideoAdSettings videoAdSettings = new VideoAdSettings();
+        videoAdSettings.setInterruptTips("退出视频播放将无法获得奖励" + "\n确定要退出吗？");
+
+        //		// 只需要调用一次，由于在主页窗口中已经调用了一次，所以此处无需调用
+        //		VideoAdManager.getInstance().requestVideoAd(mContext);
+
+        btnShowVideoAd.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // 展示视频广告
+                VideoAdManager.getInstance(getContext())
+                        .showVideoAd(getContext(), videoAdSettings, new VideoAdListener() {
+                            @Override
+                            public void onPlayStarted() {
+                                LogUtils.e("开始播放视频");
+                            }
+
+                            @Override
+                            public void onPlayInterrupted() {
+                                LogUtils.e("播放视频被中断");
+                            }
+
+                            @Override
+                            public void onPlayFailed(int errorCode) {
+                                LogUtils.e("视频播放失败");
+                                switch (errorCode) {
+                                    case ErrorCode.NON_NETWORK:
+                                        LogUtils.e("网络异常");
+                                        break;
+                                    case ErrorCode.NON_AD:
+                                        LogUtils.e("视频暂无广告");
+                                        break;
+                                    case ErrorCode.RESOURCE_NOT_READY:
+                                        LogUtils.e("视频资源还没准备好");
+                                        break;
+                                    case ErrorCode.SHOW_INTERVAL_LIMITED:
+                                        LogUtils.e("视频展示间隔限制");
+                                        break;
+                                    case ErrorCode.WIDGET_NOT_IN_VISIBILITY_STATE:
+                                        LogUtils.e("视频控件处在不可见状态");
+                                        break;
+                                    default:
+                                        LogUtils.e("请稍后再试");
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onPlayCompleted() {
+                                LogUtils.e("视频播放成功");
+                            }
+                        });
+            }
+        });
     }
 }

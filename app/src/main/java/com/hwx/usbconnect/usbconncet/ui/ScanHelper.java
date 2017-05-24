@@ -157,9 +157,9 @@ public class ScanHelper {
     };
 
     public void starPross() {
-        LogUtils.e((tag+1)/amit*100+"progress");
         if (animTextView!=null)
             animTextView.setProgress((int) (((((float)tag)+1)/((float)amit))*100));
+        LogUtils.e(animTextView.getPercent()+"progress");
         if (magicProgressCircle!=null)
             magicProgressCircle.setSmoothPercent(animTextView.getPercent());
     }

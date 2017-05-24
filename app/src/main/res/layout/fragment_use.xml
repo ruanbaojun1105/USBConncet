@@ -34,6 +34,14 @@
             />
 
     </ScrollView>
+
+    <Button
+        android:id="@+id/btn_show_video_ad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:text="视频广告"
+        />
     <LinearLayout
         android:id="@+id/ll_banner"
         android:layout_width="fill_parent"

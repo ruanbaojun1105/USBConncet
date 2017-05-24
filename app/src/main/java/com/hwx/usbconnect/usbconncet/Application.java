@@ -45,7 +45,7 @@ public class Application extends android.app.Application{
         _instance = this;
         mContext=this;
         AppConfig.getInstance();
-        /*Cockroach.install(new Cockroach.ExceptionHandler() {
+        Cockroach.install(new Cockroach.ExceptionHandler() {
             @Override
             public void handlerException(Thread thread, Throwable throwable) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -62,7 +62,7 @@ public class Application extends android.app.Application{
                     }
                 });
             }
-        });*/
+        });
     }
 
     /**
