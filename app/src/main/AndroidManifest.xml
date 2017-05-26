@@ -51,6 +51,7 @@
             android:name=".ui.activity.UsbMainActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
         <activity

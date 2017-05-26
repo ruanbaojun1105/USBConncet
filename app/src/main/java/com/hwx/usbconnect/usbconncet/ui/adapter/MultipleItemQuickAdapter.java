@@ -63,9 +63,9 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         CustomSpinner colorSpinner1 = helper.getView(R.id.spinner1);
         colorSpinner1.initializeStringValues(new String[]{
                 mContext.getString(R.string.vaddf),
-                mContext.getString(R.string.gaf),
                 mContext.getString(R.string.vaf),
-                mContext.getString(R.string.vafg)},mContext.getString(R.string.vfag));
+                mContext.getString(R.string.vafg),
+                mContext.getString(R.string.gaf)},mContext.getString(R.string.vfag));
         colorSpinner1.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
             @Override
             public void onSpinnerOpened() {
