@@ -1,6 +1,7 @@
 package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import net.youmi.android.nm.cm.ErrorCode;
 import net.youmi.android.nm.vdo.VideoAdListener;
 import net.youmi.android.nm.vdo.VideoAdManager;
 import net.youmi.android.nm.vdo.VideoAdSettings;
+
+import me.weyye.hipermission.HiPermission;
 
 import static com.hwx.usbconnect.usbconncet.Constants.isOpenVideo;
 
@@ -71,6 +74,9 @@ public class UseFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_use, container, false);
         initView(rootView);
 
+        if (!HiPermission.checkPermission(getContext(), Manifest.permission.READ_PHONE_STATE)){
+            return rootView;
+        }
         // 获取广告条
         View bannerView = BannerManager.getInstance(getContext())
                 .getBannerView(getContext(), new BannerViewListener() {

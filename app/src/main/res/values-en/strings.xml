@@ -51,4 +51,7 @@ and edit the letters or numbers that you want to show.\n
     <string name="dtaddssd">Ok</string>
     <string name="dadttsadts">Cancel</string>
     <string name="gdjiadstjj">Edit</string>
+    <string name="drrtr">Please select fonts▼</string>
+    <string name="fdasttaat">Default</string>
+    <string name="vdatdta">Apply for permission to read and write SD card</string>
 </resources>

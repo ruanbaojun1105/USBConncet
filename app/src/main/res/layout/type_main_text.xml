@@ -9,11 +9,11 @@
 
     <cn.refactor.library.SmoothCheckBox
         android:id="@+id/checkBox"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         android:layout_margin="5dp"/>
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:id="@+id/biucontainer"
@@ -21,7 +21,7 @@
         android:textColor="@color/colorPrimary"
         android:lines="1"
         android:singleLine="true"
-        android:ellipsize="end"
+        android:ellipsize="middle"
         android:textSize="18sp"
         android:layout_margin="5dp"
         android:gravity="center_vertical"
@@ -44,7 +44,7 @@
 
     <com.piotrek.customspinner.CustomSpinner
         android:id="@+id/spinner1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/setting_btnbg"
@@ -52,10 +52,18 @@
     </com.piotrek.customspinner.CustomSpinner>
     <com.piotrek.customspinner.CustomSpinner
         android:id="@+id/spinner2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/setting_btnbg2"
+        android:layout_margin="5dp">
+    </com.piotrek.customspinner.CustomSpinner>
+    <com.piotrek.customspinner.CustomSpinner
+        android:id="@+id/spinner3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/setting_btnbg6"
         android:layout_margin="5dp">
     </com.piotrek.customspinner.CustomSpinner>
 </LinearLayout>

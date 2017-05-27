@@ -6,6 +6,9 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.storage.StorageManager;
 
+import com.hwx.usbconnect.usbconncet.Application;
+import com.umeng.analytics.MobclickAgent;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -177,6 +180,7 @@ public class FileUtil {
         }
         catch (Exception e) {
             isok = false;
+            MobclickAgent.reportError(Application.getContext(),e);//文件写入异常手机
         }
         return isok;
 

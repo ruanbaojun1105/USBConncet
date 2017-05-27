@@ -1,15 +1,18 @@
 package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +49,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.weyye.hipermission.HiPermission;
+import me.weyye.hipermission.PermissionCallback;
+import me.weyye.hipermission.PermissionItem;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MainFragment#newInstance} factory method to
@@ -77,8 +84,60 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         initView(rootView);
+        rootView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkP();
+            }
+        },1000);
         return rootView;
     }
+
+    private void checkP(){
+        if (!HiPermission.checkPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
+            permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "SD write permission", R.drawable.permission_ic_storage));
+            permissionItems.add(new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "SD read permission", R.drawable.permission_ic_storage));
+            //permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "Read Phone permission", R.drawable.permission_ic_phone));
+            HiPermission.create(getContext()).title(getString(R.string.vdatdta)).permissions(permissionItems)
+                    .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getContext().getTheme()))//permission icon color
+                    .msg("To protect the peace of the world, open these permissions! You and I together save the world!")
+                    .style(R.style.PermissionBlueStyle)
+                    .checkMutiPermission(new PermissionCallback() {
+                        @Override
+                        public void onClose() {
+                            Log.i("", "onClose");
+                            LogUtils.e("用户关闭权限申请");
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            LogUtils.e("所有权限申请完成");
+                            String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
+                            String[] fileArr=getFileAll(new File(itemPath),false,false);
+                            String[] fileArrname=getFileAll(new File(itemPath),true,false);
+                            if (multipleItemAdapter!=null) {
+                                List<AbsTypeMod> listAbs = multipleItemAdapter.getData();
+                                ((ImageFontMod)listAbs.get(0)).setFileArr(fileArr).setFileName(fileArrname);
+                                ((ImageFontMod)listAbs.get(1)).setFileArr(fileArr).setFileName(fileArrname);
+                                ((ImageFontMod)listAbs.get(2)).setFileArr(fileArr).setFileName(fileArrname);
+                                multipleItemAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onDeny(String permission, int position) {
+                            Log.i("", "onDeny");
+                        }
+
+                        @Override
+                        public void onGuarantee(String permission, int position) {
+                            Log.i("", "onGuarantee");
+                        }
+                    });
+        }
+    }
+
     public static String getInnerSDCardPath() {
         return Environment.getExternalStorageDirectory().getPath();
     }
@@ -89,14 +148,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
         if (obj == null) {
             String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
-            String[] fileArr=getFileAll(new File(itemPath),false);
-            String[] fileArrname=getFileAll(new File(itemPath),true);
+            String[] fileArr=getFileAll(new File(itemPath),false,false);
+            String[] fileArrname=getFileAll(new File(itemPath),true,false);
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
-            data.add(new TextMod("Hello word"));
-            data.add(new TextMod("Hello word"));
-            data.add(new TextMod("Hello word"));
+            data.add(new TextMod("Hello word",1));
+            data.add(new TextMod("Hello word",1));
+            data.add(new TextMod("Hello word",1));
             data.add(new PresetMod());
         } else {
             data = (List<AbsTypeMod>) obj;
@@ -126,13 +185,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
      * 读取单个文件夹的所有文件
      * @return
      */
-    private String[] getFileAll(File file,boolean isName) {
+    private String[] getFileAll(File file,boolean isName,boolean isCheck) {
         if (file==null)
-            return null;
+            return new String[]{};
         if (!file.exists()) {
             file.mkdir();
         }
-        if (!AppConfig.getInstance().getBoolean("isCopy",false)){
+        //if (!AppConfig.getInstance().getBoolean("isCopy",false)){
             try {
                 FileUtil.copyFile(getResources().getAssets().open("xuanfeng.bin"),file.getPath()+"/xuanfeng.bin");
                 FileUtil.copyFile(getResources().getAssets().open("shu.bin"),file.getPath()+"/shu.bin");
@@ -140,11 +199,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        //}
+
+        if (isCheck)
+            return null;
 
         String[] filelist = file.list();
         if (filelist==null)
-            return null;
+            return new String[]{};
         List<String> alist=new ArrayList<>();
         for (int i = 0; i < filelist.length; i++) {
             File readfile = new File(file.getPath() + "/" + filelist[i]);
@@ -234,7 +296,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             if (!TextUtils.isEmpty(item3.getText())) {
                 try {
                     byte [] data1=Font16.byteMerger(new byte[]{item3.isCheck()?(byte)0x01:(byte)0x00,(byte)item3.getColor(),(byte)item3.getModel()},item3.getText().getBytes("GB2312"));
-                    byte [] data12=new Font16(v.getContext()).getStringFontByte(item3.getText());
+                    byte [] data12=new Font16(v.getContext()).getStringFontByte(item3.getText(),item3.getFontStyle());
                     dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte) item3.getId(),data1,false));
                     TextMain=Font16.byteMerger(TextMain,data12);
                 } catch (UnsupportedEncodingException e) {

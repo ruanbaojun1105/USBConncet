@@ -1,5 +1,6 @@
 package com.hwx.usbconnect.usbconncet.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,6 +21,7 @@ import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.Window;
@@ -28,6 +30,8 @@ import android.widget.Toast;
 
 import com.hwx.usbconnect.usbconncet.Application;
 import com.hwx.usbconnect.usbconncet.R;
+import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
+import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
 import com.hwx.usbconnect.usbconncet.font.Font16;
 import com.hwx.usbconnect.usbconncet.utils.AnimTextView;
@@ -38,6 +42,7 @@ import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ToastUtils;
 import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.util.ArrayList;
@@ -45,6 +50,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import me.weyye.hipermission.HiPermission;
+import me.weyye.hipermission.PermissionCallback;
+import me.weyye.hipermission.PermissionItem;
 
 /**
  * @Description:
@@ -402,7 +411,6 @@ public class ScanHelper {
     public void unregisterReceiver(){
         mContext.unregisterReceiver(mUsbReceiver);
     }
-
     /**
      * 检测是否有我们所需要的设备
      * @return

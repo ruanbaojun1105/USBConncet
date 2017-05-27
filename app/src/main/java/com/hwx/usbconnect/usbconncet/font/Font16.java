@@ -1,6 +1,7 @@
 package com.hwx.usbconnect.usbconncet.font;
 
 import android.content.Context;
+import android.widget.Switch;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -55,7 +56,7 @@ public class Font16 {
 		return arr;
 	}
 
-	public byte[] getStringFontByte(String str) {
+	public byte[] getStringFontByte(String str,int fontStyle) {
 		int[] code = null;
 		byte[] res=new byte[0];
 
@@ -71,19 +72,31 @@ public class Font16 {
 				}
 			}
 			code = getByteCode(str.substring(i, i + 1));
-			byte[] tag = read16_DZK(code[0], code[1]);
+			byte[] tag = read16_DZK(code[0], code[1],fontStyle);
 			res=byteMerger(res,tag);
 		}
 		return res;
 	}
 	private static String dotMatrixFont = "GBK16.DZK";
 	private int wordByteByDots = 32;//12*12/24----16*16/32
-	protected byte[] read16_DZK(int areaCode, int posCode) {
+	protected byte[] read16_DZK(int areaCode, int posCode,int fontStyle) {
 		byte[] data = null;
 		try {
 			int area = areaCode - 0x81;
 			int pos = posCode - (posCode<0x7f?0x40:0x41);
-			InputStream in = context.getResources().getAssets().open(dotMatrixFont);
+			String filefff="";
+			switch (fontStyle){
+				case 0:
+				case 1:
+					filefff=dotMatrixFont;
+					break;
+                default:
+                    filefff=dotMatrixFont;
+                    break;
+
+
+			}
+			InputStream in = context.getResources().getAssets().open(filefff);
 			long offset = wordByteByDots * (area * 190 + pos);
 			in.skip(offset);
 			data = new byte[wordByteByDots];

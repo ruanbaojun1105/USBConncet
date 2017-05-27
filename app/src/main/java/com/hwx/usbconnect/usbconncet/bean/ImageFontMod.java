@@ -17,16 +17,18 @@ public class ImageFontMod extends AbsTypeMod implements Parcelable {
         return fileName;
     }
 
-    public void setFileName(String[] fileName) {
+    public ImageFontMod setFileName(String[] fileName) {
         this.fileName = fileName;
+        return this;
     }
 
     public String[] getFileArr() {
         return fileArr;
     }
 
-    public void setFileArr(String[] fileArr) {
+    public ImageFontMod setFileArr(String[] fileArr) {
         this.fileArr = fileArr;
+        return this;
     }
 
     public String getImagePath() {

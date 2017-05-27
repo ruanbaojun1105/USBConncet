@@ -122,7 +122,6 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                 if (!TextUtils.isEmpty(tag)) {
                     editText.setText(tag);
                 }
-
                 /*editText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -137,6 +136,20 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
                     }
                 });*/
+                CustomSpinner fontSpinner = helper.getView(R.id.spinner3);
+                fontSpinner.setVisibility(View.GONE);
+                fontSpinner.initializeStringValues(new String[]{mContext.getString(R.string.fdasttaat),"楷书","幼圆","隶书"},mContext.getString(R.string.drrtr));
+                fontSpinner.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
+                    @Override
+                    public void onSpinnerOpened() {
+                    }
+
+                    @Override
+                    public void onSpinnerClosed() {
+                        itemOd.setFontStyle(colorSpinner2.getSelectedItemPosition());
+                    }
+                });
+                fontSpinner.setSelection(itemOd.getFontStyle());
                 break;
             case AbsTypeMod.IMG:
                 break;
@@ -164,7 +177,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                 ImageFontMod imageFontMod= (ImageFontMod) item;
                 CustomSpinner choce_spinner1 = helper.getView(R.id.choce_spinner);
                 //fileName = fName.substring(fName.lastIndexOf("//")+1);
-                choce_spinner1.initializeStringValues(imageFontMod.getFileName()!=null?imageFontMod.getFileName():new String[]{"八卦.bin","花朵.bin","旋风.bin"},
+                choce_spinner1.initializeStringValues(imageFontMod.getFileName()!=null?imageFontMod.getFileName():new String[]{},
                         mContext.getString(R.string.bfdfhdhdhf));
                 choce_spinner1.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
                     @Override

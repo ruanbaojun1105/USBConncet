@@ -41,7 +41,7 @@
     <string name="bfdfhdhdhf">图片样式选择▼</string>
     <string name="vjkkjagkl">状态</string>
     <string name="bfijj">类型</string>
-    <string name="ojgajktkj">颜色选择</string>
+    <string name="ojgajktkj">颜色</string>
     <string name="fkak">模式</string>
     <string name="okfkkat">点击修改</string>
     <string name="vdaf">退出</string>
@@ -65,4 +65,7 @@
     <string name="dtaddssd">确定</string>
     <string name="dadttsadts">取消</string>
     <string name="gdjiadstjj">编辑</string>
+    <string name="drrtr">请选择字体▼</string>
+    <string name="fdasttaat">默认</string>
+    <string name="vdatdta">申请读写SD card 的权限</string>
 </resources>
