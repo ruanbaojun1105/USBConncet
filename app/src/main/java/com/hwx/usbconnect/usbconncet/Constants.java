@@ -6,8 +6,10 @@ package com.hwx.usbconnect.usbconncet;
 public class Constants {
     public static final boolean isOpenVideo=true;//是否开启视频广告
     public static final boolean isOpenEN=false;//是否开启显示英文
+
+
     public static final boolean isOpenCutInfo=false;//是否开启去掉公司介绍
-    public static final boolean isOpenLim=true;//是否开启使用次数限制
+    public static final boolean isOpenLim=false;//是否开启使用次数限制
 
     public static final String server_url="120.76.118.136:8080";
     public static String Deviceid="1";

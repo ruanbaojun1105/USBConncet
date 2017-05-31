@@ -146,10 +146,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         List<AbsTypeMod> data = new ArrayList<>();
         ACache aCache = ACache.get(getContext());
         Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
+        String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
+        String[] fileArr=getFileAll(new File(itemPath),false,false);
+        String[] fileArrname=getFileAll(new File(itemPath),true,false);
         if (obj == null) {
-            String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
-            String[] fileArr=getFileAll(new File(itemPath),false,false);
-            String[] fileArrname=getFileAll(new File(itemPath),true,false);
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
@@ -159,6 +159,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             data.add(new PresetMod());
         } else {
             data = (List<AbsTypeMod>) obj;
+            try {
+                ((ImageFontMod)data.get(0)).setFileArr(fileArr).setFileName(fileArrname);
+                ((ImageFontMod)data.get(1)).setFileArr(fileArr).setFileName(fileArrname);
+                ((ImageFontMod)data.get(2)).setFileArr(fileArr).setFileName(fileArrname);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         multipleItemAdapter = new MultipleItemQuickAdapter(data);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
