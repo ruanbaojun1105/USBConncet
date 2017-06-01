@@ -40,6 +40,7 @@ import com.hwx.usbconnect.usbconncet.utils.Constants;
 import com.hwx.usbconnect.usbconncet.utils.DebugLog;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ToastUtils;
+import com.joanzapata.iconify.widget.IconTextView;
 import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
 import java.io.File;
@@ -70,6 +71,7 @@ import me.weyye.hipermission.PermissionItem;
  */
 
 public class ScanHelper {
+    private IconTextView icon_text;
     private Context mContext;
     private boolean isScanConn;
     private UsbManager mManager;
@@ -95,13 +97,22 @@ public class ScanHelper {
                     }
                     break;
                 case 110:
+                    inEndpoint=null;
                     outEndpoint=null;
                     isScanConn=false;
+                    icon_text.setText("{fa-times-circle @color/red}");//错误
                     Toast.makeText(mContext, R.string.dsttaat,Toast.LENGTH_SHORT).show();
                     break;
                 case 111:
                     tag=0;
                     Toast.makeText(mContext, R.string.dtadtat,Toast.LENGTH_SHORT).show();
+                    icon_text.setText("{fa-check-circle-o @color/light_orange}");//ok
+                    icon_text.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            icon_text.setText("{fa-check @color/colormain5}");//ok
+                        }
+                    },2000);
                     try {
                         dialog.dismiss();
                     } catch (Exception e) {
@@ -125,6 +136,7 @@ public class ScanHelper {
                 case 112:
                     LogUtils.e("-----------------------112");
                     Toast.makeText(mContext, R.string.vfaddt,Toast.LENGTH_SHORT).show();
+                    icon_text.setText("{fa-times-circle @color/red}");//错误
                     try {
                         dialog.dismiss();
                     } catch (Exception e) {
@@ -135,6 +147,7 @@ public class ScanHelper {
                     tag=0;
                     break;
                 case 113:
+                    icon_text.setText("{fa-certificate spin}");
                     //mProgressDialog = ProgressDialog.show(mContext, null, null);
                     dialog = new Dialog(mContext);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -161,6 +174,25 @@ public class ScanHelper {
                         e.printStackTrace();
                     }
                     break;
+                case 115:
+                    icon_text.setText("{fa-times-circle @color/red}");//错误
+                    inEndpoint=null;
+                    outEndpoint=null;
+                    isScanConn=false;
+                    if (connection!=null)
+                        connection.close();
+                    connection=null;
+                    dialog=null;
+                    animTextView=null;
+                    magicProgressCircle=null;
+                    Toast.makeText(mContext, R.string.datsdat,Toast.LENGTH_SHORT).show();
+                    break;
+                case 116:
+                    icon_text.setText("{fa-check @color/colormain5}");//ok
+                    break;
+                case 117:
+                    icon_text.setText("{fa-times-circle @color/red}");//错误
+                    break;
             }
         }
     };
@@ -179,45 +211,10 @@ public class ScanHelper {
     public void close() {
         mHandler.sendEmptyMessage(110);
     }
-    /**
-     * 设备权限的广播
-     */
-    private static final String ACTION_USB_PERMISSION="com.android.example.USB_PERMISSION";
-    /**
-     * 插入USB的广播
-     */
-    private static final String ACTION_USB_ATTACHED="android.hardware.usb.action.USB_DEVICE_ATTACHED";
-    private static final String ACTION_USB_UNPIN="android.hardware.usb.action.USB_STATE";
-    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            DebugLog.d(action);
-            if (ACTION_USB_PERMISSION.equals(action)) {
-                synchronized (this) {
-                    UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if (device != null) {
-                            //在这里增加通信的代码
-                            startScan(device);
-                        }
-                    }
-                }
-            }else if(UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)){
-                UsbDevice device = checkScanDevice(Constants.DEVICE_VIDS,Constants.DEVICE_PIDS);
-                if(device != null){
-                    startScan(device);
-                }else {
 
-                }
-            }else if(ACTION_USB_UNPIN.equals(action)){
-
-            }
-
-        }
-    };
-    public ScanHelper(Context context){
+    public ScanHelper(Context context,IconTextView icon_text){
         mContext = context;
+        this.icon_text=icon_text;
         isScanConn = true;
 
 //        init();
@@ -263,20 +260,20 @@ public class ScanHelper {
         return result;
     }
 
-    /*public void sendData(final byte[] data) {
-        if (outEndpoint!=null&&connection!=null){
-                   *//*byte aaa[]=new byte[240];
-                    for (int i = 0; i < 240; i++) {
-                        aaa[i]=(byte)i;
-                    }
-                    aaa[238]=(byte)0x0c;
-                    aaa[239]=(byte)0x0d;*//*
-            //int out = connection.bulkTransfer(outEndpoint,(byte[]) aaa, 80, 0);
-            int out = connection.bulkTransfer(outEndpoint, data, data.length, 0);//0秒超时说明可一直等待
-            LogUtils.e("--------"+out);
-            getData();
-        }
-    }*/
+//    public void sendData(final byte[] data) {
+//        if (outEndpoint!=null&&connection!=null){
+//                   byte aaa[]=new byte[240];
+//                    for (int i = 0; i < 240; i++) {
+//                        aaa[i]=(byte)i;
+//                    }
+//                    aaa[238]=(byte)0x0c;
+//                    aaa[239]=(byte)0x0d;
+//            //int out = connection.bulkTransfer(outEndpoint,(byte[]) aaa, 80, 0);
+//            int out = connection.bulkTransfer(outEndpoint, data, data.length, 0);//0秒超时说明可一直等待
+//            LogUtils.e("--------"+out);
+//            getData();
+//        }
+//    }
     int tag=0;
     int amit=0;
     public void sendData(final byte[] data) {
@@ -361,9 +358,6 @@ public class ScanHelper {
         void click(byte aaa[]);
     }
 
-    /**
-     *发送数据
-     */
     public void sendData(byte function,byte[] content,boolean isAutoSafeCode) {
         isAutoSafeCode=true;//所有都自动算出来
         byte[] head=new byte[]{BluetoothService.starCode,BluetoothService.addrCode,function,(byte) (content.length/256),(byte) (content.length%256)};
@@ -396,14 +390,57 @@ public class ScanHelper {
         return a;
     }
 
+    private static final String ACTION_USB_PERMISSION="com.android.example.USB_PERMISSION";//设备权限的广播
+    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            DebugLog.d(action);
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                LogUtils.e("ACTION_USB_PERMISSION:");
+                synchronized (this) {
+                    UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+                            startScan(device);
+                        }
+                    }
+                }
+            }else if(UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)){//拔出后再次插入
+                LogUtils.e("ACTION_USB_DEVICE_ATTACHED:");
+                UsbDevice device = checkScanDevice(Constants.DEVICE_VIDS,Constants.DEVICE_PIDS);
+                if(device != null){
+                    startScan(device);
+                }
+            }else if(UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)){//设备拔出
+                LogUtils.e("ACTION_USB_DEVICE_DETACHED:");
+                mHandler.sendEmptyMessage(115);
+            }else if("android.hardware.usb.action.USB_STATE".equals(action)){
+                boolean connected = intent.getExtras().getBoolean("connected");
+                LogUtils.e("USB_STATE:"+connected);
+            }else if("android.hardware.usb.action.USB_DISCONNECTED".equals(action)){
+                LogUtils.e("USB_DISCONNECTED:");
+            }else if("android.hardware.usb.action.USB_CONNECTED".equals(action)){
+                LogUtils.e("USB_CONNECTED:");
+            }
+        }
+    };
 
     public void registerReceiver() {
         IntentFilter filter= new IntentFilter();
         //filter.addAction(ACTION_USB_ATTACHED);
         filter.addAction(ACTION_USB_PERMISSION);
-        filter.addAction(ACTION_USB_UNPIN);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+
+        filter.addAction("android.hardware.usb.action.USB_STATE");
+        filter.addAction("android.hardware.action.USB_DISCONNECTED");
+        filter.addAction("android.hardware.action.USB_CONNECTED");
+
+//        filter.addAction("android.intent.action.UMS_CONNECTED");
+//        filter.addAction("android.intent.action.UMS_DISCONNECTED");
+//        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
+//        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
         mContext.registerReceiver(mUsbReceiver, filter);
         //LocalBroadcastManager.getInstance(Application.getContext()).registerReceiver(mUsbReceiver, filter);
     }
@@ -475,8 +512,8 @@ public class ScanHelper {
     public void startScan(final UsbDevice device){
         if(device == null)
             return;
-        if (outEndpoint!=null)
-            return;
+        /*if (outEndpoint!=null)
+            return;*/
         isScanConn = true;
         new Thread(){
             @Override
@@ -502,6 +539,7 @@ public class ScanHelper {
                     }
                     boolean isconn=connection.claimInterface(usbInterface, true);
                     LogUtils.e(isconn?"已打开连接!":"打开连接失败");
+                    mHandler.sendEmptyMessage(isconn?116:117);
                     if(device != null){
                         //收数据
                         byte[] bytes = new byte[512];

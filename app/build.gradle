@@ -53,7 +53,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile 'com.umeng.analytics:analytics:latest.integration'//umeng
-
+    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
     compile 'me.weyye.hipermission:library:1.0.5'
     // name 为上一步导入SDK中导入到工程的aar文件名去除文件后缀的字符串
     // 比如上一步导入SDK中导入到工程的aar文件名为 YoumiSdk_v7.2.1_2017-05-04.aar，

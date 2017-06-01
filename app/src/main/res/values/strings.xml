@@ -68,4 +68,6 @@
     <string name="drrtr">请选择字体▼</string>
     <string name="fdasttaat">默认</string>
     <string name="vdatdta">申请读写SD card 的权限</string>
+    <string name="vadft">不支持USB HOST</string>
+    <string name="datsdat">usb设备已拔出，连接断开</string>
 </resources>

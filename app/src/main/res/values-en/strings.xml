@@ -54,4 +54,6 @@ and edit the letters or numbers that you want to show.\n
     <string name="drrtr">Please select fonts▼</string>
     <string name="fdasttaat">Default</string>
     <string name="vdatdta">Apply for permission to read and write SD card</string>
+    <string name="vadft">No support USB Host</string>
+    <string name="datsdat">The USB device has been pulled out and the connection is disconnected</string>
 </resources>

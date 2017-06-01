@@ -15,6 +15,8 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
@@ -23,6 +25,8 @@ import com.hwx.usbconnect.usbconncet.ui.fragment.InfoFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.MainFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.UseFragment;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.widget.IconTextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.youmi.android.nm.bn.BannerManager;
@@ -37,6 +41,7 @@ public class UsbMainActivity extends AppCompatActivity {
 
     private MyFragmentPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private IconTextView icon_text;
     private List<Fragment> fragmentList=new ArrayList<>();
     public static ScanHelper mScanHelper;
     private InfoFragment infoFragment;
@@ -45,13 +50,6 @@ public class UsbMainActivity extends AppCompatActivity {
         if (!com.hwx.usbconnect.usbconncet.Constants.isOpenEN)
             return;
         // 本地语言设置"zh" : "en"
-        /*Locale myLocale = new Locale("en");
-        Resources res = context.getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);*/
-
         Resources resources = context.getResources();
         Configuration config = resources.getConfiguration();
         Locale locale = new Locale("en");
@@ -84,12 +82,16 @@ public class UsbMainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        icon_text= (IconTextView) findViewById(R.id.icon_text);
+        icon_text.setText("{fa-circle-o-notch spin}");
         init();
-
+        if (!getPackageManager().hasSystemFeature("android.hardware.usb.host")){
+            Toast.makeText(this, R.string.vadft,Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void init() {
-        mScanHelper = new ScanHelper(this);
+        mScanHelper = new ScanHelper(this,icon_text);
         mScanHelper.setScanListener(new ScanHelper.ScanListener() {
             @Override
             public void scan(String data) {
@@ -100,6 +102,19 @@ public class UsbMainActivity extends AppCompatActivity {
         });
         mScanHelper.registerReceiver();
         mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS,Constants.DEVICE_PIDS));
+        icon_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS,Constants.DEVICE_PIDS));
+            }
+        });
+        icon_text.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (icon_text!=null&&!mScanHelper.isScanConn())
+                    icon_text.setText("{fa-times-circle @color/red}");//错误
+            }
+        },3500);
     }
 
     @Override

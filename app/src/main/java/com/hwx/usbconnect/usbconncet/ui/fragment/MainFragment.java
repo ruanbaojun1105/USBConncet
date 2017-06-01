@@ -63,6 +63,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private RecyclerView mRecyclerView;
     private Button updateData;
     private MultipleItemQuickAdapter multipleItemAdapter;
+    private Context context;
 
     public MainFragment() {
         // Required empty public constructor
@@ -93,13 +94,19 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        this.context=context;
+        super.onAttach(context);
+    }
+
     private void checkP(){
-        if (!HiPermission.checkPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        if (!HiPermission.checkPermission(getContext()==null?context:getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)){
             List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
             permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "SD write permission", R.drawable.permission_ic_storage));
             permissionItems.add(new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "SD read permission", R.drawable.permission_ic_storage));
             //permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "Read Phone permission", R.drawable.permission_ic_phone));
-            HiPermission.create(getContext()).title(getString(R.string.vdatdta)).permissions(permissionItems)
+            HiPermission.create(getContext()==null?context:getContext()).title(getString(R.string.vdatdta)).permissions(permissionItems)
                     .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getContext().getTheme()))//permission icon color
                     .msg("To protect the peace of the world, open these permissions! You and I together save the world!")
                     .style(R.style.PermissionBlueStyle)
@@ -144,7 +151,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private void initView(View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_list);
         List<AbsTypeMod> data = new ArrayList<>();
-        ACache aCache = ACache.get(getContext());
+        ACache aCache = ACache.get(getContext()==null?context:getContext());
         Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
         String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
         String[] fileArr=getFileAll(new File(itemPath),false,false);
@@ -168,7 +175,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             }
         }
         multipleItemAdapter = new MultipleItemQuickAdapter(data);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(getContext()==null?context:getContext());
         mRecyclerView.setLayoutManager(manager);
 //        multipleItemAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup() {
 //            @Override
@@ -237,7 +244,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
                     int a=AppConfig.getInstance().getInt("success",1);
                     if (a > 20) {
-                        new AlertDialog.Builder(getContext()).setMessage(R.string.ftdttt)
+                        new AlertDialog.Builder(getContext()==null?context:getContext()).setMessage(R.string.ftdttt)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -252,7 +259,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void run() {
                         List<AbsTypeMod> listAbs=multipleItemAdapter.getData();
-                        ACache aCache = ACache.get(getContext());
+                        ACache aCache = ACache.get(getContext()==null?context:getContext());
                         //aCache.remove(Constants.SAVE_DATA_KEY);
                         aCache.put(Constants.SAVE_DATA_KEY, (Serializable) listAbs);
                         dataMain=new byte[0];

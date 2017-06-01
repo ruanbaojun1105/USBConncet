@@ -9,7 +9,7 @@ public class Constants {
 
 
     public static final boolean isOpenCutInfo=false;//是否开启去掉公司介绍
-    public static final boolean isOpenLim=false;//是否开启使用次数限制
+    public static final boolean isOpenLim=true;//是否开启使用次数限制
 
     public static final String server_url="120.76.118.136:8080";
     public static String Deviceid="1";

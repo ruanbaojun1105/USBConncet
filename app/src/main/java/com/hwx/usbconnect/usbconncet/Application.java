@@ -25,6 +25,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.hwx.usbconnect.usbconncet.bluetooth.ScaleActivity;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -44,7 +46,6 @@ public class Application extends android.app.Application{
         super.onCreate();
         _instance = this;
         mContext=this;
-        AppConfig.getInstance();
         Cockroach.install(new Cockroach.ExceptionHandler() {
             @Override
             public void handlerException(Thread thread, Throwable throwable) {
@@ -63,6 +64,8 @@ public class Application extends android.app.Application{
                 });
             }
         });
+        AppConfig.getInstance();
+        Iconify.with(new FontAwesomeModule());
     }
 
     /**

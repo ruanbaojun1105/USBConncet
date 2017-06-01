@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void init() {
-        mScanHelper = new ScanHelper(this);
+        mScanHelper = new ScanHelper(this,null);
         mScanHelper.setScanListener(new ScanHelper.ScanListener() {
             @Override
             public void scan(String data) {
