@@ -48,7 +48,7 @@
     <string name="dvaf">深圳市红微芯电子科技有限公司致力于高科技产业发展提供技术与服务，为广大客户提供嵌入式技术软硬件开发工具与解决方案, 致力于ARM内核系列CPU的开发和应用, 提供低功耗、高性价比的嵌入式产品, 提供针对性强、量身定制的客户化设计,公司拥有具丰富计算机、电子、通讯、医疗器械、工业控制、嵌入式系统开发的软硬件人才，汇集了嵌入式产品解决方案的人才精英。
 \n\n红微芯电子科技基于二次开发已经广泛应用于车载手持、GIS平台、Data Servers、VOIP、网络终端、工业控制、检测设备、仪器仪表、智能终端、医疗器械、安全监控等嵌入式高端应用产品,以优质的服务，丰富的专业技能，在消费，医疗，工控，通信等行业中，根据客户的专用要求，提供不同的产品方案。</string>
     <string name="ddavv">使用说明</string>
-    <string name="vavdgsdgsa">1.充电:将USB线两端连接指尖陀螺和安卓手机，连接后可为陀螺充电。  \n\n\n2.编辑:进入充电状态后，转动陀螺中间轴承一圈，陀螺将会进入到编辑模式，然后打开此软件的编辑界面输入文字和配置图案、颜色、滚动模式、电量显示等 编辑完毕后点击确认修改，陀螺的新显示配置方案即会生效。</string>
+    <string name="vavdgsdgsa">\t{fa-dot-circle-o @color/link_text_blue}\t充电\n将USB线两端连接指尖陀螺和安卓手机，连接后可为陀螺充电。  \n\n\n\t{fa-dot-circle-o @color/link_text_blue}\t编辑\n进入充电状态后，转动陀螺中间轴承一圈，陀螺将会进入到编辑模式(手机自动识别usb host需要5-10秒)，然后打开此软件的编辑界面输入文字和配置图案、颜色、滚动模式、电量显示等 编辑完毕后点击确认修改，陀螺的新显示配置方案即会生效。一般手机会自动启动软件并连接，有些手机无法连接有以下原因\n\n\t\t{fa-dot-circle-o @color/gray}\t手机不支持USB HOST功能。\n\n\t\t{fa-dot-circle-o @color/gray}\t由于系统考虑省电，将USB HOST功能屏蔽掉了。</string>
     <string name="title_activity_usbmain2">USBMain2Activity</string>
     <string name="about_me">\n\n\n官  网：<a href="http://www.sz-hkj.com/">深圳市红微芯科技有限公司\nhttp://www.sz-hkj.com/</a> \n\n电话：<a href="https://szhwxdzkj.1688.com/">0755-28306546</a></string>
     <string name="vdadg">显示配置</string>
@@ -70,4 +70,5 @@
     <string name="vdatdta">申请读写SD card 的权限</string>
     <string name="vadft">不支持USB HOST</string>
     <string name="datsdat">usb设备已拔出，连接断开</string>
+    <string name="vdasttee">样式</string>
 </resources>

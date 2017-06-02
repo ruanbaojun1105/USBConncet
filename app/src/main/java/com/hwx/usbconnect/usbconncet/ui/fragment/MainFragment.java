@@ -160,9 +160,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
             data.add(new ImageFontMod(fileArr,fileArrname));
-            data.add(new TextMod("Hello word",1));
-            data.add(new TextMod("Hello word",1));
-            data.add(new TextMod("Hello word",1));
+            data.add(new TextMod("Text",1));
+            data.add(new TextMod("Text",1));
+            data.add(new TextMod("Text",1));
             data.add(new PresetMod());
         } else {
             data = (List<AbsTypeMod>) obj;
@@ -231,7 +231,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
         String[] files = new String[alist.size()];
         for (int i = 0; i <alist.size() ; i++) {
-            files[i]=alist.get(i);
+            files[i]=isName?(getString(R.string.vdasttee)+(i+1)+" ("+alist.get(i)+")"):alist.get(i);
         }
 
         return files;

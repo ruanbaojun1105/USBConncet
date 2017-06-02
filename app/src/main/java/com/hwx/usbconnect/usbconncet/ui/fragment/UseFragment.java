@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import net.youmi.android.nm.bn.BannerManager;
 import net.youmi.android.nm.bn.BannerViewListener;
@@ -42,7 +43,7 @@ public class UseFragment extends Fragment {
 
     private View rootView;
     private TextView name;
-    private TextView this_info;
+    private IconTextView this_info;
 
 
     public UseFragment() {
@@ -74,9 +75,6 @@ public class UseFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_use, container, false);
         initView(rootView);
 
-        if (!HiPermission.checkPermission(getContext(), Manifest.permission.READ_PHONE_STATE)){
-            return rootView;
-        }
         // 获取广告条
         View bannerView = BannerManager.getInstance(getContext())
                 .getBannerView(getContext(), new BannerViewListener() {
@@ -103,13 +101,16 @@ public class UseFragment extends Fragment {
 // 将广告条加入到布局中
         bannerLayout.addView(bannerView);
 
+        if (!HiPermission.checkPermission(getContext(), Manifest.permission.READ_PHONE_STATE)){
+            bannerLayout.setVisibility(View.GONE);
+        }
         setupVideoAd(rootView);
         return rootView;
     }
 
     private void initView(View rootView) {
         name = (TextView) rootView.findViewById(R.id.name);
-        this_info = (TextView) rootView.findViewById(R.id.this_info);
+        this_info = (IconTextView) rootView.findViewById(R.id.this_info);
         name.setText(mParam1);
         name.setTextColor(getResources().getColor(R.color.colorPrimary));
         this_info.setText(mParam2);
@@ -121,6 +122,10 @@ public class UseFragment extends Fragment {
     private void setupVideoAd(View rootView) {
         Button btnShowVideoAd = (Button) rootView.findViewById(R.id.btn_show_video_ad);
         if (!isOpenVideo) {
+            btnShowVideoAd.setVisibility(View.GONE);
+            return;
+        }
+        if (!HiPermission.checkPermission(getContext(), Manifest.permission.READ_PHONE_STATE)){
             btnShowVideoAd.setVisibility(View.GONE);
             return;
         }

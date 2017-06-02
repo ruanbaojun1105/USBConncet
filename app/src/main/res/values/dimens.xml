@@ -8,4 +8,5 @@
     <dimen name="mpc_size">100dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="mpc_stroke_width">18dp</dimen>
+    <dimen name="check_width">38dp</dimen>
 </resources>
