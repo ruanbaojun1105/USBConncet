@@ -1,74 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">陀螺配置</string>
-    <string name="not_connected">You are not connected to a device</string>
-    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
-    <string name="title_connecting">connecting...</string>
-    <string name="title_connected_to">connected: </string>
-    <string name="title_not_connected">not connected</string>
-    <!--  DeviceListActivity -->
-    <string name="scanning">scanning for devices...</string>
-    <string name="select_device">select a device to connect</string>
-    <string name="none_paired">No devices have been paired</string>
-    <string name="none_found">No devices found</string>
-    <string name="title_paired_devices">Paired Devices</string>
-    <string name="title_other_devices">Other Available Devices</string>
-    <string name="button_scan">Scan for devices</string>
-
-    <string name="connect">Connect a device</string>
-    <string name="getScale">Get Scale</string>
-    <string name="kjcjkiai">连接蓝牙设备</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">深圳市红微芯科技有限公司</string>
-    <string name="title_activity_usb_main">UsbMainActivity</string>
-    <string name="action_settings">使用说明</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="jagkjk">配置成功</string>
-    <string name="fava">设备未连接,请检查</string>
-    <string name="vaddf">红</string>
-    <string name="gaf">闪烁</string>
-    <string name="vaf">蓝</string>
-    <string name="vafg">混色</string>
-    <string name="vfag">请选择颜色▼</string>
-    <string name="vvag">上下滚</string>
-    <string name="vaga">左右滚</string>
-    <string name="vaggagkjoo">固定</string>
-    <string name="ajkjkk">请选择模式▼</string>
-    <string name="vfagbfgf">速度显示</string>
-    <string name="fdggggg">电量显示</string>
-    <string name="fjigjj">版本号</string>
-    <string name="vagttew">基础显示选择▼</string>
-    <string name="bfdfhdhdhf">图片样式选择▼</string>
-    <string name="vjkkjagkl">状态</string>
-    <string name="bfijj">类型</string>
-    <string name="ojgajktkj">颜色</string>
-    <string name="fkak">模式</string>
-    <string name="okfkkat">点击修改</string>
-    <string name="vdaf">退出</string>
-    <string name="dvaf">深圳市红微芯电子科技有限公司致力于高科技产业发展提供技术与服务，为广大客户提供嵌入式技术软硬件开发工具与解决方案, 致力于ARM内核系列CPU的开发和应用, 提供低功耗、高性价比的嵌入式产品, 提供针对性强、量身定制的客户化设计,公司拥有具丰富计算机、电子、通讯、医疗器械、工业控制、嵌入式系统开发的软硬件人才，汇集了嵌入式产品解决方案的人才精英。
-\n\n红微芯电子科技基于二次开发已经广泛应用于车载手持、GIS平台、Data Servers、VOIP、网络终端、工业控制、检测设备、仪器仪表、智能终端、医疗器械、安全监控等嵌入式高端应用产品,以优质的服务，丰富的专业技能，在消费，医疗，工控，通信等行业中，根据客户的专用要求，提供不同的产品方案。</string>
-    <string name="ddavv">使用说明</string>
-    <string name="vavdgsdgsa">\t{fa-dot-circle-o @color/link_text_blue}\t充电\n将USB线两端连接指尖陀螺和安卓手机，连接后可为陀螺充电。  \n\n\n\t{fa-dot-circle-o @color/link_text_blue}\t编辑\n进入充电状态后，转动陀螺中间轴承一圈，陀螺将会进入到编辑模式(手机自动识别usb host需要5-10秒)，然后打开此软件的编辑界面输入文字和配置图案、颜色、滚动模式、电量显示等 编辑完毕后点击确认修改，陀螺的新显示配置方案即会生效。一般手机会自动启动软件并连接，有些手机无法连接有以下原因\n\n\t\t{fa-dot-circle-o @color/gray}\t手机不支持USB HOST功能。\n\n\t\t{fa-dot-circle-o @color/gray}\t由于系统考虑省电，将USB HOST功能屏蔽掉了。</string>
-    <string name="title_activity_usbmain2">USBMain2Activity</string>
-    <string name="about_me">\n\n\n官  网：<a href="http://www.sz-hkj.com/">深圳市红微芯科技有限公司\nhttp://www.sz-hkj.com/</a> \n\n电话：<a href="https://szhwxdzkj.1688.com/">0755-28306546</a></string>
-    <string name="vdadg">显示配置</string>
-    <string name="fgaata">公司介绍</string>
-    <string name="vfahta">使用说明</string>
-    <string name="ttrta">指尖陀螺</string>
-    <string name="vfaddt">出现错误，请重试!</string>
-    <string name="tatttewa">正在配置...</string>
-    <string name="dtadtat">配置成功</string>
-    <string name="dsttaat">连接失败，请检查</string>
-    <string name="ftdttt">当前设置成功次数超过20次,请授权</string>
-    <string name="dttadfdc">确定</string>
-    <string name="gdadtt">取消</string>
-    <string name="dtaddssd">确定</string>
-    <string name="dadttsadts">取消</string>
-    <string name="gdjiadstjj">编辑</string>
-    <string name="drrtr">请选择字体▼</string>
-    <string name="fdasttaat">默认</string>
-    <string name="vdatdta">申请读写SD card 的权限</string>
-    <string name="vadft">不支持USB HOST</string>
-    <string name="datsdat">usb设备已拔出，连接断开</string>
-    <string name="vdasttee">样式</string>
+    <string name="app_name">HWX Hand Spinner Configuration</string>
+    <string name="hello_blank_fragment">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD</string>
+    <string name="action_settings">Instructions</string>
+    <string name="jagkjk">Ok.</string>
+    <string name="fava">Device not connect</string>
+    <string name="vaddf">Red</string>
+    <string name="gaf">Twinkle</string>
+    <string name="vaf">Blue</string>
+    <string name="vafg">Mix color</string>
+    <string name="vfag">Select▼</string>
+    <string name="vvag">Clock Wipe</string>
+    <string name="vaga">Radial</string>
+    <string name="vaggagkjoo">Fixed</string>
+    <string name="ajkjkk">Select▼</string>
+    <string name="vfagbfgf">Speed</string>
+    <string name="fdggggg">Battery</string>
+    <string name="fjigjj">Version</string>
+    <string name="vagttew">Display▼</string>
+    <string name="bfdfhdhdhf">Image▼</string>
+    <string name="vjkkjagkl">Status</string>
+    <string name="bfijj">Type</string>
+    <string name="ojgajktkj">Color</string>
+    <string name="fkak">Mode</string>
+    <string name="okfkkat">OK</string>
+    <string name="vdaf">Exit</string>
+    <string name="dvaf">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD is committed to providing technology and services to the development of high-tech industry, providing embedded technology software and hardware development tools and solutions for our customers and to the development and application of the ARM core series CPU. We commit ourselves to provide low-power, cost-effective embedded products and to provide targeted,  customized design.
+   Our company has a wealth of hardware and software talents proficient in computer, electronics, communications, medical equipment, industrial control and embedded system development ,bringing together the talent elite master in embedded product solutions .
+   Based on secondary development, RED MICROCHIP TECHNOLOGY has been widely used in vehicular and handheld, GIS platform, Data Servers, VOIP, network terminals, medical equipment, security monitoring and other embedded high-end applications. With high-quality services and rich professional skills, our company provides customers with special requirements as well as different product solutions in consumption, medical, industrial control, communications and other industries. </string>
+    <string name="ddavv">Instructions</string>
+    <string name="vavdgsdgsa">\t{fa-circle @color/link_text_blue}\tCharging the spinner\n\n\t{fa-dot-circle-o @color/gray}\tConnect the spinner to the Android phone using the USB cable.\n\t{fa-dot-circle-o @color/gray}\tA single red light will indicate that the spinner has commenced charging.\n\t{fa-dot-circle-o @color/gray}\tWhen the spinner is fully charged the red light will disappear.
+\n\n\n\t{fa-circle @color/link_text_blue}\tSet up\n\n\t{fa-dot-circle-o @color/gray}\tScan the QR code and install the APP.\n\t{fa-dot-circle-o @color/gray}\tConnect the spinner to the Android phone using the USB cable.\n\t{fa-dot-circle-o @color/gray}\tTurn the central bearing of the spinner - the LED will flash red and blue.\n\t{fa-dot-circle-o @color/gray}\tWait a few moments for the APP to automatically load.\n\t{fa-dot-circle-o @color/gray}\tPress the display configuration tab and begin editing.\n\t{fa-dot-circle-o @color/gray}\tAfter editing click "OK" to confirm the new set up.\n\t{fa-dot-circle-o @color/gray}\tOnce the counter progess reaches "100" the new custom configuration is completed.\n\t{fa-dot-circle-o @color/gray}\tTo re-edit again close APP and start the whole process again,Have Fun!\n\n</string>
+    <string name="about_me">\n\n\nWEBSITE：<a href="http://www.sz-hkj.com/">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD\nhttp://www.sz-hkj.com</a> \n\nTEL：<a href="https://szhwxdzkj.1688.com/">0755-28306546</a></string>
+    <string name="vdadg">Display configuration</string>
+    <string name="fgaata">Company profile</string>
+    <string name="vfahta">Instruction</string>
+    <string name="ttrta">Hand Spinner</string>
+    <string name="vfaddt">Error,please retry!</string>
+    <string name="tatttewa">Start</string>
+    <string name="dtadtat">Ok</string>
+    <string name="dsttaat">Connection failed. Check, please</string>
+    <string name="ftdttt">The current settings have been successfully exceeded 20 times. Please authorize.</string>
+    <string name="dttadfdc">Ok</string>
+    <string name="gdadtt">back</string>
+    <string name="dtaddssd">Ok</string>
+    <string name="dadttsadts">Cancel</string>
+    <string name="gdjiadstjj">Edit</string>
+    <string name="drrtr">Select▼</string>
+    <string name="fdasttaat">Default</string>
+    <string name="vdatdta">Apply for permission to read and write SD card</string>
+    <string name="vadft">No support USB Host</string>
+    <string name="datsdat">The USB device has been pulled out and the connection is disconnected</string>
+    <string name="vdasttee">Pattern</string>
+    <string name="clean">Clean</string>
+    <string name="dttaatsr">Do you want to empty the current configuration and revert to default?</string>
 </resources>

@@ -7,11 +7,14 @@
     android:orientation="vertical"
     android:layout_margin="10dp"
     >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         >
 
         <TextView
@@ -47,16 +50,39 @@
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_weight="1"/>
 
-    <Button
-        android:id="@+id/updateData"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/okfkkat"
-        android:layout_margin="10dp"
-        android:textColor="@color/white"
-        android:background="@drawable/setting_btnbg5"
-        />
+        android:layout_margin="15dp"
+        >
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/clean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clean"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/updateData"
+            android:textColor="@color/colorPrimary"
+            android:paddingLeft="10dp"
+            android:gravity="bottom|center"
+            android:layout_alignTop="@+id/updateData"/>
+
+        <Button
+            android:id="@+id/updateData"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/okfkkat"
+            android:textColor="@color/white"
+            android:background="@drawable/setting_btnbg5"
+            android:layout_toLeftOf="@+id/clean"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
 </LinearLayout>

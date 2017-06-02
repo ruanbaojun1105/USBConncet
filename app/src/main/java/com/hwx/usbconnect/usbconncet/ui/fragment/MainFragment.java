@@ -39,6 +39,7 @@ import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
 import com.hwx.usbconnect.usbconncet.utils.FileUtil;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,6 +65,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private Button updateData;
     private MultipleItemQuickAdapter multipleItemAdapter;
     private Context context;
+    private IconTextView iconTextView;
 
     public MainFragment() {
         // Required empty public constructor
@@ -186,6 +188,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setAdapter(multipleItemAdapter);
         updateData = (Button) rootView.findViewById(R.id.updateData);
         updateData.setOnClickListener(this);
+        iconTextView = (IconTextView) rootView.findViewById(R.id.clean);
+        iconTextView.setText("{fa-eraser @color/colorPrimary spin}\n"+getString(R.string.clean));
+        iconTextView.setOnClickListener(this);
         /*mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
@@ -240,6 +245,41 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.clean:
+                new AlertDialog.Builder(getContext()==null?context:getContext()).setMessage(R.string.dttaatsr)
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ACache aCache = ACache.get(getContext()==null?context:getContext());
+                                        String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
+                                        String[] fileArr=getFileAll(new File(itemPath),false,false);
+                                        String[] fileArrname=getFileAll(new File(itemPath),true,false);
+                                        List<AbsTypeMod> data = new ArrayList<>();
+                                        data.add(new ImageFontMod(fileArr,fileArrname));
+                                        data.add(new ImageFontMod(fileArr,fileArrname));
+                                        data.add(new ImageFontMod(fileArr,fileArrname));
+                                        data.add(new TextMod("Text",1));
+                                        data.add(new TextMod("Text",1));
+                                        data.add(new TextMod("Text",1));
+                                        data.add(new PresetMod());
+                                        aCache.put(Constants.SAVE_DATA_KEY, (Serializable) data);
+                                        if (multipleItemAdapter!=null)
+                                            v.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    multipleItemAdapter.setNewData(data);
+                                                }
+                                            });
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setNegativeButton(R.string.gdadtt, null)
+                        .show();
+                break;
             case R.id.updateData:
                 if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
                     int a=AppConfig.getInstance().getInt("success",1);
