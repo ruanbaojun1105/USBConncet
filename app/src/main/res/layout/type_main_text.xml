@@ -12,44 +12,62 @@
         android:layout_width="@dimen/check_width"
         android:layout_height="@dimen/check_width"
         android:layout_margin="5dp"/>
-    <TextView
+
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:id="@+id/biucontainer"
-        android:textColorHint="@color/gray_1"
-        android:textColor="@color/colorPrimary"
-        android:lines="1"
-        android:singleLine="true"
-        android:ellipsize="middle"
-        android:textSize="18sp"
-        android:layout_margin="5dp"
-        android:gravity="center_vertical"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/edittext_bg"
-        android:padding="10dp"
-        />
-    <!--<com.xw.repo.XEditText
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/biucontainer"
-        android:textColorHint="@color/gray_1"
-        android:textColor="@color/colorPrimary"
-        android:lines="1"
-        android:singleLine="true"
-        android:ellipsize="end"
-        app:x_disableEmoji="true"
-        android:maxLength="50"
-        />-->
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
 
+        <TextView
+            android:id="@+id/biucontainer"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="5"
+            android:background="@drawable/edittext_bg"
+            android:ellipsize="middle"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/gray_1"
+            android:textSize="18sp" />
+        <com.piotrek.customspinner.CustomSpinner
+            android:id="@+id/font_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/setting_btnbg6"
+            >
+        </com.piotrek.customspinner.CustomSpinner>
+    </LinearLayout>
+
+    <!--<com.hwx.usbconnect.usbconncet.utils.StateButton
+        android:id="@+id/different_radius_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:text="different_radius"
+        android:textColor="@android:color/white"
+        app:normalBackgroundColor="@color/colorPrimary"
+        app:pressedBackgroundColor="@color/gray_1"
+        app:unableBackgroundColor="@android:color/holo_red_light"/>-->
     <com.piotrek.customspinner.CustomSpinner
         android:id="@+id/spinner1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/setting_btnbg"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:gravity="center"
+        >
     </com.piotrek.customspinner.CustomSpinner>
     <com.piotrek.customspinner.CustomSpinner
         android:id="@+id/spinner2"
@@ -57,14 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/setting_btnbg2"
-        android:layout_margin="5dp">
-    </com.piotrek.customspinner.CustomSpinner>
-    <com.piotrek.customspinner.CustomSpinner
-        android:id="@+id/spinner3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/setting_btnbg6"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:gravity="center"
+        >
     </com.piotrek.customspinner.CustomSpinner>
 </LinearLayout>

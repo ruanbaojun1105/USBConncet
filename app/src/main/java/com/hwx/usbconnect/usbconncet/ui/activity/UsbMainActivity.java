@@ -128,7 +128,7 @@ public class UsbMainActivity extends AppCompatActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-    @Override
+    /*@Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -139,7 +139,7 @@ public class UsbMainActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
+    }*/
 
     @Override
     protected void onDestroy() {

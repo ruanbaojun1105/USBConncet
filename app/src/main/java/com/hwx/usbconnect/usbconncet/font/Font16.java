@@ -77,7 +77,8 @@ public class Font16 {
 		}
 		return res;
 	}
-	private static String dotMatrixFont = "GBK16.DZK";
+	private static String dotMatrixFont = "GBK16.DZK";//宋体
+	private static String dotMatrixFont2 = "gbk2.dzk";//粗体
 	private int wordByteByDots = 32;//12*12/24----16*16/32
 	protected byte[] read16_DZK(int areaCode, int posCode,int fontStyle) {
 		byte[] data = null;
@@ -89,6 +90,9 @@ public class Font16 {
 				case 0:
 				case 1:
 					filefff=dotMatrixFont;
+					break;
+				case 2:
+					filefff=dotMatrixFont2;
 					break;
                 default:
                     filefff=dotMatrixFont;

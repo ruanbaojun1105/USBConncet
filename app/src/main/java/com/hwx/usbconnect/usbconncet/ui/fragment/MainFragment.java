@@ -107,7 +107,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
             permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "SD write permission", R.drawable.permission_ic_storage));
             permissionItems.add(new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "SD read permission", R.drawable.permission_ic_storage));
-            //permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "Read Phone permission", R.drawable.permission_ic_phone));
+            permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "Read Phone permission", R.drawable.permission_ic_phone));
             HiPermission.create(getContext()==null?context:getContext()).title(getString(R.string.vdatdta)).permissions(permissionItems)
                     .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getContext().getTheme()))//permission icon color
                     .msg("To protect the peace of the world, open these permissions! You and I together save the world!")
@@ -198,8 +198,39 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 imm.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
             }
         });*/
+        /*if (AppConfig.getInstance().getBoolean("isClean",false));{
+            cleanData(updateData);
+            AppConfig.getInstance().putBoolean("isClean",true);
+        }*/
     }
 
+    void cleanData(View v){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ACache aCache = ACache.get(getContext()==null?context:getContext());
+                String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
+                String[] fileArr=getFileAll(new File(itemPath),false,false);
+                String[] fileArrname=getFileAll(new File(itemPath),true,false);
+                List<AbsTypeMod> data = new ArrayList<>();
+                data.add(new ImageFontMod(fileArr,fileArrname));
+                data.add(new ImageFontMod(fileArr,fileArrname));
+                data.add(new ImageFontMod(fileArr,fileArrname));
+                data.add(new TextMod("Text",1));
+                data.add(new TextMod("Text",1));
+                data.add(new TextMod("Text",1));
+                data.add(new PresetMod());
+                aCache.put(Constants.SAVE_DATA_KEY, (Serializable) data);
+                if (multipleItemAdapter!=null)
+                    v.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            multipleItemAdapter.setNewData(data);
+                        }
+                    });
+            }
+        }).start();
+    }
     /**
      * 读取单个文件夹的所有文件
      * @return
@@ -214,7 +245,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             try {
                 FileUtil.copyFile(getResources().getAssets().open("xuanfeng.bin"),file.getPath()+"/xuanfeng.bin");
                 FileUtil.copyFile(getResources().getAssets().open("shu.bin"),file.getPath()+"/shu.bin");
-                AppConfig.getInstance().putBoolean("isCopy",true);
+                FileUtil.copyFile(getResources().getAssets().open("clock.bin"),file.getPath()+"/clock.bin");
+                FileUtil.copyFile(getResources().getAssets().open("five.bin"),file.getPath()+"/five.bin");
+                //AppConfig.getInstance().putBoolean("isCopy",true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -250,31 +283,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         .setIcon(android.R.drawable.ic_dialog_info)
                         .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ACache aCache = ACache.get(getContext()==null?context:getContext());
-                                        String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
-                                        String[] fileArr=getFileAll(new File(itemPath),false,false);
-                                        String[] fileArrname=getFileAll(new File(itemPath),true,false);
-                                        List<AbsTypeMod> data = new ArrayList<>();
-                                        data.add(new ImageFontMod(fileArr,fileArrname));
-                                        data.add(new ImageFontMod(fileArr,fileArrname));
-                                        data.add(new ImageFontMod(fileArr,fileArrname));
-                                        data.add(new TextMod("Text",1));
-                                        data.add(new TextMod("Text",1));
-                                        data.add(new TextMod("Text",1));
-                                        data.add(new PresetMod());
-                                        aCache.put(Constants.SAVE_DATA_KEY, (Serializable) data);
-                                        if (multipleItemAdapter!=null)
-                                            v.post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    multipleItemAdapter.setNewData(data);
-                                                }
-                                            });
-                                    }
-                                }).start();
+                                cleanData(v);
                             }
                         })
                         .setNegativeButton(R.string.gdadtt, null)

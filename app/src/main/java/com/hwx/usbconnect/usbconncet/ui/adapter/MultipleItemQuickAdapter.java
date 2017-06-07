@@ -3,6 +3,7 @@ package com.hwx.usbconnect.usbconncet.ui.adapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -24,8 +25,10 @@ import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bean.PresetMod;
 import com.hwx.usbconnect.usbconncet.bean.TextMod;
+import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ScreenParamsUtil;
+import com.hwx.usbconnect.usbconncet.utils.StateButton;
 import com.piotrek.customspinner.CustomSpinner;
 import com.xw.repo.XEditText;
 
@@ -103,14 +106,15 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                 editText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showEditDialog(((Activity) mContext), mContext.getString(R.string.gdjiadstjj), itemOd.getText(), new EditOnclick() {
+                        showEditDialog(((Activity) mContext), mContext.getString(R.string.gdjiadstjj), itemOd.getText(),itemOd.getFontStyle(), new EditOnclick() {
                             @Override
-                            public void onClick(String str) {
+                            public void onClick(String str,int fontS) {
                                 itemOd.setText(str);
                                 view.post(new Runnable() {
                                     @Override
                                     public void run() {
                                         ((TextView)view).setText(str);
+                                        itemOd.setFontStyle(fontS);
                                         notifyDataSetChanged();
                                     }
                                 });
@@ -122,23 +126,25 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                 if (!TextUtils.isEmpty(tag)) {
                     editText.setText(tag);
                 }
-                /*editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        itemOd.setText(charSequence.toString());
-                    }
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });*/
-                CustomSpinner fontSpinner = helper.getView(R.id.spinner3);
+//                editText.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//                    }
+//                    @Override
+//                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                        itemOd.setText(charSequence.toString());
+//                    }
+//                    @Override
+//                    public void afterTextChanged(Editable editable) {
+//
+//                    }
+//                });
+                CustomSpinner fontSpinner = helper.getView(R.id.font_spinner);
                 fontSpinner.setVisibility(View.GONE);
-                fontSpinner.initializeStringValues(new String[]{mContext.getString(R.string.fdasttaat),"楷书","幼圆","隶书"},mContext.getString(R.string.drrtr));
+                String a=mContext.getString(R.string.gtadtrtet);
+                String b=mContext.getString(R.string.dtastdtrwqg);
+                fontSpinner.initializeStringValues(new String[]{a,b},mContext.getString(R.string.drrtr));
                 fontSpinner.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
                     @Override
                     public void onSpinnerOpened() {
@@ -146,7 +152,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
                     @Override
                     public void onSpinnerClosed() {
-                        itemOd.setFontStyle(colorSpinner2.getSelectedItemPosition());
+                        LogUtils.e("----选择了"+fontSpinner.getSelectedItemPosition());
+                        itemOd.setFontStyle(fontSpinner.getSelectedItemPosition());
                     }
                 });
                 fontSpinner.setSelection(itemOd.getFontStyle());
@@ -217,35 +224,59 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
     }
 
     interface  EditOnclick{
-        void onClick(String str);
+        void onClick(String str,int fontS);
     }
 
-    public void showEditDialog(final Activity activity, String title,String content, final EditOnclick onclickInterFace){
-        XEditText et=new XEditText(activity);
-        et.setDisableEmoji(true);
+    public void showEditDialog(final Activity activity, String title,String content,int fontS, final EditOnclick onclickInterFace){
+        View view=View.inflate(activity,R.layout.type_main_text_dialog, null);
+        XEditText et= (XEditText) view.findViewById(R.id.biucontainer);
+       /* et.setDisableEmoji(true);
         //final EditText et = new EditText(activity);
         et.setMaxLines(5);
-        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});*/
         if (!TextUtils.isEmpty(content)) {
             et.setText(content);
             et.setSelection(content.length());
         }
         //et.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
-        new AlertDialog.Builder(activity).setTitle(title)
+        StateButton font_default= (StateButton) view.findViewById(R.id.font_default);
+        StateButton font_bold= (StateButton) view.findViewById(R.id.font_bold);
+        font_default.setOnClickListener(new IClickListener() {
+            @Override
+            protected void onIClick(View v) {
+                font_default.setEnabled(false);
+                font_bold.setEnabled(true);
+                view.setTag(1);
+            }
+        });
+        font_bold.setOnClickListener(new IClickListener() {
+            @Override
+            protected void onIClick(View v) {
+                font_default.setEnabled(true);
+                font_bold.setEnabled(false);
+                view.setTag(2);
+            }
+        });
+        if (fontS==0||fontS==1){
+            font_default.callOnClick();
+        }else if(fontS==2){
+            font_bold.callOnClick();
+        }
+        new AlertDialog.Builder(activity)
+                //.setTitle(title)
                 //.setIcon(android.R.drawable.ic_menu_send)
-                .setView(et)
+                .setView(view)
                 .setPositiveButton(R.string.dtaddssd, (dialog, which) -> {
                     if (activity==null)
                         return;
                     InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
                     final String input = et.getText().toString();
-                    if (TextUtils.isEmpty(input))
-                        return;
+//                    if (TextUtils.isEmpty(input))
+//                        return;
                     if (onclickInterFace!=null){
-                        activity.runOnUiThread(() -> onclickInterFace.onClick(input));
+                        activity.runOnUiThread(() -> onclickInterFace.onClick(input, (Integer) view.getTag()));
                     }
-
                 })
                 .setNegativeButton(R.string.dadttsadts, (dialogInterface, i) -> {
                     InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
