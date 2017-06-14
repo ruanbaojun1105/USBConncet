@@ -1,18 +1,13 @@
 package com.hwx.usbconnect.usbconncet.ui.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,13 +20,9 @@ import com.hwx.usbconnect.usbconncet.ui.fragment.InfoFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.MainFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.UseFragment;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.umeng.analytics.MobclickAgent;
-
-import net.youmi.android.nm.bn.BannerManager;
-import net.youmi.android.nm.sp.SpotManager;
-import net.youmi.android.nm.vdo.VideoAdManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +58,8 @@ public class UsbMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         changeAppLanguage(this);
+        int i=3;
+        LogUtils.e(i+++"3");
         setContentView(R.layout.activity_usb_main);
         fragmentList.clear();
         fragmentList.add(MainFragment.newInstance());
@@ -146,15 +139,6 @@ public class UsbMainActivity extends AppCompatActivity {
         super.onDestroy();
         mScanHelper.unregisterReceiver();
         mScanHelper.stopScan();
-
-        // 展示广告条窗口的 onDestroy() 回调方法中调用
-        BannerManager.getInstance(this).onDestroy();
-        // 退出应用时调用，用于释放资源
-        // 如果无法保证应用主界面的 onDestroy() 方法被执行到，请移动以下接口到应用的退出逻辑里面调用
-        // 插屏广告（包括普通插屏广告、轮播插屏广告、原生插屏广告）
-        SpotManager.getInstance(this).onAppExit();
-        // 视频广告（包括普通视频广告、原生视频广告）
-        VideoAdManager.getInstance(this).onAppExit();
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }

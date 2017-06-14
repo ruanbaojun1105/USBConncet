@@ -37,19 +37,4 @@
             />
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_show_video_ad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        />
-    <LinearLayout
-        android:id="@+id/ll_banner"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_weight="1"
-        >
-    </LinearLayout>
 </LinearLayout>
