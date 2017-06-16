@@ -22,7 +22,7 @@ public class AppConfig {
 
 
     private AppConfig() {
-        preferences = Application.getInstance().getSharedPreferences("HWXSharedPreferences_usbconn", Context.MODE_PRIVATE);
+        preferences = App.getInstance().getSharedPreferences("HWXSharedPreferences_usbconn", Context.MODE_PRIVATE);
     }
 
     public static AppConfig getInstance() {

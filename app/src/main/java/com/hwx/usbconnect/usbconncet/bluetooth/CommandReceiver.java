@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.hwx.usbconnect.usbconncet.Application;
+import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.Constants;
 
 
@@ -28,7 +28,7 @@ public abstract class CommandReceiver extends BroadcastReceiver {
         filter.addAction(Constants.SERIAL_PORT_CONNECT_LOST);
         filter.addAction(Constants.SERIAL_PORT_CONNECT_NAME);
         filter.addAction(Constants.SERIAL_PORT_CONNECT_STATE);
-        LocalBroadcastManager.getInstance(Application.getContext()).registerReceiver(this, filter);
+        LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(this, filter);
     }
     @Override
     public void onReceive(Context context, Intent intent) {

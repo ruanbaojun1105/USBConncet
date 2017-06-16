@@ -13,13 +13,14 @@ import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
 import com.hwx.usbconnect.usbconncet.R;
+import com.joanzapata.iconify.widget.IconButton;
 
 /**
  * @author deadline
  * @time 2016-11-07
  */
 
-public class StateButton extends AppCompatButton {
+public class StateButton extends IconButton {
 
     //text color
     private int mNormalTextColor = 0;

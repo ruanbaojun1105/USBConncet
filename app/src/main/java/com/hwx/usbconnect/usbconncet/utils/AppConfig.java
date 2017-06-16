@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.content.SharedPreferencesCompat;
 
-import com.hwx.usbconnect.usbconncet.Application;
+import com.hwx.usbconnect.usbconncet.App;
 
 /**
  * Created in Nov 8, 2015 7:48:11 PM.
@@ -20,7 +20,7 @@ public class AppConfig {
 
 
     private AppConfig() {
-        preferences = Application.getInstance().getSharedPreferences("HWX_usb", Context.MODE_PRIVATE);
+        preferences = App.getInstance().getSharedPreferences("HWX_usb", Context.MODE_PRIVATE);
     }
 
     public static AppConfig getInstance() {

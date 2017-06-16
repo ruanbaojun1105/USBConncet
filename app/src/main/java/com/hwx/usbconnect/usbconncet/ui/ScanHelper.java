@@ -1,11 +1,8 @@
 package com.hwx.usbconnect.usbconncet.ui;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,20 +17,12 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
-import android.view.Display;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.hwx.usbconnect.usbconncet.Application;
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
-import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
-import com.hwx.usbconnect.usbconncet.font.Font16;
 import com.hwx.usbconnect.usbconncet.utils.AnimTextView;
 import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
@@ -43,18 +32,11 @@ import com.hwx.usbconnect.usbconncet.utils.ToastUtils;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import me.weyye.hipermission.HiPermission;
-import me.weyye.hipermission.PermissionCallback;
-import me.weyye.hipermission.PermissionItem;
 
 /**
  * @Description:
@@ -442,7 +424,7 @@ public class ScanHelper {
 //        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
 //        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
         mContext.registerReceiver(mUsbReceiver, filter);
-        //LocalBroadcastManager.getInstance(Application.getContext()).registerReceiver(mUsbReceiver, filter);
+        //LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(mUsbReceiver, filter);
     }
 
     public void unregisterReceiver(){

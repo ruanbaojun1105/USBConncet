@@ -33,8 +33,8 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.AppConfig;
-import com.hwx.usbconnect.usbconncet.Application;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.fragment.ControlFragment;
 
@@ -93,7 +93,7 @@ public class ScaleActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        LocalBroadcastManager.getInstance(Application.getContext()).registerReceiver(mReceiver, filter);
+        LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(mReceiver, filter);
         new CommandReceiver() {
             @Override
             public void onDataReceived(byte[] buffer, byte function, byte safeCod) {

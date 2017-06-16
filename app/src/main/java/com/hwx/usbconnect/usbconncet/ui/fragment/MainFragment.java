@@ -5,6 +5,8 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -16,11 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.hwx.usbconnect.usbconncet.Application;
 import com.hwx.usbconnect.usbconncet.BuildConfig;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
@@ -28,10 +28,9 @@ import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageMod;
 import com.hwx.usbconnect.usbconncet.bean.PresetMod;
 import com.hwx.usbconnect.usbconncet.bean.TextMod;
-import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
 import com.hwx.usbconnect.usbconncet.font.Font16;
-import com.hwx.usbconnect.usbconncet.font.FontUtils;
 import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
+import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.MultipleItemQuickAdapter;
 import com.hwx.usbconnect.usbconncet.utils.ACache;
@@ -41,6 +40,7 @@ import com.hwx.usbconnect.usbconncet.utils.FileUtil;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,6 +50,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import me.weyye.hipermission.HiPermission;
 import me.weyye.hipermission.PermissionCallback;
 import me.weyye.hipermission.PermissionItem;
@@ -59,13 +62,14 @@ import me.weyye.hipermission.PermissionItem;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment implements View.OnClickListener {
-    private View rootView;
-    private RecyclerView mRecyclerView;
-    private Button updateData;
+public class MainFragment extends SimpleFragment implements View.OnClickListener {
+    @BindView(R.id.rv_list)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.clean)
+    IconTextView iconTextView;
+    @BindView(R.id.updateData)
+    Button updateData;
     private MultipleItemQuickAdapter multipleItemAdapter;
-    private Context context;
-    private IconTextView iconTextView;
 
     public MainFragment() {
         // Required empty public constructor
@@ -83,32 +87,23 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        initView(rootView);
-        rootView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                checkP();
-            }
-        },1000);
-        return rootView;
+    protected int getLayoutId() {
+        return R.layout.fragment_main;
     }
 
     @Override
-    public void onAttach(Context context) {
-        this.context=context;
-        super.onAttach(context);
+    protected void initEventAndData() {
+        initView();
+        checkP();
     }
 
-    private void checkP(){
-        if (!HiPermission.checkPermission(getContext()==null?context:getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+    private void checkP() {
+        if (!HiPermission.checkPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
             permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "SD write permission", R.drawable.permission_ic_storage));
             permissionItems.add(new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "SD read permission", R.drawable.permission_ic_storage));
             permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "Read Phone permission", R.drawable.permission_ic_phone));
-            HiPermission.create(getContext()==null?context:getContext()).title(getString(R.string.vdatdta)).permissions(permissionItems)
+            HiPermission.create(getContext()).title(getString(R.string.vdatdta)).permissions(permissionItems)
                     .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getContext().getTheme()))//permission icon color
                     .msg("To protect the peace of the world, open these permissions! You and I together save the world!")
                     .style(R.style.PermissionBlueStyle)
@@ -122,16 +117,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onFinish() {
                             LogUtils.e("所有权限申请完成");
-                            String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
-                            String[] fileArr=getFileAll(new File(itemPath),false,false);
-                            String[] fileArrname=getFileAll(new File(itemPath),true,false);
-                            if (multipleItemAdapter!=null) {
-                                List<AbsTypeMod> listAbs = multipleItemAdapter.getData();
-                                ((ImageFontMod)listAbs.get(0)).setFileArr(fileArr).setFileName(fileArrname);
-                                ((ImageFontMod)listAbs.get(1)).setFileArr(fileArr).setFileName(fileArrname);
-                                ((ImageFontMod)listAbs.get(2)).setFileArr(fileArr).setFileName(fileArrname);
-                                multipleItemAdapter.notifyDataSetChanged();
-                            }
+                            updaData();
                         }
 
                         @Override
@@ -147,49 +133,65 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void updaData(){
+        String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
+        String[] fileArr = getFileAll(new File(itemPath), false, false);
+        String[] fileArrname = getFileAll(new File(itemPath), true, false);
+        if (multipleItemAdapter != null) {
+            List<AbsTypeMod> listAbs = multipleItemAdapter.getData();
+            ((ImageFontMod) listAbs.get(0)).setFileArr(fileArr).setFileName(fileArrname);
+            ((ImageFontMod) listAbs.get(1)).setFileArr(fileArr).setFileName(fileArrname);
+            ((ImageFontMod) listAbs.get(2)).setFileArr(fileArr).setFileName(fileArrname);
+            multipleItemAdapter.notifyDataSetChanged();
+        }
+    }
+
     public static String getInnerSDCardPath() {
         return Environment.getExternalStorageDirectory().getPath();
     }
-    private void initView(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_list);
-        List<AbsTypeMod> data = new ArrayList<>();
-        ACache aCache = ACache.get(getContext()==null?context:getContext());
-        Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
-        String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
-        String[] fileArr=getFileAll(new File(itemPath),false,false);
-        String[] fileArrname=getFileAll(new File(itemPath),true,false);
-        if (obj == null) {
-            data.add(new ImageFontMod(fileArr,fileArrname));
-            data.add(new ImageFontMod(fileArr,fileArrname));
-            data.add(new ImageFontMod(fileArr,fileArrname));
-            data.add(new TextMod("Text",1));
-            data.add(new TextMod("Text",1));
-            data.add(new TextMod("Text",1));
-            data.add(new PresetMod());
-        } else {
-            data = (List<AbsTypeMod>) obj;
-            try {
-                ((ImageFontMod)data.get(0)).setFileArr(fileArr).setFileName(fileArrname);
-                ((ImageFontMod)data.get(1)).setFileArr(fileArr).setFileName(fileArrname);
-                ((ImageFontMod)data.get(2)).setFileArr(fileArr).setFileName(fileArrname);
-            } catch (Exception e) {
-                e.printStackTrace();
+
+    private void initView() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<AbsTypeMod> data = new ArrayList<>();
+                ACache aCache = ACache.get(getContext());
+                Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
+                String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
+                String[] fileArr = getFileAll(new File(itemPath), false, false);
+                String[] fileArrname = getFileAll(new File(itemPath), true, false);
+                if (obj == null) {
+                    data.add(new ImageFontMod(fileArr, fileArrname));
+                    data.add(new ImageFontMod(fileArr, fileArrname));
+                    data.add(new ImageFontMod(fileArr, fileArrname));
+                    data.add(new TextMod("Text", 1));
+                    data.add(new TextMod("Text", 1));
+                    data.add(new TextMod("Text", 1));
+                    data.add(new PresetMod());
+                } else {
+                    data = (List<AbsTypeMod>) obj;
+                    try {
+                        ((ImageFontMod) data.get(0)).setFileArr(fileArr).setFileName(fileArrname);
+                        ((ImageFontMod) data.get(1)).setFileArr(fileArr).setFileName(fileArrname);
+                        ((ImageFontMod) data.get(2)).setFileArr(fileArr).setFileName(fileArrname);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                multipleItemAdapter = new MultipleItemQuickAdapter(data);
+                LinearLayoutManager manager = new LinearLayoutManager(getContext());
+                mRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecyclerView.setLayoutManager(manager);
+                        mRecyclerView.setAdapter(multipleItemAdapter);
+                    }
+                });
             }
-        }
-        multipleItemAdapter = new MultipleItemQuickAdapter(data);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext()==null?context:getContext());
-        mRecyclerView.setLayoutManager(manager);
-//        multipleItemAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup() {
-//            @Override
-//            public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
-//                return data.get(position).getSpanSize();
-//            }
-//        });
-        mRecyclerView.setAdapter(multipleItemAdapter);
-        updateData = (Button) rootView.findViewById(R.id.updateData);
+        }).start();
+
         updateData.setOnClickListener(this);
-        iconTextView = (IconTextView) rootView.findViewById(R.id.clean);
-        iconTextView.setText("{fa-eraser @color/colorPrimary spin}\n"+getString(R.string.clean));
+        iconTextView.setText("{fa-eraser @color/colorPrimary spin}\n" + getString(R.string.clean));
         iconTextView.setOnClickListener(this);
         /*mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
@@ -204,24 +206,24 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }*/
     }
 
-    void cleanData(View v){
+    void cleanData(View v) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ACache aCache = ACache.get(getContext()==null?context:getContext());
-                String itemPath=getInnerSDCardPath()+"/HWX-SPINNER/";
-                String[] fileArr=getFileAll(new File(itemPath),false,false);
-                String[] fileArrname=getFileAll(new File(itemPath),true,false);
+                ACache aCache = ACache.get(getContext());
+                String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
+                String[] fileArr = getFileAll(new File(itemPath), false, false);
+                String[] fileArrname = getFileAll(new File(itemPath), true, false);
                 List<AbsTypeMod> data = new ArrayList<>();
-                data.add(new ImageFontMod(fileArr,fileArrname));
-                data.add(new ImageFontMod(fileArr,fileArrname));
-                data.add(new ImageFontMod(fileArr,fileArrname));
-                data.add(new TextMod("Text",1));
-                data.add(new TextMod("Text",1));
-                data.add(new TextMod("Text",1));
+                data.add(new ImageFontMod(fileArr, fileArrname));
+                data.add(new ImageFontMod(fileArr, fileArrname));
+                data.add(new ImageFontMod(fileArr, fileArrname));
+                data.add(new TextMod("Text", 1));
+                data.add(new TextMod("Text", 1));
+                data.add(new TextMod("Text", 1));
                 data.add(new PresetMod());
                 aCache.put(Constants.SAVE_DATA_KEY, (Serializable) data);
-                if (multipleItemAdapter!=null)
+                if (multipleItemAdapter != null)
                     v.post(new Runnable() {
                         @Override
                         public void run() {
@@ -231,45 +233,73 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             }
         }).start();
     }
+
+    public static Bitmap zoomImg(Bitmap bm, int newWidth, int newHeight) {
+        // 获得图片的宽高
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+    }
+
+    public byte[] getBitmapByte(Bitmap bitmap) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
+
     /**
      * 读取单个文件夹的所有文件
+     *
      * @return
      */
-    private String[] getFileAll(File file,boolean isName,boolean isCheck) {
-        if (file==null)
+    private String[] getFileAll(File file, boolean isName, boolean isCheck) {
+        if (file == null)
             return new String[]{};
         if (!file.exists()) {
             file.mkdir();
         }
         //if (!AppConfig.getInstance().getBoolean("isCopy",false)){
-            try {
-                FileUtil.copyFile(getResources().getAssets().open("xuanfeng.bin"),file.getPath()+"/xuanfeng.bin");
-                FileUtil.copyFile(getResources().getAssets().open("shu.bin"),file.getPath()+"/shu.bin");
-                FileUtil.copyFile(getResources().getAssets().open("clock.bin"),file.getPath()+"/clock.bin");
-                FileUtil.copyFile(getResources().getAssets().open("five.bin"),file.getPath()+"/five.bin");
-                //AppConfig.getInstance().putBoolean("isCopy",true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            FileUtil.copyFile(getResources().getAssets().open("xuanfeng.bin"), file.getPath() + "/xuanfeng.bin");
+            FileUtil.copyFile(getResources().getAssets().open("shu.bin"), file.getPath() + "/shu.bin");
+            FileUtil.copyFile(getResources().getAssets().open("clock.bin"), file.getPath() + "/clock.bin");
+            FileUtil.copyFile(getResources().getAssets().open("five.bin"), file.getPath() + "/five.bin");
+            //AppConfig.getInstance().putBoolean("isCopy",true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //}
 
         if (isCheck)
             return null;
 
         String[] filelist = file.list();
-        if (filelist==null)
+        if (filelist == null)
             return new String[]{};
-        List<String> alist=new ArrayList<>();
+        List<String> alist = new ArrayList<>();
         for (int i = 0; i < filelist.length; i++) {
             File readfile = new File(file.getPath() + "/" + filelist[i]);
             if (!readfile.isDirectory()) {
                 if (readfile.getPath().endsWith(".bin"))
-                    alist.add(isName?readfile.getName():readfile.getPath());
+                    alist.add(isName ? readfile.getName() : readfile.getPath());
             }
         }
         String[] files = new String[alist.size()];
-        for (int i = 0; i <alist.size() ; i++) {
-            files[i]=isName?(getString(R.string.vdasttee)+(i+1)+" ("+alist.get(i)+")"):alist.get(i);
+        for (int i = 0; i < alist.size(); i++) {
+            files[i] = alist.get(i);//isName ? (getString(R.string.vdasttee) + (i + 1) + " (" + alist.get(i) + ")") : alist.get(i);
         }
 
         return files;
@@ -279,7 +309,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.clean:
-                new AlertDialog.Builder(getContext()==null?context:getContext()).setMessage(R.string.dttaatsr)
+                new AlertDialog.Builder(getContext()).setMessage(R.string.dttaatsr)
                         .setIcon(android.R.drawable.ic_dialog_info)
                         .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -291,9 +321,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.updateData:
                 if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
-                    int a=AppConfig.getInstance().getInt("success",1);
+                    int a = AppConfig.getInstance().getInt("success", 1);
                     if (a > 20) {
-                        new AlertDialog.Builder(getContext()==null?context:getContext()).setMessage(R.string.ftdttt)
+                        new AlertDialog.Builder(getContext()).setMessage(R.string.ftdttt)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -307,27 +337,27 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<AbsTypeMod> listAbs=multipleItemAdapter.getData();
-                        ACache aCache = ACache.get(getContext()==null?context:getContext());
+                        List<AbsTypeMod> listAbs = multipleItemAdapter.getData();
+                        ACache aCache = ACache.get(getContext());
                         //aCache.remove(Constants.SAVE_DATA_KEY);
                         aCache.put(Constants.SAVE_DATA_KEY, (Serializable) listAbs);
-                        dataMain=new byte[0];
-                        TextMain=new byte[0];
-                        if (!UsbMainActivity.mScanHelper.isScanConn()){
+                        dataMain = new byte[0];
+                        TextMain = new byte[0];
+                        if (!UsbMainActivity.mScanHelper.isScanConn()) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getActivity(), R.string.dsttaat,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.dsttaat, Toast.LENGTH_SHORT).show();
                                 }
                             });
                             return;
                         }
                         UsbMainActivity.mScanHelper.star();
                         for (int i = 0; i < listAbs.size(); i++) {
-                            detailData(listAbs.get(i),v,i);
-                            LogUtils.e("log comment","abs"+listAbs.get(i).getId());
+                            detailData(listAbs.get(i), v, i);
+                            LogUtils.e("log comment", "abs" + listAbs.get(i).getId());
                         }
-                        UsbMainActivity.mScanHelper.sendData(Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte) 0x09,TextMain,false)));
+                        UsbMainActivity.mScanHelper.sendData(Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) 0x09, TextMain, false)));
                     }
                 }).start();
 
@@ -335,55 +365,55 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    byte[] dataMain=new byte[0];
-    byte[] TextMain=new byte[0];
+    byte[] dataMain = new byte[0];
+    byte[] TextMain = new byte[0];
 
-    private void detailData(AbsTypeMod absTypeMod,View v,int i) {
+    private void detailData(AbsTypeMod absTypeMod, View v, int i) {
         //url="file:///android_asset/video.mp4";
-        AbsTypeMod abs=absTypeMod;
+        AbsTypeMod abs = absTypeMod;
         //图片
         if (abs instanceof ImageMod) {
-            ImageMod item1= (ImageMod) abs;
-            byte[] fileB=readFile(v.getContext(),item1.getImagePath());
-            byte [] data=Font16.byteMerger(new byte[]{item1.isCheck()?(byte)0x01:(byte)0x00,(byte)item1.getColor(),(byte)item1.getModel()},fileB);
-            dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte)item1.getId(),data,false));
+            ImageMod item1 = (ImageMod) abs;
+            byte[] fileB = readFile(v.getContext(), item1.getImagePath());
+            byte[] data = Font16.byteMerger(new byte[]{item1.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item1.getColor(), (byte) item1.getModel()}, fileB);
+            dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item1.getId(), data, false));
         }
         //预定模式
-        if (abs instanceof PresetMod){
-            PresetMod item2= (PresetMod) abs;
-            dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte)item2.getId(),new byte[]{item2.isCheck()?(byte)0x01:(byte)0x00,(byte)item2.getColor(),(byte)item2.getModel(),(byte)item2.getType()},false));
+        if (abs instanceof PresetMod) {
+            PresetMod item2 = (PresetMod) abs;
+            dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item2.getId(), new byte[]{item2.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item2.getColor(), (byte) item2.getModel(), (byte) item2.getType()}, false));
         }
         //文本
-        if (abs instanceof TextMod){
-            TextMod item3= (TextMod) abs;
+        if (abs instanceof TextMod) {
+            TextMod item3 = (TextMod) abs;
             if (!TextUtils.isEmpty(item3.getText())) {
                 try {
-                    byte [] data1=Font16.byteMerger(new byte[]{item3.isCheck()?(byte)0x01:(byte)0x00,(byte)item3.getColor(),(byte)item3.getModel()},item3.getText().getBytes("GB2312"));
-                    byte [] data12=new Font16(v.getContext()).getStringFontByte(item3.getText(),item3.getFontStyle());
-                    dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte) item3.getId(),data1,false));
-                    TextMain=Font16.byteMerger(TextMain,data12);
+                    byte[] data1 = Font16.byteMerger(new byte[]{item3.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item3.getColor(), (byte) item3.getModel()}, item3.getText().getBytes("GB2312"));
+                    byte[] data12 = new Font16(v.getContext()).getStringFontByte(item3.getText(), item3.getFontStyle());
+                    dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item3.getId(), data1, false));
+                    TextMain = Font16.byteMerger(TextMain, data12);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-            }else {
-                dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte) item3.getId(),new byte[]{item3.isCheck()?(byte)0x01:(byte)0x00,(byte)item3.getColor(),(byte)item3.getModel()},false));
+            } else {
+                dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item3.getId(), new byte[]{item3.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item3.getColor(), (byte) item3.getModel()}, false));
             }
         }
         //预定图
-        if (abs instanceof ImageFontMod){
-            ImageFontMod item4= (ImageFontMod) abs;
-            byte[] fileB=readFile(v.getContext(),item4.getImagePath());
-            byte [] data=Font16.byteMerger(new byte[]{item4.isCheck()?(byte)0x01:(byte)0x00,(byte)item4.getColor(),(byte)item4.getModel()},fileB);
-            dataMain=Font16.byteMerger(dataMain,ScanHelper.sendDataSSS((byte)item4.getId(),data,false));
+        if (abs instanceof ImageFontMod) {
+            ImageFontMod item4 = (ImageFontMod) abs;
+            byte[] fileB = readFile(v.getContext(), item4.getImagePath());
+            byte[] data = Font16.byteMerger(new byte[]{item4.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item4.getColor(), (byte) item4.getModel()}, fileB);
+            dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item4.getId(), data, false));
         }
     }
 
     public static byte[] readFile(Context context, String filePath) {
         byte[] data = new byte[240];
         try {
-            LogUtils.e("file---"+filePath);
+            LogUtils.e("file---" + filePath);
             //InputStream in = context.getResources().getAssets().open(filePath);
-            InputStream in =new FileInputStream(filePath);
+            InputStream in = new FileInputStream(filePath);
             in.read(data, 0, 240);
             in.close();
             if (BuildConfig.DEBUG) {
@@ -398,4 +428,5 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
         return data;
     }
+
 }

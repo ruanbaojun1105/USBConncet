@@ -24,17 +24,16 @@ import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.hwx.usbconnect.usbconncet.bluetooth.ScaleActivity;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.umeng.analytics.MobclickAgent;
 
 
-public class Application extends android.app.Application{
+public class App extends android.app.Application{
 
     public static Context mContext;
-    private static Application _instance;
-    public static Application getInstance() {
+    private static App _instance;
+    public static App getInstance() {
         return _instance;
     }
     public static Context getContext() {
@@ -56,7 +55,7 @@ public class Application extends android.app.Application{
                             Log.d("Cockroach", thread + "\n" + throwable.toString());
                             throwable.printStackTrace();
                             MobclickAgent.reportError(mContext,throwable);
-                            // Toast.makeText(Application.this, "Exception Happend\n" + thread + "\n" + throwable.toString(), Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(App.this, "Exception Happend\n" + thread + "\n" + throwable.toString(), Toast.LENGTH_SHORT).show();
 //                          throw new RuntimeException("..."+(i++));
                         } catch (Throwable e) {
                         }

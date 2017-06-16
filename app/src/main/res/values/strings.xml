@@ -23,7 +23,7 @@
     <string name="bfijj">Type</string>
     <string name="ojgajktkj">Color</string>
     <string name="fkak">Mode</string>
-    <string name="okfkkat">OK</string>
+    <string name="okfkkat">{fa-sign-out 20sp}OK</string>
     <string name="vdaf">Exit</string>
     <string name="dvaf">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD is committed to providing technology and services to the development of high-tech industry, providing embedded technology software and hardware development tools and solutions for our customers and to the development and application of the ARM core series CPU. We commit ourselves to provide low-power, cost-effective embedded products and to provide targeted,  customized design.
    Our company has a wealth of hardware and software talents proficient in computer, electronics, communications, medical equipment, industrial control and embedded system development ,bringing together the talent elite master in embedded product solutions .
@@ -56,4 +56,5 @@
     <string name="dttaatsr">Do you want to empty the current configuration and revert to default?</string>
     <string name="gtadtrtet">Arial</string>
     <string name="dtastdtrwqg">Bold</string>
+    <string name="vdatttttt">One click download picture style</string>
 </resources>

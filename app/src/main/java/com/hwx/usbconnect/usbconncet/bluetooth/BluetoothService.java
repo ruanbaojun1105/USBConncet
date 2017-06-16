@@ -30,7 +30,7 @@ import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.hwx.usbconnect.usbconncet.Application;
+import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.BuildConfig;
 import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
@@ -122,7 +122,7 @@ public class BluetoothService {
 		mState = state;
 		Bundle bundle = new Bundle();
 		bundle.putInt("state", state);
-		Application.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_STATE,bundle);
+		App.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_STATE,bundle);
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class BluetoothService {
 		Bundle bundle = new Bundle();
 		bundle.putString("name", device.getName());
 		bundle.putString("address",device.getAddress());
-		Application.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_NAME,bundle);
+		App.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_NAME,bundle);
 		setState(STATE_CONNECTED);
 	}
 
@@ -288,7 +288,7 @@ public class BluetoothService {
 	 * Indicate that the connection attempt failed and notify the UI Activity.
 	 */
 	private void connectionFailed() {
-		Application.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_FAIL);
+		App.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_FAIL);
 	}
 
 	/**
@@ -296,7 +296,7 @@ public class BluetoothService {
 	 */
 	private void connectionLost() {
 		setState(STATE_LISTEN);
-		Application.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_FAIL);
+		App.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_FAIL);
 	}
 	/**
 	 * 创建新的线程用于和对端的蓝牙设备建立连接。
@@ -466,7 +466,7 @@ public class BluetoothService {
 					bundle1.putByteArray("data",content);
 					bundle1.putByte("numberNo",numberNo);
 					bundle1.putByte("safeCode",buffer[a]);
-					Application.sendLocalBroadCast(Constants.SERIAL_PORT_COMMAND,bundle1);
+					App.sendLocalBroadCast(Constants.SERIAL_PORT_COMMAND,bundle1);
                 /*if (sa==buffer[a]) {//测试暂时不开验证
                     onDataReceived(content, numberNo, buffer[a]);
                     return true;

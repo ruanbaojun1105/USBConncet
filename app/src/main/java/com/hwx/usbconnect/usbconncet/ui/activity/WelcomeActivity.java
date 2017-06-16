@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.hwx.usbconnect.usbconncet.Application;
+import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.R;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // 移除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         UsbMainActivity.changeAppLanguage(this);
-        UsbMainActivity.changeAppLanguage(Application.getContext());
+        UsbMainActivity.changeAppLanguage(App.getContext());
         setContentView(R.layout.activity_welcome);
         ImageView iv_welcome_te= (ImageView) findViewById(R.id.iv_welcome_te);
         iv_welcome_te.animate().rotation(1500f).setDuration(2300).setStartDelay(100).start();

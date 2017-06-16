@@ -6,9 +6,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.storage.StorageManager;
 
-import com.hwx.usbconnect.usbconncet.Application;
-import com.umeng.analytics.MobclickAgent;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -156,6 +153,18 @@ public class FileUtil {
         return isok;
 
     }
+    //将byte数组写入文件
+    public static void copyFile(byte[] content,String path) throws IOException {
+        File file=new File(path);
+        if (file!=null) {
+            if (file.exists()) {//如果存在就不再复制
+                return ;
+            }
+        }
+        FileOutputStream fos = new FileOutputStream(path);
+        fos.write(content);
+        fos.close();
+    }
     public static boolean copyFile(InputStream inStream, String newPath) {
         boolean isok = true;
         try {
@@ -180,7 +189,6 @@ public class FileUtil {
         }
         catch (Exception e) {
             isok = false;
-            MobclickAgent.reportError(Application.getContext(),e);//文件写入异常手机
         }
         return isok;
 

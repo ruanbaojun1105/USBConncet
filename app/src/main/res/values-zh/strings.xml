@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">陀螺配置</string>
+    <string name="title">我的应用自动装</string>
+    <string name="description">装应用时候我帮你点</string>
     <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
     <string name="title_connecting">connecting...</string>
@@ -43,7 +45,7 @@
     <string name="bfijj">类型</string>
     <string name="ojgajktkj">颜色</string>
     <string name="fkak">模式</string>
-    <string name="okfkkat">点击修改</string>
+    <string name="okfkkat">{fa-sign-out 20sp} 点击修改</string>
     <string name="vdaf">退出</string>
     <string name="dvaf">深圳市红微芯电子科技有限公司致力于高科技产业发展提供技术与服务，为广大客户提供嵌入式技术软硬件开发工具与解决方案, 致力于ARM内核系列CPU的开发和应用, 提供低功耗、高性价比的嵌入式产品, 提供针对性强、量身定制的客户化设计,公司拥有具丰富计算机、电子、通讯、医疗器械、工业控制、嵌入式系统开发的软硬件人才，汇集了嵌入式产品解决方案的人才精英。
 \n\n红微芯电子科技基于二次开发已经广泛应用于车载手持、GIS平台、Data Servers、VOIP、网络终端、工业控制、检测设备、仪器仪表、智能终端、医疗器械、安全监控等嵌入式高端应用产品,以优质的服务，丰富的专业技能，在消费，医疗，工控，通信等行业中，根据客户的专用要求，提供不同的产品方案。</string>
@@ -75,4 +77,5 @@
     <string name="dttaatsr">确定清空当前配置并恢复默认？</string>
     <string name="gtadtrtet">宋体</string>
     <string name="dtastdtrwqg">粗体</string>
+    <string name="vdatttttt">一键导入图片样式</string>
 </resources>

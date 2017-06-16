@@ -1,56 +1,54 @@
 package com.hwx.usbconnect.usbconncet.ui.fragment;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hwx.usbconnect.usbconncet.R;
+import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 
-public class InfoFragment extends Fragment {
+import butterknife.BindView;
 
+public class InfoFragment extends SimpleFragment {
+
+    @BindView(R.id.name)
+    TextView name;
+    @BindView(R.id.this_info)
     TextView this_info;
 
     public InfoFragment() {
         // Required empty public constructor
     }
+
     // TODO: Rename and change types and number of parameters
     public static InfoFragment newInstance() {
         InfoFragment fragment = new InfoFragment();
         return fragment;
     }
 
-    public void setThis_info(String str) {
-        if (TextUtils.isEmpty(str))
-            return;
-        if (this_info==null)
-            return;
-        this_info.post(new Runnable() {
-            @Override
-            public void run() {
-                this_info.setText(str);
-            }
-        });
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView=inflater.inflate(R.layout.fragment_info, container, false);
-        this_info= (TextView) rootView.findViewById(R.id.this_info);
+    protected int getLayoutId() {
+        return R.layout.fragment_info;
+    }
+
+    @Override
+    protected void initEventAndData() {
         this_info.setText(getString(R.string.dvaf));
         this_info.append(getString(R.string.about_me));
         this_info.setMovementMethod(LinkMovementMethod.getInstance());
-        return rootView;
     }
 
+    public void setThis_info(String this_info) {
+        if (TextUtils.isEmpty(this_info))
+            return;
+        this.this_info.setText(this_info);
+    }
 }

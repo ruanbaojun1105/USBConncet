@@ -3,23 +3,16 @@ package com.hwx.usbconnect.usbconncet.ui.adapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.hwx.usbconnect.usbconncet.Application;
+import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
@@ -50,7 +43,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
     protected void convert(BaseViewHolder helper, AbsTypeMod item) {
         item.setId(helper.getAdapterPosition());
         RecyclerView.LayoutParams layoutParams= (RecyclerView.LayoutParams) helper.itemView.getLayoutParams();
-        layoutParams.height= (ScreenParamsUtil.getInstance((Activity) mContext).screenHeight- Application.dip2px(150))/8;
+        layoutParams.height= (ScreenParamsUtil.getInstance((Activity) mContext).screenHeight- App.dip2px(150))/8;
         helper.itemView.requestLayout();
 
         SmoothCheckBox scb = helper.getView(R.id.checkBox);
