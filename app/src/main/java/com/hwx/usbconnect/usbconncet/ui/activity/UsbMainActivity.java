@@ -166,7 +166,21 @@ public class UsbMainActivity extends SimpleActivity {
         fragmentList.add(UseFragment.newInstance(getString(R.string.ddavv), getString(R.string.vavdgsdgsa)));
         mSectionsPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), aa , fragmentList);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                ((OnLineFragment)fragmentList.get(0)).setCleanAnim(true);
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                ((OnLineFragment)fragmentList.get(0)).setCleanAnim(state!=0);
+            }
+        });
         tabs.setupWithViewPager(mViewPager);
 
         icon_text.setText("{fa-circle-o-notch spin}");

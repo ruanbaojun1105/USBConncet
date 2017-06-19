@@ -2,6 +2,7 @@ package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,11 +59,13 @@ public class OnLineTextFragment extends SimpleFragment {
         int a = (int) (Math.random() * 5);
         int[] ass = new int[]{R.color.colormain1, R.color.colormain2, R.color.colormain3, R.color.colormain4, R.color.colormain5};
         //Glide.with(getActivity()).load(new ColorDrawable()).into(imageView);
+        biucontainer.setMaxLines(2);
+        biucontainer.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
         send.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
                 OnLineFragment fragment= (OnLineFragment) getParentFragment();
-                fragment.changeToOne();
+                fragment.changeToOne(biucontainer.getText().toString());
             }
         });
     }

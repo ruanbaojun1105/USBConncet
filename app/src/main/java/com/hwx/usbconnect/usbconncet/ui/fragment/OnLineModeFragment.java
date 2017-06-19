@@ -23,10 +23,8 @@ import butterknife.Unbinder;
 public class OnLineModeFragment extends SimpleFragment {
 
 
-    @BindView(R.id.color_btn)
+    @BindView(R.id.text_btn)
     Button colorBtn;
-    @BindView(R.id.mode_spinner)
-    CustomSpinner modeSpinner;
     @BindView(R.id.image_btn)
     Button imageBtn;
 
@@ -61,21 +59,14 @@ public class OnLineModeFragment extends SimpleFragment {
             @Override
             protected void onIClick(View v) {
                 OnLineFragment fragment= (OnLineFragment) getParentFragment();
-                fragment.changePage(1);
             }
         });
         imageBtn.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
                 OnLineFragment fragment= (OnLineFragment) getParentFragment();
-                fragment.changePage(2);
             }
         });
-        modeSpinner.initializeStringValues(new String[]{
-                        mContext.getString(R.string.vvag),
-                        mContext.getString(R.string.vaga),
-                        mContext.getString(R.string.vaggagkjoo)},
-                mContext.getString(R.string.ajkjkk));
     }
 
 }

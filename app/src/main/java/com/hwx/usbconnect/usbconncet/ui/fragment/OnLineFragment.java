@@ -2,9 +2,11 @@ package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,35 +17,41 @@ import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 import com.hwx.usbconnect.usbconncet.ui.adapter.VPagerAdapter;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
-import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.SpinnerTopView;
-import com.piotrek.customspinner.CustomSpinner;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import pro.alexzaitsev.freepager.library.view.core.VerticalPager;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import zhou.colorpalette.ColorSelectDialog;
 
 
 public class OnLineFragment extends SimpleFragment {
 
-//    @BindView(R.id.vertical_pager)
+    //    @BindView(R.id.vertical_pager)
 //    VerticalPager verticalPager;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
-    @BindView(R.id.color_btn)
-    Button colorBtn;
-    @BindView(R.id.mode_spinner)
-    CustomSpinner modeSpinner;
+    @BindView(R.id.text_btn)
+    Button text_btn;
     @BindView(R.id.image_btn)
     Button imageBtn;
     @BindView(R.id.fragment_mode)
     View fragment_mode;
     @BindView(R.id.fragment)
     FrameLayout fragment;
-//    @BindView(R.id.topPanel1)
+    @BindView(R.id.shangxia_btn)
+    Button shangxiaBtn;
+    @BindView(R.id.zuoyou_btn)
+    Button zuoyouBtn;
+    @BindView(R.id.guding_btn)
+    Button gudingBtn;
+    @BindView(R.id.color_btn)
+    Button colorBtn;
+    //    @BindView(R.id.topPanel1)
 //    SpinnerTopView topPanel1;
 //    @BindView(R.id.topPanel2)
 //    SpinnerTopView topPanel2;
@@ -53,6 +61,14 @@ public class OnLineFragment extends SimpleFragment {
     private List<Fragment> fragments = new ArrayList<>();
     private int currentPage = 0;
     private String[] titles = new String[]{"编辑", "文本预览", "图片预览"};
+    private List<View> views;
+    private byte[] Picture1_ByteT;
+    private String text;
+    private boolean isVisiImage = false;
+    private boolean isVisiText = false;
+
+    private ColorSelectDialog colorSelectDialog;
+    private int lastColor;
 
     public OnLineFragment() {
         // Required empty public constructor
@@ -76,10 +92,10 @@ public class OnLineFragment extends SimpleFragment {
     @Override
     protected void initEventAndData() {
         prepareFragment();
-        changePage(0);
-        colorBtn.setOnClickListener(new IClickListener() {
+        text_btn.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
+                setTextT("平庸却说平凡可贵");
                 fragment_mode.setVisibility(View.GONE);
                 fragment.setVisibility(View.VISIBLE);
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment, fragments.get(0)).commit();
@@ -93,11 +109,23 @@ public class OnLineFragment extends SimpleFragment {
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment, fragments.get(1)).commit();
             }
         });
-        modeSpinner.initializeStringValues(new String[]{
-                        mContext.getString(R.string.vvag),
-                        mContext.getString(R.string.vaga),
-                        mContext.getString(R.string.vaggagkjoo)},
-                mContext.getString(R.string.ajkjkk));
+
+        colorBtn.setOnClickListener(new IClickListener() {
+            @Override
+            protected void onIClick(View v) {
+                if (colorSelectDialog == null) {
+                    colorSelectDialog = new ColorSelectDialog(mContext);
+                    colorSelectDialog.setOnColorSelectListener(new ColorSelectDialog.OnColorSelectListener() {
+                        @Override
+                        public void onSelectFinish(int color) {
+                            setColor(color);
+                        }
+                    });
+                }
+                colorSelectDialog.setLastColor(lastColor);
+                colorSelectDialog.show();
+            }
+        });
 
         try {
             InputStream in = getResources().getAssets().open("five.bin");
@@ -108,33 +136,118 @@ public class OnLineFragment extends SimpleFragment {
 //        topPanel1.setPicture1_ByteT(data);
 //        topPanel2.setPicture1_ByteT(data);
 //        topPanel3.setPicture1_ByteT(data);
-        VPagerAdapter vPagerAdapter=new VPagerAdapter(3);
+        views = new ArrayList<>();
+        views.add(new SpinnerTopView(mContext));
+        views.add(new SpinnerTopView(mContext));
+        views.add(new SpinnerTopView(mContext));
+        VPagerAdapter vPagerAdapter = new VPagerAdapter(views);
         viewpager.setAdapter(vPagerAdapter);
-
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
+
             @Override
             public void onPageSelected(int position) {
-                SpinnerTopView spinnerTopView= (SpinnerTopView) viewpager.getChildAt(position);
-                spinnerTopView.setPicture1_ByteT(fileData);
+                setThisCleanAnim(position);
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
     }
 
-    public void changeToOne() {
-        fragment.setVisibility(View.GONE);
-        fragment_mode.setVisibility(View.VISIBLE);
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putByteArray("data", Picture1_ByteT);
+        outState.putString("text", text);
+        outState.putBoolean("isVisiImage", isVisiImage);
+        outState.putBoolean("isVisiText", isVisiText);
+        outState.putInt("lastColor", lastColor);
     }
 
-    public void changePage(int page) {
-        //currentPage = page;
-        //getChildFragmentManager().beginTransaction().replace(R.id.fragment, fragments.get(page));
-        //updateFragment(page);
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState == null)
+            return;
+        Picture1_ByteT = savedInstanceState.getByteArray("data");
+        text = savedInstanceState.getString("text");
+        isVisiImage = savedInstanceState.getBoolean("isVisiImage");
+        isVisiText = savedInstanceState.getBoolean("isVisiText");
+        lastColor=savedInstanceState.getInt("lastColor");
+        if (isVisiText)
+            setTextT(text);
+        else if (isVisiImage)
+            setPicture1_ByteT(Picture1_ByteT);
+    }
+
+    public void setPicture1_ByteT(byte[] picture1_ByteT) {
+        Picture1_ByteT = picture1_ByteT;
+        isVisiImage = true;
+        isVisiText = false;
+        for (View v : views) {
+            SpinnerTopView spinnerTopView = (SpinnerTopView) v;
+            spinnerTopView.setPicture1_ByteT(Picture1_ByteT);
+        }
+    }
+
+    private void setColor(int color) {
+        lastColor=color;
+        for (View v : views) {
+            SpinnerTopView spinnerTopView = (SpinnerTopView) v;
+            spinnerTopView.setLastColor(lastColor);
+        }
+    }
+
+    public void setTextT(String text) {
+        this.text = text;
+        isVisiText = true;
+        isVisiImage = false;
+        for (View v : views) {
+            SpinnerTopView spinnerTopView = (SpinnerTopView) v;
+            spinnerTopView.setText(text);
+        }
+    }
+
+    public void changeToOne(String text) {
+        fragment.setVisibility(View.GONE);
+        fragment_mode.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(text))
+            setTextT(text);
+    }
+
+    public void changeToOne(byte[] Picture1_ByteT) {
+        fragment.setVisibility(View.GONE);
+        fragment_mode.setVisibility(View.VISIBLE);
+        if (Picture1_ByteT != null)
+            setPicture1_ByteT(Picture1_ByteT);
+    }
+
+
+    public void setThisCleanAnim(int position) {
+        for (int i = 0; i < views.size(); i++) {
+            SpinnerTopView spinnerTopView = (SpinnerTopView) views.get(i);
+            if (i != position) {
+                spinnerTopView.cleanAnim();
+            } else {
+                spinnerTopView.starZeroAnim();
+            }
+        }
+    }
+
+
+    public void setCleanAnim(boolean cleanAnim) {
+        for (View v : views) {
+            SpinnerTopView spinnerTopView = (SpinnerTopView) v;
+            if (cleanAnim) {
+                spinnerTopView.cleanAnim();
+            } else {
+                spinnerTopView.starZeroAnim();
+            }
+        }
     }
 
     private void prepareFragment() {

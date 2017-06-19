@@ -135,8 +135,8 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
 
     public void updaData(){
         String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
-        String[] fileArr = getFileAll(new File(itemPath), false, false);
-        String[] fileArrname = getFileAll(new File(itemPath), true, false);
+        String[] fileArr = getFileAll(mContext,new File(itemPath), false, false);
+        String[] fileArrname = getFileAll(mContext,new File(itemPath), true, false);
         if (multipleItemAdapter != null) {
             List<AbsTypeMod> listAbs = multipleItemAdapter.getData();
             ((ImageFontMod) listAbs.get(0)).setFileArr(fileArr).setFileName(fileArrname);
@@ -158,8 +158,8 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                 ACache aCache = ACache.get(getContext());
                 Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
                 String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
-                String[] fileArr = getFileAll(new File(itemPath), false, false);
-                String[] fileArrname = getFileAll(new File(itemPath), true, false);
+                String[] fileArr = getFileAll(mContext,new File(itemPath), false, false);
+                String[] fileArrname = getFileAll(mContext,new File(itemPath), true, false);
                 if (obj == null) {
                     data.add(new ImageFontMod(fileArr, fileArrname));
                     data.add(new ImageFontMod(fileArr, fileArrname));
@@ -212,8 +212,8 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
             public void run() {
                 ACache aCache = ACache.get(getContext());
                 String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
-                String[] fileArr = getFileAll(new File(itemPath), false, false);
-                String[] fileArrname = getFileAll(new File(itemPath), true, false);
+                String[] fileArr = getFileAll(mContext,new File(itemPath), false, false);
+                String[] fileArrname = getFileAll(mContext,new File(itemPath), true, false);
                 final List<AbsTypeMod> data = new ArrayList<>();
                 data.add(new ImageFontMod(fileArr, fileArrname));
                 data.add(new ImageFontMod(fileArr, fileArrname));
@@ -265,7 +265,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
      *
      * @return
      */
-    private String[] getFileAll(File file, boolean isName, boolean isCheck) {
+    public static String[] getFileAll(Context context,File file, boolean isName, boolean isCheck) {
         if (file == null)
             return new String[]{};
         if (!file.exists()) {
@@ -273,10 +273,10 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         }
         //if (!AppConfig.getInstance().getBoolean("isCopy",false)){
         try {
-            FileUtil.copyFile(getResources().getAssets().open("xuanfeng.bin"), file.getPath() + "/xuanfeng.bin");
-            FileUtil.copyFile(getResources().getAssets().open("shu.bin"), file.getPath() + "/shu.bin");
-            FileUtil.copyFile(getResources().getAssets().open("clock.bin"), file.getPath() + "/clock.bin");
-            FileUtil.copyFile(getResources().getAssets().open("five.bin"), file.getPath() + "/five.bin");
+            FileUtil.copyFile(context.getResources().getAssets().open("xuanfeng.bin"), file.getPath() + "/xuanfeng.bin");
+            FileUtil.copyFile(context.getResources().getAssets().open("shu.bin"), file.getPath() + "/shu.bin");
+            FileUtil.copyFile(context.getResources().getAssets().open("clock.bin"), file.getPath() + "/clock.bin");
+            FileUtil.copyFile(context.getResources().getAssets().open("five.bin"), file.getPath() + "/five.bin");
             //AppConfig.getInstance().putBoolean("isCopy",true);
         } catch (IOException e) {
             e.printStackTrace();

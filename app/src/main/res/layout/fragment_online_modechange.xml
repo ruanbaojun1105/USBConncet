@@ -29,6 +29,35 @@
                 android:layout_weight="1"
                 />
         </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="2"
+        android:gravity="center"
+        >
+        <Button
+            android:id="@+id/shangxia_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="上下滚"
+            android:layout_weight="1"
+            />
+        <Button
+            android:id="@+id/zuoyou_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="左右滚"
+            android:layout_weight="1"
+            />
+        <Button
+            android:id="@+id/guding_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="固定"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -37,20 +66,18 @@
             android:gravity="center"
             >
             <Button
-                android:id="@+id/color_btn"
+                android:id="@+id/text_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="文字预览"
                 android:layout_weight="1"
                 />
-            <com.piotrek.customspinner.CustomSpinner
-                android:id="@+id/mode_spinner"
+            <Button
+                android:id="@+id/color_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="更多颜色"
                 android:layout_weight="1"
-                android:background="@drawable/setting_btnbg2"
-                android:layout_margin="10dp"
-                android:gravity="center"
                 />
             <Button
                 android:id="@+id/image_btn"

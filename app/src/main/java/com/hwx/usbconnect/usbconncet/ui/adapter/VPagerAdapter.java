@@ -5,29 +5,31 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.SpinnerTopView;
+
+import java.util.List;
 
 /**
  * Created by donglua on 15/6/21.
  */
 public class VPagerAdapter extends PagerAdapter {
 
-  private int count;
-  public VPagerAdapter(int count) {
-    this.count = count;
+  private List<View> viewList;
+  public VPagerAdapter( List<View> viewList) {
+    this.viewList = viewList;
   }
 
   @Override
   public Object instantiateItem(ViewGroup container, final int position) {
-    final Context context = container.getContext();
-    SpinnerTopView spinnerTopView=new SpinnerTopView(context);
-    container.addView(spinnerTopView);//切记加此句
-    return spinnerTopView;
+    container.addView(viewList.get(position));//切记加此句
+    return viewList.get(position);
   }
+
 
   @Override
   public int getCount() {
-    return count;
+    return viewList.size();
   }
 
   @Override
@@ -37,7 +39,7 @@ public class VPagerAdapter extends PagerAdapter {
 
   @Override
   public void destroyItem(ViewGroup container, int position, Object object) {
-    container.removeView((View) object);
+    container.removeView(viewList.get(position));
   }
 
 }
