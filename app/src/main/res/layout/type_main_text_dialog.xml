@@ -70,5 +70,4 @@
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
     </LinearLayout>
-
 </LinearLayout>

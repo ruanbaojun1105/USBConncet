@@ -46,4 +46,22 @@
 
     </declare-styleable>
 
+    <declare-styleable name="SmoothCheckBox">
+        <attr name="duration" format="integer"/>
+        <attr name="stroke_width" format="dimension"/>
+        <attr name="color_tick" format="color"/>
+        <attr name="color_checked" format="color"/>
+        <attr name="color_unchecked" format="color"/>
+        <attr name="color_unchecked_stroke" format="color"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="SpinnerTopView">
+        <attr name="ballColor" format="color" />
+        <attr name="arrowRight" format="color|reference" />
+        <attr name="arrowBg" format="color|reference" />
+        <attr name="ballSrc" format="color|reference" />
+        <attr name="ballPressedSrc" format="color|reference" />
+    </declare-styleable>
+
 </resources>

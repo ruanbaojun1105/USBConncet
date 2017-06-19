@@ -28,10 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/this_info"
-            android:shadowColor="#22000000"
-            android:shadowDx="3"
-            android:shadowDy="3"
-            android:shadowRadius="1"
             android:textSize="16sp"
             android:text="暂无内容"
             />

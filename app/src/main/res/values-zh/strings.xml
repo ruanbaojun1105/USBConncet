@@ -31,16 +31,16 @@
     <string name="gaf">闪烁</string>
     <string name="vaf">蓝</string>
     <string name="vafg">混色</string>
-    <string name="vfag">请选择颜色▼</string>
+    <string name="vfag">请选择颜色</string>
     <string name="vvag">上下滚</string>
     <string name="vaga">左右滚</string>
     <string name="vaggagkjoo">固定</string>
-    <string name="ajkjkk">请选择模式▼</string>
+    <string name="ajkjkk">请选择模式</string>
     <string name="vfagbfgf">速度显示</string>
     <string name="fdggggg">电量显示</string>
     <string name="fjigjj">版本号</string>
-    <string name="vagttew">基础显示选择▼</string>
-    <string name="bfdfhdhdhf">图片样式选择▼</string>
+    <string name="vagttew">基础显示选择</string>
+    <string name="bfdfhdhdhf">图片样式选择</string>
     <string name="vjkkjagkl">状态</string>
     <string name="bfijj">类型</string>
     <string name="ojgajktkj">颜色</string>
@@ -78,4 +78,6 @@
     <string name="gtadtrtet">宋体</string>
     <string name="dtastdtrwqg">粗体</string>
     <string name="vdatttttt">一键导入图片样式</string>
+    <string name="fdtkjkjjkt">文字颜色</string>
+    <string name="dttdw">发送</string>
 </resources>

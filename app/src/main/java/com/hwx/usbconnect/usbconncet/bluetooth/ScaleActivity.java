@@ -225,11 +225,14 @@ public class ScaleActivity extends AppCompatActivity {
             if (dialog!=null&&dialog.isShowing()){
                 dialog.dismiss();
             }
-            dialog=BluetoothService.showBluetoothListDialog(this, itemClickAdapter, item -> {
-                CONNECT_MAC=item.getAddress();
-                CONNECT_NAME=item.getName();
-                AppConfig.getInstance().putString("isEmpetConnectMac",CONNECT_MAC);
-                toCheck(item);
+            dialog=BluetoothService.showBluetoothListDialog(this, itemClickAdapter, new BluetoothService.DialogItemListener() {
+                @Override
+                public void todosomething(BluetoothDevice item) {
+                    CONNECT_MAC=item.getAddress();
+                    CONNECT_NAME=item.getName();
+                    AppConfig.getInstance().putString("isEmpetConnectMac",CONNECT_MAC);
+                    toCheck(item);
+                }
             });
         }
     }

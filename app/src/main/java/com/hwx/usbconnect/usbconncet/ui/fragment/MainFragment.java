@@ -179,7 +179,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                     }
                 }
                 multipleItemAdapter = new MultipleItemQuickAdapter(data);
-                LinearLayoutManager manager = new LinearLayoutManager(getContext());
+                final LinearLayoutManager manager = new LinearLayoutManager(getContext());
                 mRecyclerView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -206,7 +206,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         }*/
     }
 
-    void cleanData(View v) {
+    void cleanData(final View v) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -214,7 +214,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                 String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
                 String[] fileArr = getFileAll(new File(itemPath), false, false);
                 String[] fileArrname = getFileAll(new File(itemPath), true, false);
-                List<AbsTypeMod> data = new ArrayList<>();
+                final List<AbsTypeMod> data = new ArrayList<>();
                 data.add(new ImageFontMod(fileArr, fileArrname));
                 data.add(new ImageFontMod(fileArr, fileArrname));
                 data.add(new ImageFontMod(fileArr, fileArrname));
@@ -306,7 +306,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.clean:
                 new AlertDialog.Builder(getContext()).setMessage(R.string.dttaatsr)

@@ -265,7 +265,7 @@ public class ScanHelper {
                 aaa[i] = (byte)0x88;
             }*/
             LogUtils.e("总共内容长度"+data.length);
-            byte[][] bytes = split_bytes(data,64);
+            final byte[][] bytes = split_bytes(data,64);
             amit=bytes.length;
 //            for (int i = 0; i < bytes.length; i++) {
 //                for (int j = 0; j < bytes[i].length; j++) {
@@ -275,7 +275,7 @@ public class ScanHelper {
 //            }
             Onclick click=new Onclick() {
                 @Override
-                public void click(byte aaa[]) {
+                public void click(final byte aaa[]) {
                     LogUtils.e("当前"+tag+"---总共"+amit);
                     if (tag>=amit) {
                         tag=0;

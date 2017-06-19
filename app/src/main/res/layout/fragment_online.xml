@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/actionbar_dark_grey"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+    <!--<pro.alexzaitsev.freepager.library.view.core.VerticalPager
+        android:id="@+id/vertical_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+        <com.hwx.usbconnect.usbconncet.utils.SpinnerTopView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:arrowBg="@drawable/tuoluo"
+            app:ballColor="@color/blue_light"
+            android:id="@+id/topPanel1"
+            />
+
+        <com.hwx.usbconnect.usbconncet.utils.SpinnerTopView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:arrowBg="@drawable/tuoluo"
+            app:ballColor="@color/blue_light"
+            android:id="@+id/topPanel2"
+            />
+
+        <com.hwx.usbconnect.usbconncet.utils.SpinnerTopView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:arrowBg="@drawable/tuoluo"
+            app:ballColor="@color/blue_light"
+            android:id="@+id/topPanel3"
+            />
+    </pro.alexzaitsev.freepager.library.view.core.VerticalPager>-->
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        layout="@layout/fragment_online_modechange"
+        android:id="@+id/fragment_mode"
+        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:id="@+id/fragment"
+        >
+    </FrameLayout>
+
+</LinearLayout>

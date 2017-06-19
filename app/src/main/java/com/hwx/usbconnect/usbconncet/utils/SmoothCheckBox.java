@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.refactor.library;
+package com.hwx.usbconnect.usbconncet.utils;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -32,6 +32,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Checkable;
+
+import com.hwx.usbconnect.usbconncet.App;
+import com.hwx.usbconnect.usbconncet.R;
+
 
 /**
  * Author : andy
@@ -94,7 +98,7 @@ public class SmoothCheckBox extends View implements Checkable {
         mFloorColor = ta.getColor(R.styleable.SmoothCheckBox_color_unchecked_stroke, COLOR_FLOOR_UNCHECKED);
         mCheckedColor = ta.getColor(R.styleable.SmoothCheckBox_color_checked, COLOR_CHECKED);
         mUnCheckedColor = ta.getColor(R.styleable.SmoothCheckBox_color_unchecked, COLOR_UNCHECKED);
-        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.SmoothCheckBox_stroke_width, CompatUtils.dp2px(getContext(), 0));
+        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.SmoothCheckBox_stroke_width, 0);
         ta.recycle();
 
         mFloorUnCheckedColor = mFloorColor;
@@ -206,7 +210,7 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     private int measureSize(int measureSpec) {
-        int defSize = CompatUtils.dp2px(getContext(), DEF_DRAW_SIZE);
+        int defSize = App.dip2px(DEF_DRAW_SIZE);
         int specSize = MeasureSpec.getSize(measureSpec);
         int specMode = MeasureSpec.getMode(measureSpec);
 

@@ -32,6 +32,7 @@ import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
 import com.hwx.usbconnect.usbconncet.ui.adapter.MyFragmentPagerAdapter;
 import com.hwx.usbconnect.usbconncet.ui.fragment.InfoFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.MainFragment;
+import com.hwx.usbconnect.usbconncet.ui.fragment.OnLineFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.UseFragment;
 import com.hwx.usbconnect.usbconncet.utils.AnimTextView;
 import com.hwx.usbconnect.usbconncet.utils.Constants;
@@ -155,13 +156,15 @@ public class UsbMainActivity extends SimpleActivity {
         int i = 3;
         LogUtils.e(i++ + "3");
         fragmentList.clear();
+        fragmentList.add(OnLineFragment.newInstance());
         fragmentList.add(MainFragment.newInstance());
         if (!com.hwx.usbconnect.usbconncet.Constants.isOpenCutInfo) {
             infoFragment = InfoFragment.newInstance();
             fragmentList.add(infoFragment);
         }
+        String[] aa=com.hwx.usbconnect.usbconncet.Constants.isOpenCutInfo ? new String[]{"实时模式",getString(R.string.vdadg), getString(R.string.vfahta)} : new String[]{"实时模式",getString(R.string.vdadg), getString(R.string.fgaata), getString(R.string.vfahta)};
         fragmentList.add(UseFragment.newInstance(getString(R.string.ddavv), getString(R.string.vavdgsdgsa)));
-        mSectionsPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), com.hwx.usbconnect.usbconncet.Constants.isOpenCutInfo ? new String[]{getString(R.string.vdadg), getString(R.string.vfahta)} : new String[]{getString(R.string.vdadg), getString(R.string.fgaata), getString(R.string.vfahta)}, fragmentList);
+        mSectionsPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), aa , fragmentList);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabs.setupWithViewPager(mViewPager);
@@ -198,11 +201,11 @@ public class UsbMainActivity extends SimpleActivity {
         dialog.getWindow().setAttributes(p);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
-        MagicProgressCircle magicProgressCircle= (MagicProgressCircle) dialog.findViewById(R.id.demo_mpc);
+        final MagicProgressCircle magicProgressCircle= (MagicProgressCircle) dialog.findViewById(R.id.demo_mpc);
         magicProgressCircle.setSmoothPercent(0);
-        AnimTextView animTextView= (AnimTextView) dialog.findViewById(R.id.demo_tv);
+        final AnimTextView animTextView= (AnimTextView) dialog.findViewById(R.id.demo_tv);
         animTextView.setSmoothPercent(0);
-        TextView info_text= (TextView) dialog.findViewById(R.id.info_text);
+        final TextView info_text= (TextView) dialog.findViewById(R.id.info_text);
         StateButton cancal= (StateButton) dialog.findViewById(R.id.cancel);
         cancal.setVisibility(View.VISIBLE);
         cancal.setOnClickListener(new IClickListener() {
@@ -260,7 +263,7 @@ public class UsbMainActivity extends SimpleActivity {
         };
         mThread.start();
     }
-    public void download(TextView text,String path,Dialog dialog, MagicProgressCircle magicProgressCircle,AnimTextView animTextView) {
+    public void download(final TextView text, final String path, final Dialog dialog, final MagicProgressCircle magicProgressCircle, final AnimTextView animTextView) {
         new Thread() {
             public void run() {
                 try {
@@ -282,11 +285,11 @@ public class UsbMainActivity extends SimpleActivity {
                     if (ftpFiles != null) {
                         tag = ftpFiles.length;
                         for (int i = 0; i < tag; i++) {
-                            FTPFile file = ftpFiles[i];
+                            final FTPFile file = ftpFiles[i];
                             if (file.getSize() != 240)
                                 continue;
-                            int finalI = i;
-                            int finalTag1 = tag-1;
+                            final int finalI = i;
+                            final int finalTag1 = tag-1;
                             text.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -302,14 +305,14 @@ public class UsbMainActivity extends SimpleActivity {
                         ftp.disconnect();
                         ftpFiles = null;
                     }
-                    int finalTag = tag;
+                    final int finalTag = tag;
                     text.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             dialog.dismiss();
                             Toast.makeText(mContext, finalTag > 0?"OK":"No content", Toast.LENGTH_SHORT).show();
                             if (finalTag>0)
-                                ((MainFragment)mSectionsPagerAdapter.getItem(0)).updaData();
+                                ((MainFragment)mSectionsPagerAdapter.getItem(1)).updaData();
                         }
                     },500);
                 } catch (Exception e) {

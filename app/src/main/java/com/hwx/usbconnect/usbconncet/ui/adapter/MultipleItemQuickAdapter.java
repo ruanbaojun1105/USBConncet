@@ -3,6 +3,7 @@ package com.hwx.usbconnect.usbconncet.ui.adapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,7 +28,7 @@ import com.xw.repo.XEditText;
 
 import java.util.List;
 
-import cn.refactor.library.SmoothCheckBox;
+import com.hwx.usbconnect.usbconncet.utils.SmoothCheckBox;
 
 public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeMod, BaseViewHolder> {
 
@@ -40,7 +41,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, AbsTypeMod item) {
+    protected void convert(BaseViewHolder helper, final AbsTypeMod item) {
         item.setId(helper.getAdapterPosition());
         RecyclerView.LayoutParams layoutParams= (RecyclerView.LayoutParams) helper.itemView.getLayoutParams();
         layoutParams.height= (ScreenParamsUtil.getInstance((Activity) mContext).screenHeight- App.dip2px(150))/8;
@@ -56,7 +57,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             }
         });
 
-        CustomSpinner colorSpinner1 = helper.getView(R.id.spinner1);
+        final CustomSpinner colorSpinner1 = helper.getView(R.id.spinner1);
         colorSpinner1.initializeStringValues(new String[]{
                 mContext.getString(R.string.vaddf),
                 mContext.getString(R.string.vaf),
@@ -74,7 +75,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         });
         colorSpinner1.setSelection(item.getColor());
 
-        CustomSpinner colorSpinner2 = helper.getView(R.id.spinner2);
+        final CustomSpinner colorSpinner2 = helper.getView(R.id.spinner2);
         colorSpinner2.initializeStringValues(new String[]{
                 mContext.getString(R.string.vvag),
                 mContext.getString(R.string.vaga),
@@ -94,14 +95,14 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
         switch (helper.getItemViewType()) {
             case AbsTypeMod.TEXT:
-                TextMod itemOd= (TextMod) item;
+                final TextMod itemOd= (TextMod) item;
                 TextView editText = helper.getView(R.id.biucontainer);
                 editText.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(final View view) {
                         showEditDialog(((Activity) mContext), mContext.getString(R.string.gdjiadstjj), itemOd.getText(),itemOd.getFontStyle(), new EditOnclick() {
                             @Override
-                            public void onClick(String str,int fontS) {
+                            public void onClick(final String str, final int fontS) {
                                 itemOd.setText(str);
                                 view.post(new Runnable() {
                                     @Override
@@ -133,7 +134,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 //
 //                    }
 //                });
-                CustomSpinner fontSpinner = helper.getView(R.id.font_spinner);
+                final CustomSpinner fontSpinner = helper.getView(R.id.font_spinner);
                 fontSpinner.setVisibility(View.GONE);
                 String a=mContext.getString(R.string.gtadtrtet);
                 String b=mContext.getString(R.string.dtastdtrwqg);
@@ -154,8 +155,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             case AbsTypeMod.IMG:
                 break;
             case AbsTypeMod.PRESET:
-                PresetMod presetMod= (PresetMod) item;
-                CustomSpinner choce_spinner = helper.getView(R.id.choce_spinner);
+                final PresetMod presetMod= (PresetMod) item;
+                final CustomSpinner choce_spinner = helper.getView(R.id.choce_spinner);
                 choce_spinner.initializeStringValues(new String[]{
                         mContext.getString(R.string.vfagbfgf),
                         mContext.getString(R.string.fdggggg),
@@ -174,8 +175,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                 choce_spinner.setSelection(presetMod.getType());
                 break;
             case AbsTypeMod.IMGFONT:
-                ImageFontMod imageFontMod= (ImageFontMod) item;
-                CustomSpinner choce_spinner1 = helper.getView(R.id.choce_spinner);
+                final ImageFontMod imageFontMod= (ImageFontMod) item;
+                final CustomSpinner choce_spinner1 = helper.getView(R.id.choce_spinner);
                 //fileName = fName.substring(fName.lastIndexOf("//")+1);
                 choce_spinner1.initializeStringValues(imageFontMod.getFileName()!=null?imageFontMod.getFileName():new String[]{},
                         mContext.getString(R.string.bfdfhdhdhf));
@@ -221,8 +222,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
     }
 
     public void showEditDialog(final Activity activity, String title,String content,int fontS, final EditOnclick onclickInterFace){
-        View view=View.inflate(activity,R.layout.type_main_text_dialog, null);
-        XEditText et= (XEditText) view.findViewById(R.id.biucontainer);
+        final View view=View.inflate(activity,R.layout.type_main_text_dialog, null);
+        final XEditText et= (XEditText) view.findViewById(R.id.biucontainer);
        /* et.setDisableEmoji(true);
         //final EditText et = new EditText(activity);
         et.setMaxLines(5);
@@ -232,8 +233,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             et.setSelection(content.length());
         }
         //et.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
-        StateButton font_default= (StateButton) view.findViewById(R.id.font_default);
-        StateButton font_bold= (StateButton) view.findViewById(R.id.font_bold);
+        final StateButton font_default= (StateButton) view.findViewById(R.id.font_default);
+        final StateButton font_bold= (StateButton) view.findViewById(R.id.font_bold);
         font_default.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
@@ -259,21 +260,32 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                 //.setTitle(title)
                 //.setIcon(android.R.drawable.ic_menu_send)
                 .setView(view)
-                .setPositiveButton(R.string.dtaddssd, (dialog, which) -> {
-                    if (activity==null)
-                        return;
-                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                    final String input = et.getText().toString();
+                .setPositiveButton(R.string.dtaddssd, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (activity==null)
+                            return;
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                        final String input = et.getText().toString();
 //                    if (TextUtils.isEmpty(input))
 //                        return;
-                    if (onclickInterFace!=null){
-                        activity.runOnUiThread(() -> onclickInterFace.onClick(input, (Integer) view.getTag()));
+                        if (onclickInterFace!=null){
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onclickInterFace.onClick(input, (Integer) view.getTag());
+                                }
+                            });
+                        }
                     }
                 })
-                .setNegativeButton(R.string.dadttsadts, (dialogInterface, i) -> {
-                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                .setNegativeButton(R.string.dadttsadts, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                    }
                 })
                 .show();
     }

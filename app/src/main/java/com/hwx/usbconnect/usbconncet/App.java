@@ -47,7 +47,7 @@ public class App extends android.app.Application{
         mContext=this;
         Cockroach.install(new Cockroach.ExceptionHandler() {
             @Override
-            public void handlerException(Thread thread, Throwable throwable) {
+            public void handlerException(final Thread thread, final Throwable throwable) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {

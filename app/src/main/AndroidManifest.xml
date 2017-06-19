@@ -29,7 +29,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <meta-data android:value="5923b6a807fe654fdf000a83" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="bj" android:name="UMENG_CHANNEL"/>
+        <meta-data android:value="test" android:name="UMENG_CHANNEL"/>
         <activity android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
             />

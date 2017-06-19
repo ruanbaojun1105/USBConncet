@@ -27,9 +27,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.BuildConfig;
 import com.hwx.usbconnect.usbconncet.Constants;
@@ -75,7 +77,7 @@ public class BluetoothService {
 	public interface DialogItemListener{
 		void todosomething(BluetoothDevice item);
 	}
-	public static Dialog showBluetoothListDialog(final Activity activity, ItemClickAdapter adapter, DialogItemListener onclickInterFace){
+	public static Dialog showBluetoothListDialog(final Activity activity, ItemClickAdapter adapter, final DialogItemListener onclickInterFace){
 		if (activity==null)
 			return null;
 		final Dialog dialog = new Dialog(activity);
@@ -101,13 +103,21 @@ public class BluetoothService {
 		SpacesItemDecoration decoration = new SpacesItemDecoration(10);
 		mRecyclerView.addItemDecoration(decoration);
 		mRecyclerView.setAdapter(adapter);
-		adapter.setOnItemClickListener((adapter1, view, position) -> {
-			BluetoothDevice item= (BluetoothDevice) adapter1.getItem(position);
-			if (onclickInterFace!=null){
-				if (activity!=null)
-					activity.runOnUiThread(() -> onclickInterFace.todosomething(item));
+		adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+			@Override
+			public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+				final BluetoothDevice item= (BluetoothDevice) adapter.getItem(position);
+				if (onclickInterFace!=null){
+					if (activity!=null)
+						activity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								onclickInterFace.todosomething(item);
+							}
+						});
+				}
+				dialog.dismiss();
 			}
-			dialog.dismiss();
 		});
 		dialog.show();
 		return dialog;
