@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical"
+    android:background="@color/actionbar_dark_grey"
     >
     <TextView
         android:layout_width="wrap_content"
@@ -12,6 +13,7 @@
         android:text="@string/gdjiadstjj"
         android:gravity="center_vertical"
         android:layout_margin="15dp"
+        android:textColor="@color/white"
         />
     <com.xw.repo.XEditText
             android:layout_width="match_parent"
@@ -19,7 +21,7 @@
             android:layout_weight="1"
             android:id="@+id/biucontainer"
             android:textColorHint="@color/gray_1"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/blue_t"
             android:maxLines="5"
             android:singleLine="true"
             android:ellipsize="end"
@@ -33,37 +35,53 @@
         android:text="@string/drrtr"
         android:gravity="center_vertical"
         android:layout_margin="15dp"
+        android:textColor="@color/white"
         />
+    <com.hwx.usbconnect.usbconncet.utils.HorizontalPicker
+        android:id="@+id/hpicker_font"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        app:itemMargin="40dp"
+        app:itemHeight="45dp"
+        app:itemWidth="80dp"
+        android:gravity="center_vertical"
+        app:backgroundSelector="@drawable/selector_text"
+        app:textColorSelector="@color/selector_text_view"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:gravity="right|bottom"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:id="@+id/show_lin"
         >
 
         <com.hwx.usbconnect.usbconncet.utils.StateButton
-            android:id="@+id/font_default"
+            android:id="@+id/cancle_default"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            android:text="@string/gtadtrtet"
+            android:text="@string/dadttsadts"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/gray_1"
+            app:normalBackgroundColor="@color/transparent"
             app:normalTextColor="@color/white"
             app:pressedBackgroundColor="@color/gray"
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
         <com.hwx.usbconnect.usbconncet.utils.StateButton
-            android:id="@+id/font_bold"
+            android:id="@+id/true_default"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            android:text="@string/dtastdtrwqg"
+            android:text="@string/dtaddssd"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/gray_1"
+            app:normalBackgroundColor="@color/transparent"
             app:normalTextColor="@color/white"
             app:pressedBackgroundColor="@color/gray"
             app:pressedTextColor="@android:color/black"

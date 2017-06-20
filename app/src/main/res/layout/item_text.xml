@@ -2,12 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="20dp"
+    android:gravity="center"
     >
 
+    <com.hwx.usbconnect.usbconncet.utils.SpinnerTopView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/topView"
+        android:layout_margin="10dp"
+        />
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:gravity="center"
+        android:textColor="@color/white"
+        />
 </LinearLayout>

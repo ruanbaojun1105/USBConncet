@@ -7,97 +7,276 @@
         android:orientation="vertical"
         android:layout_weight="1"
         >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/updateData"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/updateData"
+                android:gravity="bottom|center"
+                android:paddingLeft="10dp"
+                android:text="{fa-sliders @color/colormain3 24sp} 电量"
+                android:textColor="@color/gray" />
+
+            <TextView
+                android:id="@+id/this_tag_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/updateData"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/updateData"
+                android:gravity="bottom|center"
+                android:paddingLeft="10dp"
+                android:text="0"
+                android:textColor="@color/colormain3"
+                android:textSize="25sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/updateData"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/updateData"
+                android:gravity="bottom|center"
+                android:paddingLeft="10dp"
+                android:text="{fa-lemon-o @color/colormain2 26sp} 速度"
+                android:textColor="@color/gray" />
+
+            <TextView
+                android:id="@+id/all_tag_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/updateData"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/updateData"
+                android:gravity="bottom|center"
+                android:paddingLeft="10dp"
+                android:text="0"
+                android:textColor="@color/colormain2"
+                android:textSize="25sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <com.hwx.usbconnect.usbconncet.utils.JColorBar
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/color_bar"
+        />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
-            android:layout_weight="2"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/update_lin"
             >
-            <Button
+            <com.hwx.usbconnect.usbconncet.utils.StateButton
+                android:id="@+id/mode_btn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:text="码盘0"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="模式"
                 android:layout_weight="1"
-                />
-
-            <Button
+                app:radius="5dp"
+                app:normalBackgroundColor="@color/colorPrimary"
+                app:normalTextColor="@color/white"
+                app:normalStrokeWidth="1dp"
+                app:normalStrokeColor="@color/white"
+                app:pressedBackgroundColor="@color/gray"
+                app:pressedTextColor="@android:color/black"
+                app:unableBackgroundColor="@color/colorPrimary"
+                app:unableTextColor="@color/white"/>
+            <com.hwx.usbconnect.usbconncet.utils.StateButton
+                android:id="@+id/text_btn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorAccent"
-                android:text="码盘 1"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="文本"
                 android:layout_weight="1"
-                />
+                app:radius="5dp"
+                app:normalBackgroundColor="@color/colorPrimary"
+                app:normalTextColor="@color/white"
+                app:normalStrokeWidth="1dp"
+                app:normalStrokeColor="@color/white"
+                app:pressedBackgroundColor="@color/gray"
+                app:pressedTextColor="@android:color/black"
+                app:unableBackgroundColor="@color/colorPrimary"
+                app:unableTextColor="@color/white"/>
+            <com.hwx.usbconnect.usbconncet.utils.StateButton
+                android:id="@+id/image_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="图片"
+                android:layout_weight="1"
+                app:radius="5dp"
+                app:normalBackgroundColor="@color/colorPrimary"
+                app:normalTextColor="@color/white"
+                app:normalStrokeWidth="1dp"
+                app:normalStrokeColor="@color/white"
+                app:pressedBackgroundColor="@color/gray"
+                app:pressedTextColor="@android:color/black"
+                app:unableBackgroundColor="@color/colorPrimary"
+                app:unableTextColor="@color/white"/>
+            <com.hwx.usbconnect.usbconncet.utils.StateButton
+                android:id="@+id/other_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="其他"
+                android:layout_weight="1"
+                app:radius="5dp"
+                app:normalBackgroundColor="@color/colorPrimary"
+                app:normalTextColor="@color/white"
+                app:normalStrokeWidth="1dp"
+                app:normalStrokeColor="@color/white"
+                app:pressedBackgroundColor="@color/gray"
+                app:pressedTextColor="@android:color/black"
+                app:unableBackgroundColor="@color/colorPrimary"
+                app:unableTextColor="@color/white"/>
         </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:gravity="center"
+        android:id="@+id/mode_lin"
+        android:visibility="gone"
         >
-        <Button
+        <com.hwx.usbconnect.usbconncet.utils.StateButton
             android:id="@+id/shangxia_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="上下滚"
+            android:layout_margin="5dp"
+            android:text="上下滚动"
             android:layout_weight="1"
-            />
-        <Button
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/gray"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"/>
+        <com.hwx.usbconnect.usbconncet.utils.StateButton
             android:id="@+id/zuoyou_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="左右滚"
+            android:layout_margin="5dp"
+            android:text="左右滚动"
             android:layout_weight="1"
-            />
-        <Button
-            android:id="@+id/guding_btn"
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/gray"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"/>
+        <com.hwx.usbconnect.usbconncet.utils.StateButton
+            android:id="@+id/gunding_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:text="固定"
             android:layout_weight="1"
-            />
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/gray"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"/>
     </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="2"
-            android:gravity="center"
-            >
-            <Button
-                android:id="@+id/text_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="文字预览"
-                android:layout_weight="1"
-                />
-            <Button
-                android:id="@+id/color_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="更多颜色"
-                android:layout_weight="1"
-                />
-            <Button
-                android:id="@+id/image_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="图片预览"
-                android:layout_weight="1"
-                />
-        </LinearLayout>
-        <!--<TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:hint="default, just likes EditText"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:maxLines="3"
-            android:background="@drawable/edittext_bbb"
-            android:padding="10dp"
-            android:layout_weight="1"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:id="@+id/other_lin"
+        android:visibility="gone"
+        >
+        <com.hwx.usbconnect.usbconncet.utils.StateButton
+            android:id="@+id/color_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            />-->
+            android:text="更多颜色"
+            android:layout_weight="1"
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/gray"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"/>
+        <com.hwx.usbconnect.usbconncet.utils.StateButton
+            android:id="@+id/version_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="版本信息"
+            android:layout_weight="1"
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/gray"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"/>
+        <com.hwx.usbconnect.usbconncet.utils.StateButton
+            android:id="@+id/auto_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="自动"
+            android:layout_weight="1"
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/gray"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"/>
+    </LinearLayout>
 
     </LinearLayout>

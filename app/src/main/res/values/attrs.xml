@@ -63,5 +63,12 @@
         <attr name="ballSrc" format="color|reference" />
         <attr name="ballPressedSrc" format="color|reference" />
     </declare-styleable>
-
+    <declare-styleable name="HorizontalPicker">
+        <attr name="textSize" format="dimension"/>
+        <attr name="backgroundSelector" format="reference"/>
+        <attr name="textColorSelector" format="reference"/>
+        <attr name="itemHeight" format="dimension"/>
+        <attr name="itemWidth" format="dimension"/>
+        <attr name="itemMargin" format="dimension"/>
+    </declare-styleable>
 </resources>

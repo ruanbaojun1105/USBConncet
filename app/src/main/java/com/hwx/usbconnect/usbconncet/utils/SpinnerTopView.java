@@ -77,16 +77,24 @@ public class SpinnerTopView extends View {
     /**
      * 背景
      */
-    private Drawable mBgDrawable;
+    private IconDrawable mBgDrawable;
     private String text;//显示文本
     private boolean isVisiBgDot=false;
     private boolean isVisiImage=false;
     private boolean isVisiText=false;
+    private boolean isVisiBg=true;
     private ObjectAnimator animator=null;
     private byte[] Picture1_ByteT=new byte[240];
     private int lastColor;
+    private int prerent=1;//显示百分比精细度，越大越不清晰
 
+    public void setPrerent(int prerent) {
+        this.prerent = prerent;
+    }
 
+    public void setVisiBg(boolean visiBg) {
+        isVisiBg = visiBg;
+    }
 
     public SpinnerTopView(Context context) {
         super(context);
@@ -106,19 +114,19 @@ public class SpinnerTopView extends View {
     private void init(AttributeSet attrs, int defStyle) {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SpinnerTopView);
         //读取XML配置
-        mBgDrawable = a.getDrawable(R.styleable.SpinnerTopView_arrowBg);
+        //mBgDrawable = a.getDrawable(R.styleable.SpinnerTopView_arrowBg);//fa-futbol-o
+        mBgDrawable=new IconDrawable(getContext(), FontAwesomeIcons.fa_futbol_o).colorRes(R.color.link_text_blue);//.sizeDp(25);
         mBallDrawable=new IconDrawable(getContext(), FontAwesomeIcons.fa_dot_circle_o).colorRes(R.color.blue_light).sizeDp(25);
         a.recycle();
         mBallRadius = mBallDrawable.getIntrinsicWidth() >> 1;
         mDefaultWidth = App.dip2px(mDefaultWidthDp);
         mDefaultHeight = App.dip2px(mDefaultHeightDp);
 
-
+        setPadding(10,10,10,10);
+        setmBgDrawable(mBgDrawable,false);
         animator = ObjectAnimator.ofFloat(this, "rotation", 0f, 360f);
         animator.setInterpolator(new LinearInterpolator());
-        animator.setDuration(10000);
-        animator.setRepeatCount(-1);
-        animator.setStartDelay(500);
+        setAnim3();
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
@@ -143,7 +151,7 @@ public class SpinnerTopView extends View {
             public void onAnimationRepeat(Animator animator) {
             }
         });
-        starZeroAnim();
+        //starZeroAnim();
     }
 
     @Override
@@ -208,7 +216,30 @@ public class SpinnerTopView extends View {
         animator.start();
     }
 
+
+    public SpinnerTopView setAnim1() {
+        animator.setDuration(2000);
+        animator.setRepeatCount(3);
+        animator.setFloatValues( 0f, 480f);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        return this;
+    }
+    public SpinnerTopView setAnim2() {
+        animator.setDuration(5000);
+        animator.setRepeatCount(-1);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        return this;
+    }
+    public SpinnerTopView setAnim3() {
+        animator.setDuration(10000);
+        animator.setRepeatCount(-1);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        return this;
+    }
     public void setPicture1_ByteT(byte[] picture1_ByteT) {
+        setPicture1_ByteT(picture1_ByteT,true);
+    }
+    public void setPicture1_ByteT(byte[] picture1_ByteT,boolean starAnim) {
         if (picture1_ByteT==null)
             return;
         Picture1_ByteT = picture1_ByteT;
@@ -216,7 +247,8 @@ public class SpinnerTopView extends View {
         isVisiBgDot=true;
         isVisiText=false;
         invalidate();
-        starAnim();
+        if (starAnim)
+            starAnim();
 //        ValueAnimator anim = ValueAnimator.ofFloat(0f, 360f);
 //        anim.setInterpolator(new LinearInterpolator());
 //        anim.setDuration(5000);
@@ -247,8 +279,12 @@ public class SpinnerTopView extends View {
     }
 
     public void setLastColor(int lastColor) {
+        setLastColor(lastColor,true);
+    }
+    public void setLastColor(int lastColor,boolean relayout) {
         this.lastColor = lastColor;
-        invalidate();
+        if (relayout)
+            invalidate();
     }
 
     @Override
@@ -273,26 +309,26 @@ public class SpinnerTopView extends View {
                 mPaint2.setColor(lastColor==0?Color.WHITE:lastColor);
                 //去锯齿的 不多说
                 mPaint2.setAntiAlias(true);
-                mPaint2.setTextSize(mRadius - small);
+                mPaint2.setTextSize(mRadius - small-50);
                 mPaint2.setStyle(Paint.Style.STROKE);
                 //mPaint2.setStyle(Paint.Style.FILL);
                 Path path = new Path();
                 path.addCircle(mCenterX, mCenterY, (float) bbb, Path.Direction.CW);
                 //canvas.drawPath(path, mPaint2);
-                canvas.drawTextOnPath(text, path, 0, small / 2, mPaint2);
+                canvas.drawTextOnPath(text, path, 0, small/3, mPaint2);
             }
         }
-        if (isVisiBgDot) {
+        if (false) {//isVisiBgDot
             float x = 0;
             float y = 0;
             int Age;
             for (Age = 0; Age < 360; Age++) {
                 //LogUtils.e("angle:"+Age+"--x"+x+"--y"+y);
-                for (int R = big; R > small; R -=ret) {
+                for (int R = big; R > small+ret; R -=ret) {
                     x = mBallCenterX - (float) (R * Math.cos((Age / 180.0) * 3.1415926));
                     y = mBallCenterY - (float) (R * Math.sin((Age / 180.0) * 3.1415926));
                     mPaint3.setColor(Color.GRAY);
-                    canvas.drawCircle(x, y, 3, mPaint3);
+                    canvas.drawCircle(x, y, 1, mPaint3);
 //                    if ((Age+1)%120==0&&((big-small)/ret/2)==R) {
 //                        canvas.drawCircle(x, y, sR*3/5, mPaint3);//中心小圆
 //                    }
@@ -362,21 +398,22 @@ public class SpinnerTopView extends View {
         float x = 0;
         float y = 0;
         int Age;
-
+        mPaint3.setColor(lastColor==0?Color.CYAN:lastColor);
         for(Age=0;Age<360;Age++)
         {
             for (int R = big; R > small; R = R - ret)
             {
                 x = mBallCenterX- (float)(R * Math.cos( (Age/180.0)*3.1415926));
                 y = mBallCenterY- (float)(R * Math.sin((Age / 180.0) * 3.1415926));
-                mPaint3.setColor(Color.GRAY);
 //                if (isVisiBgDot)
 //                    canvas.drawCircle(x,y,3,mPaint3);
                 int color = 0;
                 color =( (0x0001 << ((R - small) /ret)) & (Picture1_ByteT[(Age / 3) * 2] * 256 + Picture1_ByteT[(Age / 3) * 2 + 1]) );
-                if (color > 0){
-                    mPaint3.setColor(lastColor==0?Color.CYAN:lastColor);
-                    canvas.drawCircle(x,y,5,mPaint3);
+                if (color > 0){//少画几个点总是好的
+                    if (prerent==1)
+                        canvas.drawCircle(x,y,3,mPaint3);
+                    else if (Age%prerent==0)
+                        canvas.drawCircle(x,y,5,mPaint3);
                 }
             }
         }
@@ -394,6 +431,8 @@ public class SpinnerTopView extends View {
     private void drawBgBall(Canvas canvas) {
         //Drawable drawable=getResources().getDrawable(R.drawable.rocker_base);
         //point to the right drawable instance
+        if (!isVisiBg)
+            return;
         if (mBgDrawable==null)
             return;
         mBgDrawable.setBounds((int) (mCenterX - mRadius),
@@ -403,7 +442,9 @@ public class SpinnerTopView extends View {
         mBgDrawable.draw(canvas);
     }
 
-    public void setmBgDrawable(Drawable mBgDrawable) {
-        this.mBgDrawable = mBgDrawable;
+    public void setmBgDrawable(IconDrawable mBgDrawable,boolean relayout) {
+        this.mBgDrawable = mBgDrawable.sizePx((int) mBallRadius);
+        if (relayout)
+            invalidate();
     }
 }

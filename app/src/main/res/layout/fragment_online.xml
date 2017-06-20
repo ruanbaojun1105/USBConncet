@@ -10,7 +10,7 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="4"
         />
     <!--<pro.alexzaitsev.freepager.library.view.core.VerticalPager
         android:id="@+id/vertical_pager"
@@ -44,17 +44,18 @@
             android:id="@+id/topPanel3"
             />
     </pro.alexzaitsev.freepager.library.view.core.VerticalPager>-->
+
     <include
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         layout="@layout/fragment_online_modechange"
         android:id="@+id/fragment_mode"
         />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:visibility="gone"
         android:id="@+id/fragment"
         >

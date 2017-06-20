@@ -203,7 +203,7 @@ public class UsbMainActivity extends SimpleActivity {
         }
     }
 
-    private void toStarDownImage() {
+    public void toStarDownImage() {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_edit_image);

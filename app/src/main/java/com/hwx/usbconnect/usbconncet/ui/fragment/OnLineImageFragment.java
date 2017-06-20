@@ -1,7 +1,10 @@
 package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,8 +18,11 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
+import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.ItemClickAdapter;
+import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
+import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,37 +67,58 @@ public class OnLineImageFragment extends SimpleFragment {
     }
 
     private void initView() {
-        int a = (int) (Math.random() * 5);
-        int[] ass = new int[]{R.color.colormain1, R.color.colormain2, R.color.colormain3, R.color.colormain4, R.color.colormain5};
+//        int a = (int) (Math.random() * 5);
+//        int[] ass = new int[]{R.color.colormain1, R.color.colormain2, R.color.colormain3, R.color.colormain4, R.color.colormain5};
         //Glide.with(getActivity()).load(new ColorDrawable()).into(imageView);
         String itemPath = MainFragment.getInnerSDCardPath() + "/HWX-SPINNER/";
-        String[] fileArr = MainFragment.getFileAll(mContext,new File(itemPath), false, false);
-        String[] fileArrname = MainFragment.getFileAll(mContext,new File(itemPath), true, false);
-        List<ImageFontTag> modList=new ArrayList<>();
+        String[] fileArr = MainFragment.getFileAll(mContext, new File(itemPath), false, false);
+        String[] fileArrname = MainFragment.getFileAll(mContext, new File(itemPath), true, false);
+        List<ImageFontTag> modList = new ArrayList<>();
         for (int i = 0; i < fileArr.length; i++) {
-            ImageFontTag imageFontMod=new ImageFontTag(fileArr[i],fileArrname[i]);
+            ImageFontTag imageFontMod = new ImageFontTag(fileArr[i], fileArrname[i]);
             modList.add(imageFontMod);
         }
-        final ItemClickAdapter itemClickAdapter=new ItemClickAdapter(modList);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        final ItemClickAdapter itemClickAdapter = new ItemClickAdapter(modList);
+        GridLayoutManager manager = new GridLayoutManager(getContext(),2);
         rvList.setLayoutManager(manager);
         rvList.setAdapter(itemClickAdapter);
         rvList.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-                OnLineFragment fragment= (OnLineFragment) getParentFragment();
-                String path=itemClickAdapter.getItem(position).getPath();
-                fragment.changeToOne(MainFragment.readFile(mContext,path));
+                OnLineFragment fragment = (OnLineFragment) getParentFragment();
+                String path = itemClickAdapter.getItem(position).getPath();
+                fragment.changeToOne(MainFragment.readFile(mContext, path));
             }
         });
-        send.setVisibility(modList.size()==0?View.VISIBLE:View.GONE);
+        rvList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                LogUtils.e("onScrollStateChanged---"+newState);
+                OnLineFragment fragment = (OnLineFragment) getParentFragment();
+                fragment.setThisCleanAnim(newState!=0);
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        send.setVisibility(modList.size() == 0 ? View.VISIBLE : View.GONE);
         send.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                OnLineFragment fragment= (OnLineFragment) getParentFragment();
+                OnLineFragment fragment = (OnLineFragment) getParentFragment();
                 fragment.changeToOne(new byte[]{});
             }
         });
+        if (modList.size() <6&& !AppConfig.getInstance().getBoolean("istip",false)) {
+            AppConfig.getInstance().putBoolean("istip",true);
+            new AlertDialog.Builder(mContext).setMessage("当前本地资源太少，是否从服务器导入？")
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ((UsbMainActivity)mContext).toStarDownImage();
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .show();
+        }
     }
 
     public class  ImageFontTag{

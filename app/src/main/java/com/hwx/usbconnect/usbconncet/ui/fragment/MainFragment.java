@@ -416,7 +416,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
             InputStream in = new FileInputStream(filePath);
             in.read(data, 0, 240);
             in.close();
-            if (BuildConfig.DEBUG) {
+            if (false) {
                 StringBuilder buil = new StringBuilder("");
                 for (int i = 0; i < 240; i++) {
                     //data[i]=(byte) i;

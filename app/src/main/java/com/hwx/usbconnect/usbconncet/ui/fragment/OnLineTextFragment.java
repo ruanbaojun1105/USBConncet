@@ -3,33 +3,28 @@ package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
+import com.hwx.usbconnect.usbconncet.utils.HorizontalPicker;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
-import com.hwx.usbconnect.usbconncet.utils.StateButton;
 import com.xw.repo.XEditText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 public class OnLineTextFragment extends SimpleFragment {
 
     @BindView(R.id.biucontainer)
     XEditText biucontainer;
-    @BindView(R.id.font_default)
-    StateButton fontDefault;
-    @BindView(R.id.font_bold)
-    StateButton fontBold;
-    @BindView(R.id.color_select)
-    View colorSelect;
     @BindView(R.id.send)
     Button send;
+    @BindView(R.id.hpicker_font)
+    HorizontalPicker hpickerFont;
 
     public OnLineTextFragment() {
         // Required empty public constructor
@@ -64,10 +59,14 @@ public class OnLineTextFragment extends SimpleFragment {
         send.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                OnLineFragment fragment= (OnLineFragment) getParentFragment();
-                fragment.changeToOne(biucontainer.getText().toString());
+                OnLineFragment fragment = (OnLineFragment) getParentFragment();
+                fragment.changeToOne(biucontainer.getText().toString(),hpickerFont.getSelectedIndex());
             }
         });
+        List<HorizontalPicker.PickerItem> textItems = new ArrayList<>();
+        textItems.add(new HorizontalPicker.TextItem("宋体"));
+        textItems.add(new HorizontalPicker.TextItem("粗体"));
+        hpickerFont.setItems(textItems,0);
     }
 
 }

@@ -2,13 +2,19 @@ package com.hwx.usbconnect.usbconncet.ui.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -19,6 +25,7 @@ import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bean.PresetMod;
 import com.hwx.usbconnect.usbconncet.bean.TextMod;
+import com.hwx.usbconnect.usbconncet.utils.HorizontalPicker;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ScreenParamsUtil;
@@ -26,6 +33,7 @@ import com.hwx.usbconnect.usbconncet.utils.StateButton;
 import com.piotrek.customspinner.CustomSpinner;
 import com.xw.repo.XEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hwx.usbconnect.usbconncet.utils.SmoothCheckBox;
@@ -198,21 +206,10 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                             return;
                         else
                             imageFontMod.setImagePath(imageFontMod.getFileArr()[choce_spinner1.getSelectedItemPosition()-1]);
-                        /*switch (choce_spinner1.getSelectedItemPosition()){
-                            case 0:
-                                imageFontMod.setImagePath("file:///android_asset/八卦.bin");
-                                break;
-                            case 1:
-                                imageFontMod.setImagePath("file:///android_asset/花朵.bin");
-                                break;
-                            case 2:
-                                imageFontMod.setImagePath("file:///android_asset/旋风.bin");
-                                break;
-                        }*/
                     }
                 });
                 choce_spinner1.setBackgroundResource(R.drawable.setting_btnbg4);
-                choce_spinner1.setSelection(imageFontMod.getFontId());
+                choce_spinner1.setSelection(imageFontMod.getFontId()>=choce_spinner1.getCount()?0:imageFontMod.getFontId());
                 break;
         }
     }
@@ -222,6 +219,10 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
     }
 
     public void showEditDialog(final Activity activity, String title,String content,int fontS, final EditOnclick onclickInterFace){
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
         final View view=View.inflate(activity,R.layout.type_main_text_dialog, null);
         final XEditText et= (XEditText) view.findViewById(R.id.biucontainer);
        /* et.setDisableEmoji(true);
@@ -233,60 +234,84 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
             et.setSelection(content.length());
         }
         //et.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
-        final StateButton font_default= (StateButton) view.findViewById(R.id.font_default);
-        final StateButton font_bold= (StateButton) view.findViewById(R.id.font_bold);
-        font_default.setOnClickListener(new IClickListener() {
+
+        final HorizontalPicker hpickerFont= (HorizontalPicker) view.findViewById(R.id.hpicker_font);;
+        List<HorizontalPicker.PickerItem> textItems = new ArrayList<>();
+        textItems.add(new HorizontalPicker.TextItem("宋体"));
+        textItems.add(new HorizontalPicker.TextItem("粗体"));
+        hpickerFont.setItems(textItems,fontS);
+
+        LinearLayout show_lin= (LinearLayout) view.findViewById(R.id.show_lin);
+        show_lin.setVisibility(View.VISIBLE);
+        Button cancle_default= (Button) view.findViewById(R.id.cancle_default);
+        Button true_default= (Button) view.findViewById(R.id.true_default);
+        dialog.setContentView(view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        cancle_default.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                font_default.setEnabled(false);
-                font_bold.setEnabled(true);
-                view.setTag(1);
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                if (dialog!=null&&dialog.isShowing())
+                    dialog.dismiss();
             }
         });
-        font_bold.setOnClickListener(new IClickListener() {
+        true_default.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                font_default.setEnabled(true);
-                font_bold.setEnabled(false);
-                view.setTag(2);
-            }
-        });
-        if (fontS==0||fontS==1){
-            font_default.callOnClick();
-        }else if(fontS==2){
-            font_bold.callOnClick();
-        }
-        new AlertDialog.Builder(activity)
-                //.setTitle(title)
-                //.setIcon(android.R.drawable.ic_menu_send)
-                .setView(view)
-                .setPositiveButton(R.string.dtaddssd, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (activity==null)
-                            return;
-                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                        final String input = et.getText().toString();
+                if (activity==null)
+                    return;
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                final String input = et.getText().toString();
 //                    if (TextUtils.isEmpty(input))
 //                        return;
-                        if (onclickInterFace!=null){
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onclickInterFace.onClick(input, (Integer) view.getTag());
-                                }
-                            });
+                if (onclickInterFace!=null){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onclickInterFace.onClick(input, hpickerFont.getSelectedIndex());
                         }
-                    }
-                })
-                .setNegativeButton(R.string.dadttsadts, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                    }
-                })
-                .show();
+                    });
+                }
+                if (dialog!=null&&dialog.isShowing())
+                    dialog.dismiss();
+            }
+        });
+//        new AlertDialog.Builder(activity)
+//                //.setTitle(title)
+//                //.setIcon(android.R.drawable.ic_menu_send)
+//                .setView(view)
+//                .setPositiveButton(R.string.dtaddssd, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        if (activity==null)
+//                            return;
+//                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+//                        final String input = et.getText().toString();
+//                    if (TextUtils.isEmpty(input))
+//                        return;
+//                        if (onclickInterFace!=null){
+//                            activity.runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    onclickInterFace.onClick(input, hpickerFont.getSelectedIndex());
+//                                }
+//                            });
+//                        }
+//                    }
+//                })
+//                .setNegativeButton(R.string.dadttsadts, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+//                    }
+//                })
+//                .show();
     }
 }
