@@ -11,7 +11,9 @@
         android:id="@+id/checkBox"
         android:layout_width="@dimen/check_width"
         android:layout_height="@dimen/check_width"
-        android:layout_margin="5dp"/>
+        android:layout_margin="5dp"
+        app:color_checked="@color/colorPrimary"
+        />
 
     <com.piotrek.customspinner.CustomSpinner
         android:id="@+id/choce_spinner"

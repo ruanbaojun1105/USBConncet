@@ -55,7 +55,7 @@ public class OnLineTextFragment extends SimpleFragment {
         int[] ass = new int[]{R.color.colormain1, R.color.colormain2, R.color.colormain3, R.color.colormain4, R.color.colormain5};
         //Glide.with(getActivity()).load(new ColorDrawable()).into(imageView);
         biucontainer.setMaxLines(2);
-        biucontainer.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
+//        biucontainer.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
         send.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {

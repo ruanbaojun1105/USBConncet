@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class ScaleActivity extends AppCompatActivity {
+public class ScaleActivity extends AppCompatActivity  {
     // Debugging
     private static final String TAG = "OtherActivity";
     private static final boolean D = true;
@@ -51,6 +51,7 @@ public class ScaleActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1;
 
     private BluetoothAdapter mBluetoothAdapter = null;
+
     private Object lock = new Object();
     private StringBuilder builder = new StringBuilder("");
     private TextView connect_state;
@@ -61,18 +62,6 @@ public class ScaleActivity extends AppCompatActivity {
     private String CONNECT_NAME="";
     private ItemClickAdapter itemClickAdapter;
     private List<BluetoothDevice> deviceList=new ArrayList<>();
-    /*@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            *//*Intent home = new Intent(Intent.ACTION_MAIN);
-            //home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            home.addCategory(Intent.CATEGORY_HOME);
-            startActivity(home);*//*
-            System.exit(0);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,27 +79,25 @@ public class ScaleActivity extends AppCompatActivity {
             finish();
             return;
         }
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(mReceiver, filter);
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(BluetoothDevice.ACTION_FOUND);
+//        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+//        LocalBroadcastManager.getInstance(Application.getContext()).registerReceiver(mReceiver, filter);
         new CommandReceiver() {
             @Override
             public void onDataReceived(byte[] buffer, byte function, byte safeCod) {
             }
             @Override
             public void onFail() {
-                connect_state.setText("连接失败");
+                connect_state.setText("fail connect");
                 builder.setLength(0);
-                //connect_state.postDelayed(() -> startOpen(),8000);
-                startOpen();
             }
             @Override
             public void onLost() {
-                connect_state.setText("连接丢失");
+                connect_state.setText("lost connect");
                 builder.setLength(0);
-                //connect_state.postDelayed(() -> startOpen(),8000);
             }
+
             @Override
             public void onDeviceInfo(String name, String address) {
                 connect_state.append("\t"+name);
@@ -119,21 +106,22 @@ public class ScaleActivity extends AppCompatActivity {
             public void onStadeTag(int stade) {
                 switch (stade){
                     case 0:
-                        connect_state.setText("未连接");
+                        connect_state.setText("we're doing nothing");
                         break;
                     case 1:
-                        connect_state.setText("等待连接");
+                        connect_state.setText("now listening for incoming connections");
                         break;
                     case 2:
-                        connect_state.setText("初始化连接");
+                        connect_state.setText("now initiating an outgoing connection");
                         break;
                     case 3:
-                        connect_state.setText("已连接 "+CONNECT_NAME);
+                        connect_state.setText("now connected to a remote "+CONNECT_NAME);
                         break;
                 }
             }
         }.regiest();
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, ControlFragment.newInstance()).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, ControlFragment.newInstance(1)).commit();
+        //startOpen();
     }
 
     @Override
@@ -147,7 +135,6 @@ public class ScaleActivity extends AppCompatActivity {
     }
 
     public void startOpen() {
-        super.onStart();
         if (D) Log.e(TAG, "++ ON START ++");
         if (BluetoothService.getInstance().getState()==BluetoothService.STATE_CONNECTED){
             return;
@@ -181,7 +168,7 @@ public class ScaleActivity extends AppCompatActivity {
     }
 
     public synchronized boolean isEmpetConnectMac() {
-        CONNECT_MAC=AppConfig.getInstance().getString("isEmpetConnectMac","");
+        CONNECT_MAC=AppConfig.getInstance().getString("ta","");
         return TextUtils.isEmpty(CONNECT_MAC);
     }
 
@@ -214,14 +201,16 @@ public class ScaleActivity extends AppCompatActivity {
     private Dialog dialog;
     private void doDiscovery() {
         if (D) Log.d(TAG, "doDiscovery()");
+        //ensureDiscoverable();
         mBluetoothAdapter.startDiscovery();
         if (isEmpetConnectMac()){
             deviceList.clear();
             Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();//配对设备
             for (BluetoothDevice device : pairedDevices){
-                itemClickAdapter.addData(device);
+                deviceList.add(device);
+                itemClickAdapter.notifyDataSetChanged();
+                //itemClickAdapter.addData(device);
             }
-            ensureDiscoverable();
             if (dialog!=null&&dialog.isShowing()){
                 dialog.dismiss();
             }
@@ -230,7 +219,7 @@ public class ScaleActivity extends AppCompatActivity {
                 public void todosomething(BluetoothDevice item) {
                     CONNECT_MAC=item.getAddress();
                     CONNECT_NAME=item.getName();
-                    AppConfig.getInstance().putString("isEmpetConnectMac",CONNECT_MAC);
+                    //AppConfig.getInstance().putString("isEmpetConnectMac",CONNECT_MAC);
                     toCheck(item);
                 }
             });
@@ -254,7 +243,8 @@ public class ScaleActivity extends AppCompatActivity {
 
     private void connDevice(String address) {
         mBluetoothAdapter.cancelDiscovery();
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        BluetoothDevice device = mBluetoothAdapter
+                .getRemoteDevice(address);
         BluetoothService.getInstance().connect(device);
     }
 
@@ -280,7 +270,8 @@ public class ScaleActivity extends AppCompatActivity {
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     toCheck(device);
                     if (isEmpetConnectMac()&&itemClickAdapter!=null){
-                        itemClickAdapter.addData(device);
+                        deviceList.add(device);
+                        itemClickAdapter.notifyDataSetChanged();
                     }
                 }
                 // When discovery is finished, change the Activity title

@@ -3,6 +3,7 @@ package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.TextView;
 
 import com.hwx.usbconnect.usbconncet.R;
@@ -66,6 +67,7 @@ public class UseFragment extends SimpleFragment {
     private void initView() {
         name.setText(mParam1);
         name.setTextColor(getResources().getColor(R.color.colorPrimary));
+        name.setVisibility(View.GONE);
         this_info.setText(mParam2);
     }
 }

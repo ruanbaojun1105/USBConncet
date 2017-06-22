@@ -1,6 +1,5 @@
 package com.hwx.usbconnect.usbconncet.ui.activity;
 
-import android.hardware.usb.UsbDevice;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,9 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
-import com.hwx.usbconnect.usbconncet.utils.Constants;
 
 public class MainActivity extends AppCompatActivity {
     private ScanHelper mScanHelper;
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mScanHelper.registerReceiver();
-        mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS,Constants.DEVICE_PIDS));
+        mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
     }
 
     @Override

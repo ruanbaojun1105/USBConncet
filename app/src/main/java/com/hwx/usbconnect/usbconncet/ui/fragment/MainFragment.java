@@ -15,13 +15,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.hwx.usbconnect.usbconncet.BuildConfig;
+import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
@@ -35,7 +34,6 @@ import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.MultipleItemQuickAdapter;
 import com.hwx.usbconnect.usbconncet.utils.ACache;
 import com.hwx.usbconnect.usbconncet.utils.AppConfig;
-import com.hwx.usbconnect.usbconncet.utils.Constants;
 import com.hwx.usbconnect.usbconncet.utils.FileUtil;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -51,8 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import me.weyye.hipermission.HiPermission;
 import me.weyye.hipermission.PermissionCallback;
 import me.weyye.hipermission.PermissionItem;
@@ -193,13 +189,15 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         updateData.setOnClickListener(this);
         iconTextView.setText("{fa-eraser @color/colorPrimary spin}\n" + getString(R.string.clean));
         iconTextView.setOnClickListener(this);
-        /*mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
+                if (((UsbMainActivity)mContext).isOffLinePage()) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
+                }
             }
-        });*/
+        });
         /*if (AppConfig.getInstance().getBoolean("isClean",false));{
             cleanData(updateData);
             AppConfig.getInstance().putBoolean("isClean",true);
@@ -347,6 +345,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    ((UsbMainActivity)mContext).setIcon_text("{fa-usb @color/red}");//错误
                                     Toast.makeText(getActivity(), R.string.dsttaat, Toast.LENGTH_SHORT).show();
                                 }
                             });

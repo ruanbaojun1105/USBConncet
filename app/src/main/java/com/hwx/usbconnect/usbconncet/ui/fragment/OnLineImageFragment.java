@@ -5,21 +5,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
-import com.hwx.usbconnect.usbconncet.ui.adapter.ItemClickAdapter;
+import com.hwx.usbconnect.usbconncet.ui.adapter.SpinnerItemAdapter;
 import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
@@ -29,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 public class OnLineImageFragment extends SimpleFragment {
 
@@ -78,7 +72,7 @@ public class OnLineImageFragment extends SimpleFragment {
             ImageFontTag imageFontMod = new ImageFontTag(fileArr[i], fileArrname[i]);
             modList.add(imageFontMod);
         }
-        final ItemClickAdapter itemClickAdapter = new ItemClickAdapter(modList);
+        final SpinnerItemAdapter itemClickAdapter = new SpinnerItemAdapter(modList);
         GridLayoutManager manager = new GridLayoutManager(getContext(),2);
         rvList.setLayoutManager(manager);
         rvList.setAdapter(itemClickAdapter);

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/actionbar_dark_grey"
     tools:context="com.hwx.usbconnect.usbconncet.ui.fragment.InfoFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -30,6 +31,7 @@
             android:id="@+id/this_info"
             android:textSize="16sp"
             android:text="暂无内容"
+            android:textColor="@color/white"
             />
     </ScrollView>
 

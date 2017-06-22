@@ -85,10 +85,10 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
         final CustomSpinner colorSpinner2 = helper.getView(R.id.spinner2);
         colorSpinner2.initializeStringValues(new String[]{
-                mContext.getString(R.string.vvag),
-                mContext.getString(R.string.vaga),
-                mContext.getString(R.string.vaggagkjoo)},
-                mContext.getString(R.string.ajkjkk));
+                        mContext.getString(R.string.vaga),
+                        mContext.getString(R.string.vvag),
+                        mContext.getString(R.string.vaggagkjoo)},
+                        mContext.getString(R.string.ajkjkk));
         colorSpinner2.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
             @Override
             public void onSpinnerOpened() {
@@ -108,7 +108,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
                 editText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View view) {
-                        showEditDialog(((Activity) mContext), mContext.getString(R.string.gdjiadstjj), itemOd.getText(),itemOd.getFontStyle(), new EditOnclick() {
+                        showEditDialog(mContext.getString(R.string.gdjiadstjj), itemOd.getText(),itemOd.getFontStyle(), new EditOnclick() {
                             @Override
                             public void onClick(final String str, final int fontS) {
                                 itemOd.setText(str);
@@ -218,12 +218,12 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         void onClick(String str,int fontS);
     }
 
-    public void showEditDialog(final Activity activity, String title,String content,int fontS, final EditOnclick onclickInterFace){
+    public void showEditDialog(String title,String content,int fontS, final EditOnclick onclickInterFace){
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 
-        final View view=View.inflate(activity,R.layout.type_main_text_dialog, null);
+        final View view=View.inflate(mContext,R.layout.type_main_text_dialog, null);
         final XEditText et= (XEditText) view.findViewById(R.id.biucontainer);
        /* et.setDisableEmoji(true);
         //final EditText et = new EditText(activity);
@@ -235,7 +235,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         }
         //et.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
 
-        final HorizontalPicker hpickerFont= (HorizontalPicker) view.findViewById(R.id.hpicker_font);;
+        final HorizontalPicker hpickerFont= (HorizontalPicker) view.findViewById(R.id.hpicker_font);
         List<HorizontalPicker.PickerItem> textItems = new ArrayList<>();
         textItems.add(new HorizontalPicker.TextItem("宋体"));
         textItems.add(new HorizontalPicker.TextItem("粗体"));
@@ -249,11 +249,25 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+            }
+        });
         dialog.show();
         cancle_default.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
                 if (dialog!=null&&dialog.isShowing())
                     dialog.dismiss();
@@ -262,15 +276,13 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         true_default.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                if (activity==null)
-                    return;
-                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
                 final String input = et.getText().toString();
 //                    if (TextUtils.isEmpty(input))
 //                        return;
                 if (onclickInterFace!=null){
-                    activity.runOnUiThread(new Runnable() {
+                    et.post(new Runnable() {
                         @Override
                         public void run() {
                             onclickInterFace.onClick(input, hpickerFont.getSelectedIndex());

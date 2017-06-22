@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/actionbar_dark_grey"
+    >
+
+    <!--<ToggleButton
+        android:id="@+id/tbtnSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ToggleButton" />
+    <Button
+        android:id="@+id/btnDis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="本机可以被搜索  " />
+
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="退出" />-->
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="搜索"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="正在搜索蓝牙...  ...."
+        android:padding="10dp"
+        android:textColor="@color/white"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lvDevices"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        />
+
+</LinearLayout>

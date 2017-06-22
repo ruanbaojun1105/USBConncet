@@ -53,7 +53,7 @@
     <string name="vavdgsdgsa">\t{fa-dot-circle-o @color/link_text_blue}\t充电\n将USB线两端连接指尖陀螺和安卓手机，连接后可为陀螺充电。  \n\n\n\t{fa-dot-circle-o @color/link_text_blue}\t编辑\n进入充电状态后，转动陀螺中间轴承一圈，陀螺将会进入到编辑模式(手机自动识别usb host需要5-10秒)，然后打开此软件的编辑界面输入文字和配置图案、颜色、滚动模式、电量显示等 编辑完毕后点击确认修改，陀螺的新显示配置方案即会生效。一般手机会自动启动软件并连接，有些手机无法连接有以下原因\n\n\t\t{fa-dot-circle-o @color/gray}\t手机不支持USB HOST功能。\n\n\t\t{fa-dot-circle-o @color/gray}\t由于系统考虑省电，将USB HOST功能屏蔽掉了。\n\n\t\t{fa-dot-circle-o @color/gray}\t未打开手机高级设置中的OTG开关。</string>
     <string name="title_activity_usbmain2">USBMain2Activity</string>
     <string name="about_me">\n\n\n官  网：<a href="http://www.sz-hkj.com/">深圳市红微芯科技有限公司\nhttp://www.sz-hkj.com/</a> \n\n电话：<a href="https://szhwxdzkj.1688.com/">0755-28306546</a></string>
-    <string name="vdadg">显示配置</string>
+    <string name="vdadg">离线模式</string>
     <string name="fgaata">公司介绍</string>
     <string name="vfahta">使用说明</string>
     <string name="ttrta">指尖陀螺</string>

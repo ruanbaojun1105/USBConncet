@@ -13,13 +13,6 @@ android {
         targetSdkVersion 25
         versionCode 13
         versionName "1.5"
-        /*jackOptions {
-            enabled true
-        }*/
-        // 指定支持的so架构
-        ndk {
-            abiFilters 'armeabi', 'armeabi-v7a'//, 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
-        }
     }
     buildTypes {
         release {
@@ -41,7 +34,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.2.0'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.15'
     compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.google.android.gms:play-services-plus:9.4.0'
+    //compile 'com.google.android.gms:play-services-plus:9.4.0'
     compile 'com.android.support:design:25.3.1'
     compile 'com.github.piotrek1543:CustomSpinner:0.1'
     compile 'com.xw.repo:xedittext:2.0.2@aar'
@@ -59,4 +52,5 @@ dependencies {
     compile 'me.yokeyword:fragmentation:0.10.7'
     compile 'pro.alexzaitsev:freepager:1.0.1'
     compile project(':ColorPalette')
+    compile 'com.github.clans:fab:1.6.4'
 }

@@ -13,16 +13,16 @@ import java.util.List;
 /**
  *
  */
-public class ItemClickAdapter extends BaseQuickAdapter<OnLineImageFragment.ImageFontTag, BaseViewHolder> {
+public class SpinnerItemAdapter extends BaseQuickAdapter<OnLineImageFragment.ImageFontTag, BaseViewHolder> {
 
-    public ItemClickAdapter(List<OnLineImageFragment.ImageFontTag> data) {
-        super(R.layout.item_text, data);
+    public SpinnerItemAdapter(List<OnLineImageFragment.ImageFontTag> data) {
+        super(R.layout.spinlist_item_text, data);
     }
 
 
     @Override
     protected void convert(final BaseViewHolder helper, final OnLineImageFragment.ImageFontTag item) {
-        helper.setText(R.id.text,item.getName());
+        helper.setText(R.id.text,item.getName().replace(".bin",""));
         final SpinnerTopView topView=helper.getView(R.id.topView);
         new Thread(new Runnable() {
             @Override
@@ -32,6 +32,7 @@ public class ItemClickAdapter extends BaseQuickAdapter<OnLineImageFragment.Image
                 topView.post(new Runnable() {
                     @Override
                     public void run() {
+                        topView.setPrerent(4);
                         topView.setPicture1_ByteT(aa,false);
                     }
                 });

@@ -57,7 +57,7 @@ public class BluetoothService {
 	private ConnectedThread mConnectedThread;
 	private int mState;
 	public static final int STATE_NONE = 0; // we're doing nothing
-	public static final int STATE_LISTEN = 1; // now listening for incoming connections
+	public static final int STATE_LISTEN_LOST = 1; // now listening for incoming connections
 	public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
 	public static final int STATE_CONNECTED = 3; // now connected to a remote device
 
@@ -162,7 +162,6 @@ public class BluetoothService {
 
 		mAcceptThread = new AcceptThread(device);
 		mAcceptThread.start();
-		setState(STATE_LISTEN);
 	}
 
 	/**
@@ -219,6 +218,9 @@ public class BluetoothService {
 		setState(STATE_NONE);
 	}
 	public boolean write(byte[] out) {
+		if (instance==null){
+			return false;
+		}
 		// Create temporary object
 		ConnectedThread r;
 		// Synchronize a copy of the ConnectedThread
@@ -227,9 +229,9 @@ public class BluetoothService {
 		}
 		// Perform the write unsynchronized
 		try {
-			if (r!=null)
+			if (r!=null) {
 				r.write(out);
-			else
+			}else
 				return false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -238,11 +240,14 @@ public class BluetoothService {
 		}
 		return true;
 	}
-	public static final int safeCode = 0x10;//校验码
+	public static final int safeCode = 0x0e;//校验码
 	public final static byte[] endCode = new byte[]{0x0c, 0x0d};//结束符
 	public static final int starCode = 0x3a;//头
 	public static final int addrCode = 0x01;//地址
 	public void sendData(byte[] data) {
+		if (instance==null||mState!=3){
+			return ;
+		}
 		write(data);
 	}
 	/**
@@ -256,7 +261,10 @@ public class BluetoothService {
 	 *发送数据
 	 */
 	public void sendData(byte function,byte[] content,boolean isAutoSafeCode) {
-		isAutoSafeCode=true;//所有都自动算出来
+		if (instance==null||mState!=3){
+			return ;
+		}
+		isAutoSafeCode=false;//所有都自动算出来
 		byte[] head=new byte[]{starCode,addrCode,function,(byte) (content.length/256),(byte) (content.length%256)};
 		byte safe=safeCode;
 		if (isAutoSafeCode)
@@ -271,21 +279,6 @@ public class BluetoothService {
 		write(a);
 		Log.e("dd:","number code ："+function+" 's data send is "+mConnectedThread==null?"error!":"ok!");
 	}
-	public static byte[] reData(byte function,byte[] content,boolean isAutoSafeCode) {
-		isAutoSafeCode=true;//所有都自动算出来
-		byte[] head=new byte[]{starCode,addrCode,function,(byte) (content.length/256),(byte) (content.length%256)};
-		byte safe=safeCode;
-		if (isAutoSafeCode)
-			safe=checkSafeCod(content);
-		byte[] end=new byte[]{safe,endCode[0],endCode[1]};
-		List<byte[]> list=new ArrayList<byte[]>();
-		list.add(head);
-		list.add(content);
-		list.add(end);
-
-		byte[] a=sysCopy(list);
-		return a;
-	}
 	public static byte checkSafeCod(byte[] data){
 		byte safeCode=0;
 		for(byte at:data){
@@ -298,6 +291,7 @@ public class BluetoothService {
 	 * Indicate that the connection attempt failed and notify the UI Activity.
 	 */
 	private void connectionFailed() {
+		setState(STATE_LISTEN_LOST);
 		App.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_FAIL);
 	}
 
@@ -305,8 +299,8 @@ public class BluetoothService {
 	 * Indicate that the connection was lost and notify the UI Activity.
 	 */
 	private void connectionLost() {
-		setState(STATE_LISTEN);
-		App.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_FAIL);
+		setState(STATE_LISTEN_LOST);
+		App.sendLocalBroadCast(Constants.SERIAL_PORT_CONNECT_LOST);
 	}
 	/**
 	 * 创建新的线程用于和对端的蓝牙设备建立连接。
@@ -404,7 +398,7 @@ public class BluetoothService {
 		public void run() {
 			Log.i(TAG, "BEGIN mConnectedThread");
 			byte[] buffer = new byte[64];
-			int bytes;
+			int bytes = 0;
 
 			// Keep listening to the InputStream while connected
 			while (true) {
@@ -511,7 +505,7 @@ public class BluetoothService {
 			try {
 				if (mmOutStream!=null) {
 					mmOutStream.write(buffer);
-					Log.i("bt", new String(buffer));
+					Log.e("ble -- bt  size:", String.valueOf(buffer.length));
 				}
 			} catch (IOException e) {
 				Log.e(TAG, "Exception during write", e);

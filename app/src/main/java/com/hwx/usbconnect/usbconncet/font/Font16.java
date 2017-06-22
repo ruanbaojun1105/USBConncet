@@ -3,6 +3,8 @@ package com.hwx.usbconnect.usbconncet.font;
 import android.content.Context;
 import android.widget.Switch;
 
+import com.hwx.usbconnect.usbconncet.Constants;
+
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -56,12 +58,34 @@ public class Font16 {
 		return arr;
 	}
 
+	public byte[] getStringAndFont(String str,int fontStyle) {
+		int[] code = null;
+		byte[] res=new byte[0];
+
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) < 0x80) {
+				code = getByteCode(str.substring(i, i + 1));
+				byte[] tag=new byte[16];
+				for (int j = 0; j < 16; j++) {
+					tag[j]= (byte) Constants.nAsciiDot[(code[0]-0x20)*16+j];
+				}
+				res=byteMerger(res,tag);
+			}else {
+				code = getByteCode(str.substring(i, i + 1));
+				byte[] tag = read16_DZK(code[0], code[1],fontStyle);
+				res=byteMerger(res,tag);
+			}
+		}
+		return res;
+	}
+
 	public byte[] getStringFontByte(String str,int fontStyle) {
 		int[] code = null;
 		byte[] res=new byte[0];
 
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) < 0x80) {
+				code = getByteCode(str.substring(i, i + 1));
 				continue;
 			}else {
 				try {
@@ -142,11 +166,16 @@ public class Font16 {
 	}
 
 	protected int[] getByteCode(String str) {
-		int[] byteCode = new int[2];
+		int[] byteCode = new int[0];
 		try {
 			byte[] data = str.getBytes(ENCODE);
-			byteCode[0] = data[0] < 0 ? 256 + data[0] : data[0];
-			byteCode[1] = data[1] < 0 ? 256 + data[1] : data[1];
+			byteCode= new int[data.length];
+			if (data.length==1)
+				byteCode[0] = data[0] < 0 ? 256 + data[0] : data[0];
+			if (data.length==2) {
+				byteCode[0] = data[0] < 0 ? 256 + data[0] : data[0];
+				byteCode[1] = data[1] < 0 ? 256 + data[1] : data[1];
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

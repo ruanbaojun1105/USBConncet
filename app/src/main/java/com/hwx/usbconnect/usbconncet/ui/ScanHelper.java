@@ -3,6 +3,8 @@ package com.hwx.usbconnect.usbconncet.ui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,11 +23,11 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
 import com.hwx.usbconnect.usbconncet.utils.AnimTextView;
 import com.hwx.usbconnect.usbconncet.utils.AppConfig;
-import com.hwx.usbconnect.usbconncet.utils.Constants;
 import com.hwx.usbconnect.usbconncet.utils.DebugLog;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ToastUtils;
@@ -82,7 +84,7 @@ public class ScanHelper {
                     inEndpoint=null;
                     outEndpoint=null;
                     isScanConn=false;
-                    icon_text.setText("{fa-times-circle @color/red}");//错误
+                    icon_text.setText("{fa-usb @color/red}");//错误
                     Toast.makeText(mContext, R.string.dsttaat,Toast.LENGTH_SHORT).show();
                     break;
                 case 111:
@@ -92,7 +94,7 @@ public class ScanHelper {
                     icon_text.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            icon_text.setText("{fa-check @color/colormain5}");//ok
+                            icon_text.setText("{fa-usb @color/colormain5}");//ok
                         }
                     },2000);
                     try {
@@ -119,6 +121,12 @@ public class ScanHelper {
                     LogUtils.e("-----------------------112");
                     Toast.makeText(mContext, R.string.vfaddt,Toast.LENGTH_SHORT).show();
                     icon_text.setText("{fa-times-circle @color/red}");//错误
+                    icon_text.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            icon_text.setText("{fa-usb @color/red}");//错误
+                        }
+                    },1500);
                     try {
                         dialog.dismiss();
                     } catch (Exception e) {
@@ -390,7 +398,7 @@ public class ScanHelper {
                 }
             }else if(UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)){//拔出后再次插入
                 LogUtils.e("ACTION_USB_DEVICE_ATTACHED:");
-                UsbDevice device = checkScanDevice(Constants.DEVICE_VIDS,Constants.DEVICE_PIDS);
+                UsbDevice device = checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS);
                 if(device != null){
                     startScan(device);
                 }
@@ -404,7 +412,11 @@ public class ScanHelper {
                 LogUtils.e("USB_DISCONNECTED:");
             }else if("android.hardware.usb.action.USB_CONNECTED".equals(action)){
                 LogUtils.e("USB_CONNECTED:");
-            }
+            }/*else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                LogUtils.e("ACTION_FOUND:");
+            }else if(BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){
+                LogUtils.e("ACTION_BOND_STATE_CHANGED:");
+            }*/
         }
     };
 
@@ -419,10 +431,10 @@ public class ScanHelper {
         filter.addAction("android.hardware.action.USB_DISCONNECTED");
         filter.addAction("android.hardware.action.USB_CONNECTED");
 
-//        filter.addAction("android.intent.action.UMS_CONNECTED");
-//        filter.addAction("android.intent.action.UMS_DISCONNECTED");
-//        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
-//        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+//        filter.addAction(BluetoothDevice.ACTION_FOUND);// 用BroadcastReceiver来取得搜索结果
+//        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+//        filter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+//        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         mContext.registerReceiver(mUsbReceiver, filter);
         //LocalBroadcastManager.getInstance(App.getContext()).registerReceiver(mUsbReceiver, filter);
     }

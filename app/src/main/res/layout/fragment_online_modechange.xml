@@ -162,7 +162,7 @@
                 app:unableBackgroundColor="@color/colorPrimary"
                 app:unableTextColor="@color/white"/>
         </LinearLayout>
-    <LinearLayout
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
@@ -172,14 +172,14 @@
         android:visibility="gone"
         >
         <com.hwx.usbconnect.usbconncet.utils.StateButton
-            android:id="@+id/shangxia_btn"
+            android:id="@+id/zuoyou_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="上下滚动"
+            android:text="左右滚动"
             android:layout_weight="1"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalBackgroundColor="@color/link_text_blue"
             app:normalTextColor="@color/white"
             app:normalStrokeWidth="1dp"
             app:normalStrokeColor="@color/white"
@@ -188,14 +188,14 @@
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
         <com.hwx.usbconnect.usbconncet.utils.StateButton
-            android:id="@+id/zuoyou_btn"
+            android:id="@+id/shangxia_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="左右滚动"
+            android:text="上下滚动"
             android:layout_weight="1"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalBackgroundColor="@color/link_text_blue"
             app:normalTextColor="@color/white"
             app:normalStrokeWidth="1dp"
             app:normalStrokeColor="@color/white"
@@ -211,7 +211,23 @@
             android:text="固定"
             android:layout_weight="1"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalBackgroundColor="@color/link_text_blue"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/gray"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"/>
+        <com.hwx.usbconnect.usbconncet.utils.StateButton
+            android:id="@+id/hunse_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="混色"
+            android:layout_weight="1"
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/link_text_blue"
             app:normalTextColor="@color/white"
             app:normalStrokeWidth="1dp"
             app:normalStrokeColor="@color/white"
@@ -237,7 +253,7 @@
             android:text="更多颜色"
             android:layout_weight="1"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalBackgroundColor="@color/blue_t"
             app:normalTextColor="@color/white"
             app:normalStrokeWidth="1dp"
             app:normalStrokeColor="@color/white"
@@ -253,7 +269,7 @@
             android:text="版本信息"
             android:layout_weight="1"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalBackgroundColor="@color/colormain7"
             app:normalTextColor="@color/white"
             app:normalStrokeWidth="1dp"
             app:normalStrokeColor="@color/white"
@@ -269,14 +285,15 @@
             android:text="自动"
             android:layout_weight="1"
             app:radius="5dp"
-            app:normalBackgroundColor="@color/colorPrimary"
+            app:normalBackgroundColor="@color/colormain6"
             app:normalTextColor="@color/white"
             app:normalStrokeWidth="1dp"
             app:normalStrokeColor="@color/white"
-            app:pressedBackgroundColor="@color/gray"
+            app:pressedBackgroundColor="@color/colorPrimary"
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
-            app:unableTextColor="@color/white"/>
+            app:unableTextColor="@color/white"
+            />
     </LinearLayout>
 
     </LinearLayout>

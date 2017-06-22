@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="10dp"
+    android:background="@color/actionbar_dark_grey"
     >
 
     <LinearLayout
@@ -23,6 +23,7 @@
             android:gravity="center"
             android:text="@string/vjkkjagkl"
             android:layout_margin="5dp"
+            android:textColor="@color/white"
             />
         <TextView
             android:layout_width="match_parent"
@@ -30,21 +31,27 @@
             android:layout_weight="1"
             android:text="@string/bfijj"
             android:gravity="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:textColor="@color/white"
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/ojgajktkj"
             android:gravity="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:textColor="@color/white"
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/fkak"
             android:gravity="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:textColor="@color/white"
+            />
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_list"
@@ -68,7 +75,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/updateData"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             android:paddingLeft="10dp"
             android:gravity="bottom|center"
             android:layout_alignTop="@+id/updateData"/>

@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
+
 /**
  * =====================================
  * 作    者: 陈嘉桐 445263848

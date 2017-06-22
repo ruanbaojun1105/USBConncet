@@ -44,7 +44,7 @@ public abstract class CommandReceiver extends BroadcastReceiver {
         }else if (intent.getAction().equals(Constants.SERIAL_PORT_CONNECT_STATE)) {
 //            Constants that indicate the current connection state
 //            public static final int STATE_NONE = 0; // we're doing nothing
-//            public static final int STATE_LISTEN = 1; // now listening for incoming
+//            public static final int STATE_LISTEN_LOST = 1; // now listening for incoming
 //            // connections
 //            public static final int STATE_CONNECTING = 2; // now initiating an outgoing
 //            // connection
