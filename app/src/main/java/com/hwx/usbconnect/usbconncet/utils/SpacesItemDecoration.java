@@ -1,4 +1,4 @@
-package com.hwx.usbconnect.usbconncet.bluetooth;
+package com.hwx.usbconnect.usbconncet.utils;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

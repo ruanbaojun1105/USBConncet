@@ -1,39 +1,37 @@
 package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
-import com.hwx.usbconnect.usbconncet.bluetooth.CommandReceiver;
+import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
+import com.hwx.usbconnect.usbconncet.bean.TextMod;
+import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
+import com.hwx.usbconnect.usbconncet.ui.brocast.CommandReceiver;
 import com.hwx.usbconnect.usbconncet.font.Font16;
-import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
+import com.hwx.usbconnect.usbconncet.ui.UsbScanHelper;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
-import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.VPagerAdapter;
+import com.hwx.usbconnect.usbconncet.utils.ACache;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
-import com.hwx.usbconnect.usbconncet.utils.JColorBar;
+import com.hwx.usbconnect.usbconncet.ui.widget.JColorBar;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
-import com.hwx.usbconnect.usbconncet.utils.SpinnerTopView;
-import com.hwx.usbconnect.usbconncet.utils.StateButton;
+import com.hwx.usbconnect.usbconncet.ui.widget.SpinnerTopView;
+import com.hwx.usbconnect.usbconncet.ui.widget.StateButton;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -41,9 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import zhou.colorpalette.ColorSelectDialog;
 
 
@@ -89,6 +85,8 @@ public class OnLineFragment extends SimpleFragment {
     StateButton autoBtn;
     @BindView(R.id.other_lin)
     LinearLayout otherLin;
+    @BindView(R.id.close_spinner_btn)
+    StateButton close_spinner_btn;
     private List<Fragment> fragments = new ArrayList<>();
     //private String[] titles = new String[]{"编辑", "文本预览", "图片预览"};
     private List<View> views;
@@ -96,6 +94,7 @@ public class OnLineFragment extends SimpleFragment {
     private String text;
     private boolean isVisiImage = false;
     private boolean isVisiText = false;
+    private boolean isFixed=false;
 
     private ColorSelectDialog colorSelectDialog = null;
     private int lastColor;
@@ -114,6 +113,7 @@ public class OnLineFragment extends SimpleFragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_online;
@@ -130,6 +130,8 @@ public class OnLineFragment extends SimpleFragment {
             @Override
             public void update(int color) {
                 setColor(color);
+//                if (((UsbMainActivity)mActivity).isLinePage())
+//                    StatusBarUtil.setColor(mActivity,lastColor==0?mContext.getResources().getColor(R.color.colorPrimary):lastColor,20);
             }
         });
         text_btn.setOnClickListener(new IClickListener() {
@@ -167,15 +169,21 @@ public class OnLineFragment extends SimpleFragment {
         });
         colorBtn.setOnClickListener(new IClickListener() {
             @Override
-            protected void onIClick(View v) {
+            protected void onIClick(final View v) {
                 if (colorSelectDialog == null) {
                     colorSelectDialog = new ColorSelectDialog(mContext);
                     colorSelectDialog.setOnColorSelectListener(new ColorSelectDialog.OnColorSelectListener() {
                         @Override
-                        public void onSelectFinish(int color) {
+                        public void onSelectFinish(final int color) {
                             setColor(color);
+                            Bundle bundle=getArguments();
+                            bundle.putInt("lastColor",color);
+                            setArguments(bundle);
+                            onSaveInstanceState(bundle);
                             otherLin.setVisibility(View.GONE);
                             updateLin.setVisibility(View.VISIBLE);
+//                            if (((UsbMainActivity)mActivity).isLinePage())
+//                                StatusBarUtil.setColor(mActivity,lastColor==0?mContext.getResources().getColor(R.color.colorPrimary):lastColor,20);
                         }
                     });
                 }
@@ -233,9 +241,9 @@ public class OnLineFragment extends SimpleFragment {
         };
         topView.setOnClickListener(onClickListener);
         topView1.setOnClickListener(onClickListener);
-        views.add(topView.setAnim3());
-        //views.add(new SpinnerTopView(mContext).setAnim1());
-        views.add(topView1.setAnim2());
+        views.add(topView.setVisiBg(true).setAnim1());
+        //views.add(new SpinnerTopView(mContext).setAnim1());fa-gear
+        views.add(topView1.setVisiBg(true).setmBgDrawable(new IconDrawable(getContext(), FontAwesomeIcons.fa_sun_o),true).setAnim2());//fa-sun-o
         VPagerAdapter vPagerAdapter = new VPagerAdapter(views);
         viewpager.setAdapter(vPagerAdapter);
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -316,14 +324,14 @@ public class OnLineFragment extends SimpleFragment {
         text = savedInstanceState.getString("text");
         isVisiImage = savedInstanceState.getBoolean("isVisiImage");
         isVisiText = savedInstanceState.getBoolean("isVisiText");
-        lastColor = savedInstanceState.getInt("lastColor");
+        LogUtils.e("x"+savedInstanceState.getFloat("x"));
         color_bar.post(new Runnable() {
             @Override
             public void run() {
                 color_bar.setX(savedInstanceState.getFloat("x"));
             }
         });
-
+        lastColor = savedInstanceState.getInt("lastColor");
         setColor(lastColor, true);
         if (isVisiText)
             setTextT(text);
@@ -338,7 +346,7 @@ public class OnLineFragment extends SimpleFragment {
     public void setPicture1_ByteT(byte[] picture1_ByteT, int baifenbi) {
         if (baifenbi!=1) {//图片
             byte[] data = Font16.byteMerger(new byte[]{(byte) 0x01, (byte) 0x00, (byte) 0x00}, picture1_ByteT);
-            BluetoothService.getInstance().sendData((byte) 0x03, data, false);
+            BluetoothService.getInstance().sendData((byte) 0x00, data, false);
         }
         Picture1_ByteT = picture1_ByteT;
         isVisiImage = true;
@@ -349,14 +357,26 @@ public class OnLineFragment extends SimpleFragment {
             spinnerTopView.setPicture1_ByteT(Picture1_ByteT);
         }
     }
-
+    private void setFixed(boolean isFixed) {
+        this.isFixed=isFixed;
+        for (View v : views) {
+            SpinnerTopView spinnerTopView = (SpinnerTopView) v;
+            spinnerTopView.setFixed(isFixed);
+            break;
+        }
+    }
 
     private void setColor(int color) {
         setColor(color, true);
     }
 
+    public int getLastColor() {
+        return lastColor;
+    }
+
     private void setColor(int color, boolean relayout) {
-        BluetoothService.getInstance().sendData((byte) 0x10, new byte[]{(byte) Color.red(color),(byte) Color.green(color),(byte) Color.blue(color)}, false);
+        if (lastColor!=color)
+            BluetoothService.getInstance().sendData((byte) 0x10, new byte[]{(byte) Color.red(color),(byte) Color.green(color),(byte) Color.blue(color)}, false);
         lastColor = color;
         for (View v : views) {
             SpinnerTopView spinnerTopView = (SpinnerTopView) v;
@@ -368,21 +388,36 @@ public class OnLineFragment extends SimpleFragment {
         setTextT(text, 0);
     }
 
-    public void setTextT(String text, int fontStyle) {
+    public void setTextT(final String text, final int fontStyle) {
         if (TextUtils.isEmpty(text))
             return;
         this.text = text;
         isVisiText = true;
         isVisiImage = false;
         isStopAuto =true;
-        try {
-            byte[] data1 = Font16.byteMerger(new byte[]{(byte) 0x01, (byte) 0x00, (byte) 0x00}, text.getBytes("GB2312"));
-            byte[] data12 = new Font16(mContext).getStringFontByte(text, fontStyle);
-            BluetoothService.getInstance().sendData((byte) 0x03, data1, false);
-            BluetoothService.getInstance().sendData((byte) 0x09, data12, false);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<AbsTypeMod> data = new ArrayList<>();
+                ACache aCache = ACache.get(getContext());
+                Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
+                data = (List<AbsTypeMod>) obj;
+                try {
+                    String textT="";
+                    textT=text+(obj==null?"":(((TextMod) data.get(4)).getText()))+(obj==null?"":(((TextMod) data.get(5)).getText()));
+                    byte[] data1 = Font16.byteMerger(new byte[]{(byte) 0x01, (byte) 0x00, (byte) 0x00}, text.getBytes("GB2312"));
+                    byte[] data12 = new Font16(mContext).getStringFontByte(textT, fontStyle);
+                    BluetoothService.getInstance().sendData((byte) 0x03, data1, false);
+                    Thread.sleep(50);
+                    BluetoothService.getInstance().sendData((byte) 0x09, data12, false);
+                    data=null;
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         byte[] fff = new Font16(mContext).getStringAndFont(text, fontStyle);
         if (fff.length == 0)
             return;
@@ -485,6 +520,8 @@ public class OnLineFragment extends SimpleFragment {
                     return;
                 LogUtils.e("auto--pic" + curNumber);
                 final byte[] aa = MainFragment.readFile(mContext, fileArr[curNumber]);
+                if (autoBtn==null)
+                    return;
                 autoBtn.post(new Runnable() {
                     @Override
                     public void run() {
@@ -503,32 +540,36 @@ public class OnLineFragment extends SimpleFragment {
         }).start();
     }
 
-    @OnClick({R.id.shangxia_btn, R.id.zuoyou_btn, R.id.gunding_btn, R.id.version_btn, R.id.auto_btn,R.id.hunse_btn})
+    @OnClick({R.id.shangxia_btn, R.id.zuoyou_btn, R.id.gunding_btn, R.id.version_btn, R.id.auto_btn,R.id.hunse_btn,R.id.close_spinner_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.zuoyou_btn:
                 BluetoothService.getInstance().sendData((byte) 0x11, new byte[]{(byte)0x01}, false);
                 modeLin.setVisibility(View.GONE);
                 updateLin.setVisibility(View.VISIBLE);
+                setFixed(false);
                 break;
             case R.id.shangxia_btn:
                 BluetoothService.getInstance().sendData((byte) 0x11, new byte[]{(byte)0x02}, false);
                 modeLin.setVisibility(View.GONE);
                 updateLin.setVisibility(View.VISIBLE);
                 //otherLin.setVisibility(View.GONE);
+                setFixed(false);
                 break;
             case R.id.gunding_btn:
                 BluetoothService.getInstance().sendData((byte) 0x11, new byte[]{(byte)0x03}, false);
                 modeLin.setVisibility(View.GONE);
                 updateLin.setVisibility(View.VISIBLE);
+                setFixed(false);
                 break;
             case R.id.hunse_btn:
                 BluetoothService.getInstance().sendData((byte) 0x11, new byte[]{(byte)0x04}, false);
                 modeLin.setVisibility(View.GONE);
                 updateLin.setVisibility(View.VISIBLE);
+                setFixed(true);
                 break;
             case R.id.version_btn:
-                byte[] ta=ScanHelper.sendDataSSS((byte)0x06, new byte[]{(byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x03}, false);
+                byte[] ta= UsbScanHelper.sendDataSSS((byte)0x06, new byte[]{(byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x03}, false);
                 BluetoothService.getInstance().sendData(ta);
                 otherLin.setVisibility(View.GONE);
                 updateLin.setVisibility(View.VISIBLE);
@@ -541,6 +582,11 @@ public class OnLineFragment extends SimpleFragment {
                 if (fileArr==null)
                     isStopAuto=!isStopAuto;
                 autoPicture(fileArr,0);
+                break;
+            case R.id.close_spinner_btn:
+                BluetoothService.getInstance().sendData((byte) 0x12, new byte[]{(byte)0x00}, false);
+                otherLin.setVisibility(View.GONE);
+                updateLin.setVisibility(View.VISIBLE);
                 break;
         }
     }

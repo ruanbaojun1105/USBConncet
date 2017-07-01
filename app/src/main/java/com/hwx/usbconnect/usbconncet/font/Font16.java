@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Switch;
 
 import com.hwx.usbconnect.usbconncet.Constants;
+import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -105,6 +106,7 @@ public class Font16 {
 	private static String dotMatrixFont2 = "gbk2.dzk";//粗体
 	private int wordByteByDots = 32;//12*12/24----16*16/32
 	protected byte[] read16_DZK(int areaCode, int posCode,int fontStyle) {
+		LogUtils.e("读取字体"+(fontStyle<2?"宋体":"粗体"));
 		byte[] data = null;
 		try {
 			int area = areaCode - 0x81;
@@ -112,10 +114,9 @@ public class Font16 {
 			String filefff="";
 			switch (fontStyle){
 				case 0:
-				case 1:
 					filefff=dotMatrixFont;
 					break;
-				case 2:
+				case 1:
 					filefff=dotMatrixFont2;
 					break;
                 default:

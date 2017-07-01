@@ -3,8 +3,6 @@ package com.hwx.usbconnect.usbconncet.ui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,11 +21,10 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.AppConfig;
 import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
-import com.hwx.usbconnect.usbconncet.utils.AnimTextView;
-import com.hwx.usbconnect.usbconncet.utils.AppConfig;
+import com.hwx.usbconnect.usbconncet.ui.widget.AnimTextView;
 import com.hwx.usbconnect.usbconncet.utils.DebugLog;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ToastUtils;
@@ -54,7 +51,7 @@ import java.util.List;
         <uses-feature android:name="android.hardware.usb.host"/>
  */
 
-public class ScanHelper {
+public class UsbScanHelper {
     private IconTextView icon_text;
     private Context mContext;
     private boolean isScanConn;
@@ -103,7 +100,7 @@ public class ScanHelper {
                         e.printStackTrace();
                     }
                     if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
-                        int a = AppConfig.getInstance().getInt("success", 1);
+                        int a = com.hwx.usbconnect.usbconncet.AppConfig.getInstance().getInt("success", 1);
                         AppConfig.getInstance().putInt("success", a + 1);
                         if (a > 20) {
                             new AlertDialog.Builder(mContext).setMessage("当前设置成功次数超过20次,请授权")
@@ -202,7 +199,7 @@ public class ScanHelper {
         mHandler.sendEmptyMessage(110);
     }
 
-    public ScanHelper(Context context,IconTextView icon_text){
+    public UsbScanHelper(Context context, IconTextView icon_text){
         mContext = context;
         this.icon_text=icon_text;
         isScanConn = true;
@@ -275,12 +272,6 @@ public class ScanHelper {
             LogUtils.e("总共内容长度"+data.length);
             final byte[][] bytes = split_bytes(data,64);
             amit=bytes.length;
-//            for (int i = 0; i < bytes.length; i++) {
-//                for (int j = 0; j < bytes[i].length; j++) {
-//                    System.out.print(bytes[i][j] + " ");
-//                }
-//                click.click(bytes[i]);
-//            }
             Onclick click=new Onclick() {
                 @Override
                 public void click(final byte aaa[]) {

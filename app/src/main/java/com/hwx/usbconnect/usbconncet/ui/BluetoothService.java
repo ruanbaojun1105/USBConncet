@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hwx.usbconnect.usbconncet.bluetooth;
+package com.hwx.usbconnect.usbconncet.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -36,7 +36,10 @@ import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.BuildConfig;
 import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
+import com.hwx.usbconnect.usbconncet.ui.adapter.ItemClickAdapter;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
+import com.hwx.usbconnect.usbconncet.utils.SpacesItemDecoration;
+import com.hwx.usbconnect.usbconncet.utils.StringHexUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,6 +143,10 @@ public class BluetoothService {
 	 */
 	public synchronized int getState() {
 		return mState;
+	}
+
+	public boolean isConnectBle() {
+		return mState==3;
 	}
 
 	/**
@@ -269,6 +276,7 @@ public class BluetoothService {
 		byte safe=safeCode;
 		if (isAutoSafeCode)
 			safe=checkSafeCod(content);
+		safe=safeCode;//固定
 		byte[] end=new byte[]{safe,endCode[0],endCode[1]};
 		List<byte[]> list=new ArrayList<byte[]>();
 		list.add(head);
@@ -464,7 +472,7 @@ public class BluetoothService {
 					if (numberNo==0x05){
 						sa=0x01;
 					}
-					sendData((byte) 0xff,new byte[]{0x00,0x00},true);//收到消息返回一条
+					//sendData((byte) 0xff,new byte[]{0x00,0x00},true);//收到消息返回一条
 
 					Bundle bundle1=new Bundle();
 					bundle1.putByteArray("data",content);

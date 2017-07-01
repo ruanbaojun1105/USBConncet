@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_spinner"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:textColor="@color/bg_gray"
+        android:layout_toLeftOf="@+id/icon"
+        android:layout_marginLeft="60dp"
+        app:normalBackgroundColor="@color/grey_spinner"
+        app:radius="5dp"
+        android:layout_margin="10dp"
+        />
+    <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
+        android:id="@+id/icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@color/grey_spinner"
+        app:normalBackgroundColor="@color/grey_spinner"
+        android:textColor="@color/bg_gray"
+        android:text="{fa-street-view}"
+        app:radius="10dp"
+        app:round="true"
+        android:layout_alignTop="@+id/text"
+        android:layout_alignParentRight="true"
+        />
+</RelativeLayout>

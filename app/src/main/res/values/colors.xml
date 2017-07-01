@@ -56,8 +56,10 @@
     <color name="orange_light">#ffa500</color>
     <color name="white_yellow">#fff7b4</color>
     <color name="yellow">#ffff00</color>
+    <color name="grey_spinner">#3C3F41</color>
 
     <color name="green_t">#5F8A2D</color>
     <color name="glod_t">#7F4D39</color>
     <color name="blue_t">#5CACDF</color>
+    <color name="blue_t_alph">#505CACDF</color>
 </resources>

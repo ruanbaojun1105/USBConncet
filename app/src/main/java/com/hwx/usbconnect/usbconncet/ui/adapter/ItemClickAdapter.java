@@ -1,4 +1,4 @@
-package com.hwx.usbconnect.usbconncet.bluetooth;
+package com.hwx.usbconnect.usbconncet.ui.adapter;
 
 import android.bluetooth.BluetoothDevice;
 

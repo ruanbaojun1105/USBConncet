@@ -1,4 +1,4 @@
-package com.hwx.usbconnect.usbconncet.utils;
+package com.hwx.usbconnect.usbconncet.ui.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;

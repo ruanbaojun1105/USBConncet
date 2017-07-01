@@ -1,4 +1,4 @@
-package com.hwx.usbconnect.usbconncet.bluetooth;
+package com.hwx.usbconnect.usbconncet.ui.brocast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

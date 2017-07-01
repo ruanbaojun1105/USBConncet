@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.yalantis.starwars.TilesFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tiles_frame_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:sw_animationDuration="2000"
+    >
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/actionbar_dark_grey"
@@ -21,20 +30,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="退出" />-->
-    <Button
+    <!--<ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/blepic" />-->
+    <com.joanzapata.iconify.widget.IconTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="{fa-bluetooth @color/colorPrimary 80sp} \tBluetooth\t®"
+        android:textSize="40sp"
+        android:gravity="top|center"
+        android:textColor="@color/white"
+        android:id="@+id/icon_head"
+        />
+    <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
         android:id="@+id/btnSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="搜索"
-        android:visibility="gone"
+        android:text="@string/vdrjtj"
+        android:textSize="18sp"
+        android:visibility="visible"
+        android:layout_margin="15dp"
         android:textColor="@color/white"
+        app:normalStrokeColor="@color/white"
+        app:normalStrokeWidth="1px"
+        android:textStyle="bold"
+        app:normalBackgroundColor="@color/colorPrimary"
+        app:radius="5dp"
+        app:round="true"
+        app:pressedBackgroundColor="@color/gray_1"
         />
-    <TextView
+    <com.joanzapata.iconify.widget.IconTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="正在搜索蓝牙...  ...."
-        android:padding="10dp"
+        android:text="@string/dsst"
+        android:textSize="16sp"
+        android:gravity="center"
         android:textColor="@color/white"
+        android:padding="5dp"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lvDevices"
@@ -45,3 +80,5 @@
         />
 
 </LinearLayout>
+
+    </com.yalantis.starwars.TilesFrameLayout>

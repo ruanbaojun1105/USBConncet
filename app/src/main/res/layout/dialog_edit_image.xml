@@ -26,7 +26,7 @@ android:layout_height="wrap_content"
     app:mpc_default_color="@color/mpc_default_color"
     />
 
-<com.hwx.usbconnect.usbconncet.utils.AnimTextView
+<com.hwx.usbconnect.usbconncet.ui.widget.AnimTextView
     android:id="@+id/demo_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@ android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="10dp"
         />
-    <com.hwx.usbconnect.usbconncet.utils.StateButton
+    <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
         android:id="@+id/cancel"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"

@@ -37,7 +37,7 @@
         android:layout_margin="15dp"
         android:textColor="@color/white"
         />
-    <com.hwx.usbconnect.usbconncet.utils.HorizontalPicker
+    <com.hwx.usbconnect.usbconncet.ui.widget.HorizontalPicker
         android:id="@+id/hpicker_font"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
@@ -61,7 +61,7 @@
         android:id="@+id/show_lin"
         >
 
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/cancle_default"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -74,7 +74,7 @@
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/true_default"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

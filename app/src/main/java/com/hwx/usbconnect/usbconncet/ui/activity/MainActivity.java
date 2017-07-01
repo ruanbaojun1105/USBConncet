@@ -9,10 +9,10 @@ import android.widget.EditText;
 
 import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
+import com.hwx.usbconnect.usbconncet.ui.UsbScanHelper;
 
 public class MainActivity extends AppCompatActivity {
-    private ScanHelper mScanHelper;
+    private UsbScanHelper mUsbScanHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,27 +24,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(editText.getText()))
-                    mScanHelper.sendData(editText.getText().toString().trim().getBytes());
+                    mUsbScanHelper.sendData(editText.getText().toString().trim().getBytes());
             }
         });
     }
     private void init() {
-        mScanHelper = new ScanHelper(this,null);
-        mScanHelper.setScanListener(new ScanHelper.ScanListener() {
+        mUsbScanHelper = new UsbScanHelper(this,null);
+        mUsbScanHelper.setScanListener(new UsbScanHelper.ScanListener() {
             @Override
             public void scan(String data) {
                 //接收数据
             }
         });
-        mScanHelper.registerReceiver();
-        mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
+        mUsbScanHelper.registerReceiver();
+        mUsbScanHelper.startScan(mUsbScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mScanHelper.unregisterReceiver();
-        mScanHelper.stopScan();
+        mUsbScanHelper.unregisterReceiver();
+        mUsbScanHelper.stopScan();
     }
 
 

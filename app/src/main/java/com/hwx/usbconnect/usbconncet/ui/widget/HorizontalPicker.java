@@ -1,4 +1,4 @@
-package com.hwx.usbconnect.usbconncet.utils;
+package com.hwx.usbconnect.usbconncet.ui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,13 +9,13 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 
 import com.hwx.usbconnect.usbconncet.R;
+import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;

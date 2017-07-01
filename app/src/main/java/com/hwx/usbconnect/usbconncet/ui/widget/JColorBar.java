@@ -1,4 +1,4 @@
-package com.hwx.usbconnect.usbconncet.utils;
+package com.hwx.usbconnect.usbconncet.ui.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
+import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 
 /**
  * =====================================
@@ -186,6 +186,7 @@ public class JColorBar extends View {
     @Override
     public void setX(float x) {
         this.x = x;
+        LogUtils.e("offset_X-"+offset_X);
         invalidate();
     }
 

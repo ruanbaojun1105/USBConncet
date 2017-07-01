@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hwx.usbconnect.usbconncet.utils;
+package com.hwx.usbconnect.usbconncet.ui.widget;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;

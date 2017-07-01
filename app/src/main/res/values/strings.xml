@@ -32,7 +32,7 @@
     <string name="vavdgsdgsa">\t{fa-circle @color/link_text_blue}\tCharging the spinner\n\n\t{fa-dot-circle-o @color/gray}\tConnect the spinner to the Android phone using the USB cable.\n\t{fa-dot-circle-o @color/gray}\tA single red light will indicate that the spinner has commenced charging.\n\t{fa-dot-circle-o @color/gray}\tWhen the spinner is fully charged the red light will disappear.
 \n\n\n\t{fa-circle @color/link_text_blue}\tSet up\n\n\t{fa-dot-circle-o @color/gray}\tScan the QR code and install the APP.\n\t{fa-dot-circle-o @color/gray}\tConnect the spinner to the Android phone using the USB cable.\n\t{fa-dot-circle-o @color/gray}\tTurn the central bearing of the spinner - the LED will flash red and blue.\n\t{fa-dot-circle-o @color/gray}\tWait a few moments for the APP to automatically load.\n\t{fa-dot-circle-o @color/gray}\tPress the display configuration tab and begin editing.\n\t{fa-dot-circle-o @color/gray}\tAfter editing click "OK" to confirm the new set up.\n\t{fa-dot-circle-o @color/gray}\tOnce the counter progess reaches "100" the new custom configuration is completed.\n\t{fa-dot-circle-o @color/gray}\tTo re-edit again close APP and start the whole process again,Have Fun!\n\n</string>
     <string name="about_me">\n\n\nWEBSITE：<a href="http://www.sz-hkj.com/">SHENZHEN CITY RED MICROCHIP TECHNOLOGY CO., LTD\nhttp://www.sz-hkj.com</a> \n\nTEL：<a href="https://szhwxdzkj.1688.com/">0755-28306546</a></string>
-    <string name="vdadg">Display configuration</string>
+    <string name="vdadg">Offline mode</string>
     <string name="fgaata">Company profile</string>
     <string name="vfahta">Instruction</string>
     <string name="ttrta">Hand Spinner</string>
@@ -59,4 +59,29 @@
     <string name="vdatttttt">One click download picture style</string>
     <string name="fdtkjkjjkt">Text color</string>
     <string name="dttdw">Send</string>
+    <string name="vkfajkddkt">The current local resource is too low. Do you want to import from the server?</string>
+    <string name="voaiosdtio">Custom</string>
+    <string name="vdrz">{fa-sliders @color/colormain3 24sp} Electricity</string>
+    <string name="dattatt">{fa-lemon-o @color/colormain2 26sp} Speed</string>
+    <string name="tetw">Text</string>
+    <string name="dgsstsew">Picture</string>
+    <string name="vderet">Other</string>
+    <string name="vfte">More colors</string>
+    <string name="vadtev">Auto</string>
+    <string name="tew">Real-time mode</string>
+    <string name="vdtetet">Location permission</string>
+    <string name="tseesta">Please grant permissions</string>
+    <string name="retjkjt">Bluetooth connection disconnected</string>
+    <string name="jkasjkkt">Bluetooth connection failed</string>
+    <string name="viasiotei">Begin connection</string>
+    <string name="vkohaskjltk">Press again</string>
+    <string name="seer">Unpaired</string>
+    <string name="vrrete">Please turn on Bluetooth first</string>
+    <string name="tgfh">Paired</string>
+    <string name="vbrt">Ble address：</string>
+    <string name="vdrjtj">Search</string>
+    <string name="dsst">{fa-spinner @color/colormain5 20sp spin}\t</string>
+    <string name="vjaserjtj">Close spinner</string>
+    <string name="vedde">Interaction</string>
+    <string name="tetea">Set a nickname</string>
 </resources>

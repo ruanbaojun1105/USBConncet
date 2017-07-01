@@ -7,36 +7,29 @@
     android:layout_height="match_parent"
     android:background="@color/actionbar_dark_grey"
     >
-    <!--<com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="20dp"
-        app:fab_colorNormal="@color/colorAccent"
-        app:fab_colorPressed="@color/colorPrimary"
-        app:fab_colorRipple="@color/colormain3"
-        app:fab_showShadow="true"
-        app:fab_shadowColor="@color/blue_light"
-        app:fab_shadowRadius="5dp"
-        app:fab_size="normal"
-        app:fab_label="未连接"
-        app:fab_showAnimation="@anim/fab_scale_up"
-        app:fab_hideAnimation="@anim/fab_scale_down"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true" />-->
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="fill_parent"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/gray_4"
-        app:tabIndicatorColor="@color/white"
-        app:tabBackground="@color/colorPrimary"
-        app:tabMode="fixed"
-        app:tabGravity="center"
         android:background="@color/colorPrimary"
-        />
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/gray_4"
+            app:tabIndicatorColor="@color/white"
+            app:tabBackground="@color/colorPrimary"
+            app:tabMode="fixed"
+            app:tabGravity="center"
+            android:background="@color/colorPrimary"
+            />
+
+    </android.support.v7.widget.Toolbar>
     <com.joanzapata.iconify.widget.IconTextView
         android:layout_width="50dp"
         android:layout_height="?attr/actionBarSize"
@@ -75,8 +68,8 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tabs"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/toolbar" />
 
 </RelativeLayout>

@@ -38,7 +38,7 @@
     <string name="ajkjkk">请选择模式</string>
     <string name="vfagbfgf">速度显示</string>
     <string name="fdggggg">电量显示</string>
-    <string name="fjigjj">版本号</string>
+    <string name="fjigjj">版本信息</string>
     <string name="vagttew">基础显示选择</string>
     <string name="bfdfhdhdhf">图片样式选择</string>
     <string name="vjkkjagkl">状态</string>
@@ -80,4 +80,31 @@
     <string name="vdatttttt">一键导入图片样式</string>
     <string name="fdtkjkjjkt">文字颜色</string>
     <string name="dttdw">发送</string>
+    <string name="vkfajkddkt">当前本地资源太少，是否从服务器导入？</string>
+    <string name="voaiosdtio">自定义</string>
+    <string name="vdrz">{fa-sliders @color/colormain3 24sp} 电量</string>
+    <string name="dattatt">{fa-lemon-o @color/colormain2 26sp} 速度</string>
+    <string name="tetw">文本</string>
+    <string name="dgsstsew">图片</string>
+    <string name="vderet">其他</string>
+    <string name="vfte">更多颜色</string>
+    <string name="vadtev">自动</string>
+    <string name="tew">实时模式</string>
+
+
+    <string name="vdtetet">位置权限</string>
+    <string name="tseesta">请授予权限</string>
+    <string name="retjkjt">蓝牙连接断开</string>
+    <string name="jkasjkkt">蓝牙连接失败</string>
+    <string name="viasiotei">开始连接</string>
+    <string name="vkohaskjltk">双击退出</string>
+    <string name="seer">未配对</string>
+    <string name="vrrete">请先打开蓝牙</string>
+    <string name="tgfh">已配对</string>
+    <string name="vbrt">本机蓝牙地址：</string>
+    <string name="vdrjtj">搜索</string>
+    <string name="dsst">{fa-spinner @color/colormain5 20sp spin}\t 正在搜索蓝牙</string>
+    <string name="vjaserjtj">关闭陀螺</string>
+    <string name="vedde">交流互动</string>
+    <string name="tetea">设置在互动中的昵称</string>
 </resources>

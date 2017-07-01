@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
+import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
 import com.hwx.usbconnect.usbconncet.font.FontUtilsTest;
 
 /**

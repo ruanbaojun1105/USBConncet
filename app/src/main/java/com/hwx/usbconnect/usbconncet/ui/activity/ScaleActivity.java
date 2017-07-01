@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hwx.usbconnect.usbconncet.bluetooth;
+package com.hwx.usbconnect.usbconncet.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,9 +23,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,10 +31,11 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hwx.usbconnect.usbconncet.App;
 import com.hwx.usbconnect.usbconncet.AppConfig;
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.ui.fragment.ControlFragment;
+import com.hwx.usbconnect.usbconncet.ui.brocast.CommandReceiver;
+import com.hwx.usbconnect.usbconncet.ui.adapter.ItemClickAdapter;
+import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
 
 import java.util.ArrayList;
 import java.util.List;

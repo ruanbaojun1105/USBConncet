@@ -18,7 +18,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         >
-        <com.hwx.usbconnect.usbconncet.utils.SpinnerTopView
+        <com.hwx.usbconnect.usbconncet.ui.widget.SpinnerTopView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -27,7 +27,7 @@
             android:id="@+id/topPanel1"
             />
 
-        <com.hwx.usbconnect.usbconncet.utils.SpinnerTopView
+        <com.hwx.usbconnect.usbconncet.ui.widget.SpinnerTopView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,7 +36,7 @@
             android:id="@+id/topPanel2"
             />
 
-        <com.hwx.usbconnect.usbconncet.utils.SpinnerTopView
+        <com.hwx.usbconnect.usbconncet.ui.widget.SpinnerTopView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:arrowBg="@drawable/tuoluo"

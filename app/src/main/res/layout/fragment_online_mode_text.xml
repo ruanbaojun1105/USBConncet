@@ -27,7 +27,7 @@
             layout="@layout/type_main_text_dialog"
             />
 
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/send"
             android:layout_width="match_parent"
             android:layout_height="40dp"

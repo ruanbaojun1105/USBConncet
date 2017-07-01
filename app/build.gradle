@@ -11,12 +11,19 @@ android {
         applicationId "com.hwx.usbconnect.usbconncet"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 13
-        versionName "1.5"
+        versionCode 20
+        versionName "2.0"
     }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -34,7 +41,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.2.0'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.15'
     compile 'com.android.support:support-v4:25.3.1'
-    //compile 'com.google.android.gms:play-services-plus:9.4.0'
     compile 'com.android.support:design:25.3.1'
     compile 'com.github.piotrek1543:CustomSpinner:0.1'
     compile 'com.xw.repo:xedittext:2.0.2@aar'
@@ -52,5 +58,13 @@ dependencies {
     compile 'me.yokeyword:fragmentation:0.10.7'
     compile 'pro.alexzaitsev:freepager:1.0.1'
     compile project(':ColorPalette')
-    compile 'com.github.clans:fab:1.6.4'
+    //compile 'com.github.clans:fab:1.6.4'
+    compile 'com.jaeger.statusbarutil:library:1.4.0'
+    compile 'com.orhanobut:logger:1.15'
+//    compile 'com.nispok:snackbar:2.11.+'
+    //碎片动画
+    compile 'com.yalantis:starwarstiles:0.1.1'
+    //动画封装
+    compile 'com.github.florent37:expectanim:1.0.0'
+//    compile 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 }

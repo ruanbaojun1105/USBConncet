@@ -6,17 +6,25 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Process;
+import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,24 +34,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.hwx.usbconnect.usbconncet.Constants;
+import com.hwx.usbconnect.usbconncet.IBackService;
+import com.hwx.usbconnect.usbconncet.MsgBackInterface;
+import com.hwx.usbconnect.usbconncet.MsgInterface;
 import com.hwx.usbconnect.usbconncet.R;
-import com.hwx.usbconnect.usbconncet.bluetooth.BluetoothService;
-import com.hwx.usbconnect.usbconncet.bluetooth.CommandReceiver;
+import com.hwx.usbconnect.usbconncet.bean.MessageTalk;
+import com.hwx.usbconnect.usbconncet.bean.MessageTalkMe;
+import com.hwx.usbconnect.usbconncet.bean.MessageTalkOther;
+import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
+import com.hwx.usbconnect.usbconncet.ui.brocast.CommandReceiver;
 import com.hwx.usbconnect.usbconncet.ftp.UtilsFTP;
-import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
+import com.hwx.usbconnect.usbconncet.ui.UsbScanHelper;
 import com.hwx.usbconnect.usbconncet.ui.adapter.MyFragmentPagerAdapter;
-import com.hwx.usbconnect.usbconncet.ui.fragment.InfoFragment;
+import com.hwx.usbconnect.usbconncet.ui.brocast.TcpAIDLService;
 import com.hwx.usbconnect.usbconncet.ui.fragment.MainFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.OnLineFragment;
-import com.hwx.usbconnect.usbconncet.ui.fragment.UseFragment;
-import com.hwx.usbconnect.usbconncet.utils.AnimTextView;
+import com.hwx.usbconnect.usbconncet.ui.fragment.TalkFragment;
+import com.hwx.usbconnect.usbconncet.ui.widget.AnimTextView;
+import com.hwx.usbconnect.usbconncet.utils.ACache;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
-import com.hwx.usbconnect.usbconncet.utils.StateButton;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.hwx.usbconnect.usbconncet.ui.widget.StateButton;
+import com.jaeger.library.StatusBarUtil;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 import com.umeng.analytics.MobclickAgent;
@@ -52,6 +65,7 @@ import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -75,14 +89,133 @@ public class UsbMainActivity extends SimpleActivity {
     ViewPager mViewPager;
     @BindView(R.id.main_content)
     RelativeLayout mainContent;
-//    @BindView(R.id.fab)
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    //    @BindView(R.id.fab)
 //    FloatingActionButton fab;
     private MyFragmentPagerAdapter mSectionsPagerAdapter;
     private List<Fragment> fragmentList = new ArrayList<>();
-    public static ScanHelper mScanHelper;
-    private InfoFragment infoFragment;
+    public static UsbScanHelper mUsbScanHelper;
     private UtilsFTP ftp = null;
     private Dialog dialog = null;
+
+    private IBackService iBackService;
+    private Intent mServiceIntent;
+    private List<MessageTalk> msgList=new ArrayList<>();
+    private ServiceConnection conn = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            iBackService = null;
+
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            iBackService = IBackService.Stub.asInterface(service);
+        }
+    };
+
+    public boolean isTcpConnected(){
+        if (iBackService==null)
+            return false;
+        try {
+            return iBackService.isConnect();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
+//    MsgInterface msgCallc;
+    public void setBackMsgCall(final MsgInterface msgCall){
+//        msgCallc=msgCall;
+        if (iBackService==null)
+            return;
+        try {//将聊天消息包裹一层再下发 用作数据恢复
+            iBackService.getMessage(new MsgBackInterface() {
+                @Override
+                public void getBackMsg(String name,String msg) throws RemoteException {
+                    if (msg.startsWith("^")){
+                        msg=msg.replace("^","");
+                        msgList.add(new MessageTalkMe(name,msg));
+                    }else {
+                        String [] arr=msg.split(":");
+                        if (arr==null)
+                            msgList.add(new MessageTalkOther(name,"",msg));
+                        else if (arr.length<2)
+                            msgList.add(new MessageTalkOther(name,"",msg));
+                        else {
+                            StringBuilder bu = new StringBuilder("");
+                            for (int i = 1; i < arr.length; i++) {
+                                bu.append(arr[i]);
+                            }
+                            msgList.add(new MessageTalkOther(name,arr[0].replace("\t","").replace("\n",""), bu.toString()));
+                        }
+                    }
+                    if (msgCall!=null)
+                        msgCall.getBackMsg(name,msg);
+                }
+
+                @Override
+                public IBinder asBinder() {
+                    return null;
+                }
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessage(final String text) {
+//        msgList.add(new MessageTalkMe("测试",text));
+//        if (msgCallc!=null)
+//            msgCallc.getBackMsg("","");
+        if (iBackService==null)
+            return;
+        if (TextUtils.isEmpty(text))
+            return;
+        try {
+            if (!iBackService.isConnect()) {
+                Snackbar.make(mViewPager, "There is a glitch in the server!",Snackbar.LENGTH_SHORT).show();
+                //Toast.makeText(this, "There is a glitch in the server!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        iBackService.sendMessage(text);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("list", (ArrayList<MessageTalk>) msgList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState==null)
+            return;
+        msgList= (ArrayList<MessageTalk>) savedInstanceState.getSerializable("list");
+    }
+
+    public List<MessageTalk> getMsgList() {
+        return msgList;
+    }
 
     public static void changeAppLanguage(Context context) {
         if (!Constants.isOpenEN)
@@ -97,65 +230,73 @@ public class UsbMainActivity extends SimpleActivity {
     }
 
     @Override
+    protected void setStatusBar() {
+        StatusBarUtil.setColor(UsbMainActivity.this,mContext.getResources().getColor(R.color.colorPrimary), 15);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        //mScanHelper.registerReceiver();
+        //mUsbScanHelper.registerReceiver();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
-        //mScanHelper.unregisterReceiver();
+        //mUsbScanHelper.unregisterReceiver();
     }
-//    @Override
-//    public boolean onKeyUp(int keyCode, KeyEvent event) {
-//        // TODO Auto-generated method stub
-//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//            // MobclickAgent.onKillProcess(Context context);//如果开发者调用
-//            // Process.kill 或者 System.exit 之类的方法杀死进程，请务必在此之前调用此方法，用来保存统计数据。
-//            android.os.Process.killProcess(android.os.Process.myPid());
-//            System.exit(0);
-//            return true;
-//        }
-//        return false;
-//    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mScanHelper.unregisterReceiver();
-        mScanHelper.stopScan();
         Process.killProcess(Process.myPid());
         System.exit(0);
     }
     @Override
+    protected void onStart() {
+        super.onStart();
+        bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
+    }
+
+    @Override
     protected int getLayout() {
         return R.layout.activity_usb_main;
     }
+
     @Override
     protected void initEventAndData() {
         changeAppLanguage(this);
         int i = 3;
         LogUtils.e(i++ + "3");
+        setSupportActionBar(toolbar);
+        mServiceIntent = new Intent(this, TcpAIDLService.class);
+        ACache aCache = ACache.get(mContext);
+        Object obj = aCache.getAsObject("msg_list_t");
+        if (obj!=null) {
+            msgList= (List<MessageTalk>) obj;
+        }
+
         fragmentList.clear();
         fragmentList.add(OnLineFragment.newInstance());
         fragmentList.add(MainFragment.newInstance());
-        if (!Constants.isOpenCutInfo) {
-            infoFragment = InfoFragment.newInstance();
-            fragmentList.add(infoFragment);
-        }
-        String[] aa = Constants.isOpenCutInfo ? new String[]{"实时模式", getString(R.string.vdadg), getString(R.string.vfahta)} : new String[]{"实时模式", getString(R.string.vdadg), getString(R.string.fgaata), getString(R.string.vfahta)};
-        fragmentList.add(UseFragment.newInstance(getString(R.string.ddavv), getString(R.string.vavdgsdgsa)));
+        fragmentList.add(TalkFragment.newInstance());
+        //fragmentList.add(UseFragment.newInstance(getString(R.string.ddavv), getString(R.string.vavdgsdgsa)));
+        String[] aa = new String[]{getString(R.string.tew), getString(R.string.vdadg),getString(R.string.vedde), getString(R.string.vfahta)};
         mSectionsPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), aa, fragmentList);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //LogUtils.e("positionOffset"+positionOffset+"positionOffsetPixels"+positionOffsetPixels);
                 ((OnLineFragment) fragmentList.get(0)).setCleanAnim(true);
             }
 
             @Override
             public void onPageSelected(int position) {
+                //if (!isLinePage())
+                    StatusBarUtil.setColor(UsbMainActivity.this,mContext.getResources().getColor(R.color.colorPrimary),15);
             }
 
             @Override
@@ -185,9 +326,10 @@ public class UsbMainActivity extends SimpleActivity {
             Toast.makeText(this, R.string.vadft, Toast.LENGTH_SHORT).show();
         }
     }
+
     private void init() {
-        mScanHelper = new ScanHelper(this, icon_text);
-//        mScanHelper.setScanListener(new ScanHelper.ScanListener() {
+        mUsbScanHelper = new UsbScanHelper(this, icon_text);
+//        mUsbScanHelper.setScanListener(new UsbScanHelper.ScanListener() {
 //            @Override
 //            public void scan(String data) {
 //                //接收数据
@@ -195,25 +337,28 @@ public class UsbMainActivity extends SimpleActivity {
 //                    infoFragment.setThis_info(data);
 //            }
 //        });
-        mScanHelper.registerReceiver();
-        mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
+        mUsbScanHelper.registerReceiver();
+        mUsbScanHelper.startScan(mUsbScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
         icon_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mScanHelper.startScan(mScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
+                mUsbScanHelper.startScan(mUsbScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
             }
         });
         icon_text.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (icon_text != null && !mScanHelper.isScanConn())
+                if (icon_text != null && !mUsbScanHelper.isScanConn())
                     icon_text.setText("{fa-usb @color/red}");//错误
             }
         }, 3500);
     }
 
     public boolean isOffLinePage() {
-        return mViewPager.getCurrentItem()==1;
+        return mViewPager.getCurrentItem() == 1;
+    }
+    public boolean isLinePage() {
+        return mViewPager.getCurrentItem() == 0;
     }
 
     public void setIcon_text(String aa) {
@@ -228,21 +373,21 @@ public class UsbMainActivity extends SimpleActivity {
             protected void onIClick(View v) {
                 if (!HiPermission.checkPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
-                    permissionItems.add(new PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, "位置权限", R.drawable.permission_ic_location));
-                    permissionItems.add(new PermissionItem(Manifest.permission.ACCESS_COARSE_LOCATION, "位置权限", R.drawable.permission_ic_location));
+                    permissionItems.add(new PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, getString(R.string.vdtetet), R.drawable.permission_ic_location));
+                    permissionItems.add(new PermissionItem(Manifest.permission.ACCESS_COARSE_LOCATION, getString(R.string.vdtetet), R.drawable.permission_ic_location));
                     HiPermission.create(mContext).title("").permissions(permissionItems)
-                            .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, mContext.getTheme()))//permission icon color
-                            .msg("请给权限")
+                            .filterColor(ResourcesCompat.getColor(mContext.getResources(), R.color.colorPrimary, mContext.getTheme()))//permission icon color
+                            .msg(getString(R.string.tseesta))
                             .style(R.style.PermissionBlueStyle)
                             .checkMutiPermission(new PermissionCallback() {
                                 @Override
                                 public void onClose() {
-                                    Toast.makeText(UsbMainActivity.this, "请授予权限", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UsbMainActivity.this, getString(R.string.tseesta), Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFinish() {
-                                    startActivity(new Intent(mContext,BlueToothTTActivity.class));
+                                    startActivity(new Intent(mContext, BlueToothTTActivity.class));
                                 }
 
                                 @Override
@@ -255,14 +400,14 @@ public class UsbMainActivity extends SimpleActivity {
 
                                 }
                             });
-                }else startActivity(new Intent(mContext,BlueToothTTActivity.class));
+                } else startActivity(new Intent(mContext, BlueToothTTActivity.class));
 
             }
         });
         ble_icon_text.bringToFront();
         ble_icon_text.setText("{fa-bluetooth @color/red}");
         ObjectAnimator rotation = ObjectAnimator.ofFloat(ble_icon_text, "rotation", 0f, 360f);
-        ObjectAnimator fadeInOut = ObjectAnimator.ofFloat(ble_icon_text,  "alpha", 1f, 0f,1f);
+        ObjectAnimator fadeInOut = ObjectAnimator.ofFloat(ble_icon_text, "alpha", 1f, 0f, 1f);
         final AnimatorSet animSet = new AnimatorSet();
         animSet.play(rotation).with(fadeInOut);
         animSet.setDuration(3000);
@@ -270,9 +415,9 @@ public class UsbMainActivity extends SimpleActivity {
             @Override
             public void onAnimationStart(Animator animator) {
             }
+
             @Override
             public void onAnimationEnd(Animator animator) {
-                //fab.setVisibility(View.GONE);
                 ble_icon_text.setText("{fa-bluetooth @color/colormain5}");
             }
 
@@ -283,7 +428,6 @@ public class UsbMainActivity extends SimpleActivity {
 
             @Override
             public void onAnimationRepeat(Animator animator) {
-
             }
         });
         final AnimatorSet animSet1 = new AnimatorSet();
@@ -293,9 +437,9 @@ public class UsbMainActivity extends SimpleActivity {
             @Override
             public void onAnimationStart(Animator animator) {
             }
+
             @Override
             public void onAnimationEnd(Animator animator) {
-                //fab.setVisibility(View.VISIBLE);
                 ble_icon_text.setText("{fa-bluetooth @color/red}");
             }
 
@@ -313,22 +457,25 @@ public class UsbMainActivity extends SimpleActivity {
             @Override
             public void onDataReceived(byte[] buffer, byte function, byte safeCod) {
             }
+
             @Override
             public void onFail() {
-                Toast.makeText(UsbMainActivity.this, "BLE lost", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UsbMainActivity.this, R.string.jkasjkkt, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onLost() {
-                Toast.makeText(UsbMainActivity.this, "BLE lost", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UsbMainActivity.this, R.string.retjkjt, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDeviceInfo(String name, String address) {
             }
+
             @Override
             public void onStadeTag(int stade) {
-                LogUtils.e("stade---"+stade);
-                switch (stade){
+                LogUtils.e("stade---" + stade);
+                switch (stade) {
                     case 0:
                         animSet1.start();
                         //connect_state.setText("we're doing nothing");
@@ -339,7 +486,7 @@ public class UsbMainActivity extends SimpleActivity {
                         break;
                     case 2:
                         ble_icon_text.setText("{fa-circle-o-notch spin}");
-                       //connect_state.setText("now initiating an outgoing connection");
+                        //connect_state.setText("now initiating an outgoing connection");
                         break;
                     case 3:
                         animSet.start();
@@ -389,22 +536,13 @@ public class UsbMainActivity extends SimpleActivity {
                 }).start();
             }
         });
-        info_text.setText("开始连接");
+        info_text.setText(R.string.viasiotei);
         dialog.show();
         Thread mThread = new Thread() {
             public void run() {
                 ftp = new UtilsFTP("39.108.147.206", 21, "anonymous", "anonymous", false);
                 try {
                     ftp.connect();
-//					连接成功后发心跳包
-//							int count = 0;
-//							while (ftp.getClient().sendNoOp()) {
-//								Thread.sleep(3000);
-////								toast("心跳" + String.valueOf(count));
-//								count++;
-//							}
-//					ftp.disconnect();
-//					toast("断开成功");
                     Thread.sleep(1000);
                     String itemPath = MainFragment.getInnerSDCardPath() + "/HWX-SPINNER/";
                     download(info_text, itemPath, dialog, magicProgressCircle, animTextView);
@@ -494,19 +632,23 @@ public class UsbMainActivity extends SimpleActivity {
         }.start();
     }
 
-
     public static long exitTime;
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if ((System.currentTimeMillis() - exitTime) > 1200) {
-                Toast.makeText(mContext, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.vkohaskjltk, Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
+                ACache aCache = ACache.get(mContext);
+                //List<MessageTalk> list=msgList.subList(msgList.size()>20?(msgList.size()-20):0,msgList.size());
+                aCache.put("msg_list_t", (Serializable) msgList,2 * ACache.TIME_DAY);//2天
+                unbindService(conn);
                 BluetoothService.getInstance().stop();
-                mScanHelper.unregisterReceiver();
-                mScanHelper.stopScan();
+                mUsbScanHelper.unregisterReceiver();
+                mUsbScanHelper.stopScan();
                 MobclickAgent.onKillProcess(mContext);//如果开发者调用
                 Process.killProcess(Process.myPid());
                 System.exit(0);

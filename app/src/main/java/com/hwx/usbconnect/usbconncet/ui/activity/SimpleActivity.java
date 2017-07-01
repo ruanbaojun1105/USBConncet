@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.hwx.usbconnect.usbconncet.App;
+import com.hwx.usbconnect.usbconncet.R;
+import com.jaeger.library.StatusBarUtil;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -31,7 +33,12 @@ public abstract class SimpleActivity extends SupportActivity {
         setContentView(getLayout());
         mUnBinder = ButterKnife.bind(this);
         mContext = this;
+        setStatusBar();
         initEventAndData();
+    }
+
+    protected void setStatusBar() {
+        StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary));
     }
 
     protected void setToolBar(Toolbar toolbar, String title) {

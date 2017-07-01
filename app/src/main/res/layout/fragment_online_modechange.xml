@@ -32,7 +32,7 @@
                 android:layout_alignTop="@+id/updateData"
                 android:gravity="bottom|center"
                 android:paddingLeft="10dp"
-                android:text="{fa-sliders @color/colormain3 24sp} 电量"
+                android:text="@string/vdrz"
                 android:textColor="@color/gray" />
 
             <TextView
@@ -66,7 +66,7 @@
                 android:layout_alignTop="@+id/updateData"
                 android:gravity="bottom|center"
                 android:paddingLeft="10dp"
-                android:text="{fa-lemon-o @color/colormain2 26sp} 速度"
+                android:text="@string/dattatt"
                 android:textColor="@color/gray" />
 
             <TextView
@@ -84,7 +84,7 @@
                 android:textSize="25sp" />
         </LinearLayout>
     </LinearLayout>
-    <com.hwx.usbconnect.usbconncet.utils.JColorBar
+    <com.hwx.usbconnect.usbconncet.ui.widget.JColorBar
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:id="@+id/color_bar"
@@ -97,12 +97,12 @@
             android:gravity="center"
             android:id="@+id/update_lin"
             >
-            <com.hwx.usbconnect.usbconncet.utils.StateButton
+            <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
                 android:id="@+id/mode_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="模式"
+                android:text="@string/fkak"
                 android:layout_weight="1"
                 app:radius="5dp"
                 app:normalBackgroundColor="@color/colorPrimary"
@@ -113,12 +113,12 @@
                 app:pressedTextColor="@android:color/black"
                 app:unableBackgroundColor="@color/colorPrimary"
                 app:unableTextColor="@color/white"/>
-            <com.hwx.usbconnect.usbconncet.utils.StateButton
+            <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
                 android:id="@+id/text_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="文本"
+                android:text="@string/tetw"
                 android:layout_weight="1"
                 app:radius="5dp"
                 app:normalBackgroundColor="@color/colorPrimary"
@@ -129,12 +129,12 @@
                 app:pressedTextColor="@android:color/black"
                 app:unableBackgroundColor="@color/colorPrimary"
                 app:unableTextColor="@color/white"/>
-            <com.hwx.usbconnect.usbconncet.utils.StateButton
+            <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
                 android:id="@+id/image_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="图片"
+                android:text="@string/dgsstsew"
                 android:layout_weight="1"
                 app:radius="5dp"
                 app:normalBackgroundColor="@color/colorPrimary"
@@ -145,12 +145,12 @@
                 app:pressedTextColor="@android:color/black"
                 app:unableBackgroundColor="@color/colorPrimary"
                 app:unableTextColor="@color/white"/>
-            <com.hwx.usbconnect.usbconncet.utils.StateButton
+            <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
                 android:id="@+id/other_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="其他"
+                android:text="@string/vderet"
                 android:layout_weight="1"
                 app:radius="5dp"
                 app:normalBackgroundColor="@color/colorPrimary"
@@ -171,12 +171,12 @@
         android:id="@+id/mode_lin"
         android:visibility="gone"
         >
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/zuoyou_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="左右滚动"
+            android:text="@string/vaga"
             android:layout_weight="1"
             app:radius="5dp"
             app:normalBackgroundColor="@color/link_text_blue"
@@ -187,12 +187,12 @@
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/shangxia_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="上下滚动"
+            android:text="@string/vvag"
             android:layout_weight="1"
             app:radius="5dp"
             app:normalBackgroundColor="@color/link_text_blue"
@@ -203,12 +203,12 @@
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/gunding_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="固定"
+            android:text="@string/vaggagkjoo"
             android:layout_weight="1"
             app:radius="5dp"
             app:normalBackgroundColor="@color/link_text_blue"
@@ -219,12 +219,12 @@
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/hunse_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="混色"
+            android:text="@string/vafg"
             android:layout_weight="1"
             app:radius="5dp"
             app:normalBackgroundColor="@color/link_text_blue"
@@ -245,12 +245,13 @@
         android:id="@+id/other_lin"
         android:visibility="gone"
         >
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/color_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="更多颜色"
+            android:visibility="gone"
+            android:text="@string/vfte"
             android:layout_weight="1"
             app:radius="5dp"
             app:normalBackgroundColor="@color/blue_t"
@@ -261,12 +262,12 @@
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/version_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="版本信息"
+            android:text="@string/fjigjj"
             android:layout_weight="1"
             app:radius="5dp"
             app:normalBackgroundColor="@color/colormain7"
@@ -277,12 +278,29 @@
             app:pressedTextColor="@android:color/black"
             app:unableBackgroundColor="@color/colorPrimary"
             app:unableTextColor="@color/white"/>
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
+            android:id="@+id/close_spinner_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/vjaserjtj"
+            android:layout_weight="1"
+            app:radius="5dp"
+            app:normalBackgroundColor="@color/colormain5"
+            app:normalTextColor="@color/white"
+            app:normalStrokeWidth="1dp"
+            app:normalStrokeColor="@color/white"
+            app:pressedBackgroundColor="@color/colorPrimary"
+            app:pressedTextColor="@android:color/black"
+            app:unableBackgroundColor="@color/colorPrimary"
+            app:unableTextColor="@color/white"
+            />
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/auto_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="自动"
+            android:text="@string/vadtev"
             android:layout_weight="1"
             app:radius="5dp"
             app:normalBackgroundColor="@color/colormain6"

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -16,10 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.AppConfig;
 import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
@@ -27,13 +26,13 @@ import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageMod;
 import com.hwx.usbconnect.usbconncet.bean.PresetMod;
 import com.hwx.usbconnect.usbconncet.bean.TextMod;
+import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
 import com.hwx.usbconnect.usbconncet.font.Font16;
-import com.hwx.usbconnect.usbconncet.ui.ScanHelper;
+import com.hwx.usbconnect.usbconncet.ui.UsbScanHelper;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.MultipleItemQuickAdapter;
 import com.hwx.usbconnect.usbconncet.utils.ACache;
-import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.FileUtil;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -77,12 +76,6 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.fragment_main;
     }
@@ -90,17 +83,24 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
     @Override
     protected void initEventAndData() {
         initView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         checkP();
     }
 
     private void checkP() {
-        if (!HiPermission.checkPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (!isAdded())
+            return;
+        if (!HiPermission.checkPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
             permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "SD write permission", R.drawable.permission_ic_storage));
             permissionItems.add(new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "SD read permission", R.drawable.permission_ic_storage));
             permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "Read Phone permission", R.drawable.permission_ic_phone));
-            HiPermission.create(getContext()).title(getString(R.string.vdatdta)).permissions(permissionItems)
-                    .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getContext().getTheme()))//permission icon color
+            HiPermission.create(mContext).title(getString(R.string.vdatdta)).permissions(permissionItems)
+                    .filterColor(ResourcesCompat.getColor(mContext.getResources(), R.color.colorPrimary, mContext.getTheme()))//permission icon color
                     .msg("To protect the peace of the world, open these permissions! You and I together save the world!")
                     .style(R.style.PermissionBlueStyle)
                     .checkMutiPermission(new PermissionCallback() {
@@ -126,20 +126,33 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                             Log.i("", "onGuarantee");
                         }
                     });
-        }
+        }else
+            updaData();
     }
 
-    public void updaData(){
-        String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
-        String[] fileArr = getFileAll(mContext,new File(itemPath), false, false);
-        String[] fileArrname = getFileAll(mContext,new File(itemPath), true, false);
-        if (multipleItemAdapter != null) {
-            List<AbsTypeMod> listAbs = multipleItemAdapter.getData();
-            ((ImageFontMod) listAbs.get(0)).setFileArr(fileArr).setFileName(fileArrname);
-            ((ImageFontMod) listAbs.get(1)).setFileArr(fileArr).setFileName(fileArrname);
-            ((ImageFontMod) listAbs.get(2)).setFileArr(fileArr).setFileName(fileArrname);
-            multipleItemAdapter.notifyDataSetChanged();
-        }
+    public void updaData() {
+        if (!isAdded())
+            return;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
+                String[] fileArr = getFileAll(mContext, new File(itemPath), false, false);
+                String[] fileArrname = getFileAll(mContext, new File(itemPath), true, false);
+                if (multipleItemAdapter != null) {
+                    List<AbsTypeMod> listAbs = multipleItemAdapter.getData();
+                    ((ImageFontMod) listAbs.get(0)).setFileArr(fileArr).setFileName(fileArrname);
+                    ((ImageFontMod) listAbs.get(1)).setFileArr(fileArr).setFileName(fileArrname);
+                    ((ImageFontMod) listAbs.get(2)).setFileArr(fileArr).setFileName(fileArrname);
+                    mRecyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            multipleItemAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     public static String getInnerSDCardPath() {
@@ -151,7 +164,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
             @Override
             public void run() {
                 List<AbsTypeMod> data = new ArrayList<>();
-                ACache aCache = ACache.get(getContext());
+                ACache aCache = ACache.get(mContext);
                 Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
                 String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
                 String[] fileArr = getFileAll(mContext,new File(itemPath), false, false);
@@ -189,15 +202,15 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         updateData.setOnClickListener(this);
         iconTextView.setText("{fa-eraser @color/colorPrimary spin}\n" + getString(R.string.clean));
         iconTextView.setOnClickListener(this);
-        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                if (((UsbMainActivity)mContext).isOffLinePage()) {
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
-                }
-            }
-        });
+//        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                LogUtils.e("onScrolled---");
+//                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
+//            }
+//        });
         /*if (AppConfig.getInstance().getBoolean("isClean",false));{
             cleanData(updateData);
             AppConfig.getInstance().putBoolean("isClean",true);
@@ -246,7 +259,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
     }
 
-    public byte[] getBitmapByte(Bitmap bitmap) {
+    public static byte[] getBitmapByte(Bitmap bitmap) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         try {
@@ -271,7 +284,6 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         }
         //if (!AppConfig.getInstance().getBoolean("isCopy",false)){
         try {
-            FileUtil.copyFile(context.getResources().getAssets().open("xuanfeng.bin"), file.getPath() + "/xuanfeng.bin");
             FileUtil.copyFile(context.getResources().getAssets().open("shu.bin"), file.getPath() + "/shu.bin");
             FileUtil.copyFile(context.getResources().getAssets().open("clock.bin"), file.getPath() + "/clock.bin");
             FileUtil.copyFile(context.getResources().getAssets().open("five.bin"), file.getPath() + "/five.bin");
@@ -307,7 +319,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.clean:
-                new AlertDialog.Builder(getContext()).setMessage(R.string.dttaatsr)
+                new AlertDialog.Builder(mContext).setMessage(R.string.dttaatsr)
                         .setIcon(android.R.drawable.ic_dialog_info)
                         .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -321,7 +333,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                 if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
                     int a = AppConfig.getInstance().getInt("success", 1);
                     if (a > 20) {
-                        new AlertDialog.Builder(getContext()).setMessage(R.string.ftdttt)
+                        new AlertDialog.Builder(mContext).setMessage(R.string.ftdttt)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setPositiveButton(R.string.dttadfdc, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -341,7 +353,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                         aCache.put(Constants.SAVE_DATA_KEY, (Serializable) listAbs);
                         dataMain = new byte[0];
                         TextMain = new byte[0];
-                        if (!UsbMainActivity.mScanHelper.isScanConn()) {
+                        if (!UsbMainActivity.mUsbScanHelper.isScanConn()&& !BluetoothService.getInstance().isConnectBle()) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -351,12 +363,17 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                             });
                             return;
                         }
-                        UsbMainActivity.mScanHelper.star();
+
+                        if (UsbMainActivity.mUsbScanHelper.isScanConn())
+                            UsbMainActivity.mUsbScanHelper.star();
                         for (int i = 0; i < listAbs.size(); i++) {
                             detailData(listAbs.get(i), v, i);
                             LogUtils.e("log comment", "abs" + listAbs.get(i).getId());
                         }
-                        UsbMainActivity.mScanHelper.sendData(Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) 0x09, TextMain, false)));
+                        if (UsbMainActivity.mUsbScanHelper.isScanConn())
+                            UsbMainActivity.mUsbScanHelper.sendData(Font16.byteMerger(dataMain, UsbScanHelper.sendDataSSS((byte) 0x09, TextMain, false)));
+                        if (BluetoothService.getInstance().isConnectBle())
+                            BluetoothService.getInstance().sendData(UsbScanHelper.sendDataSSS((byte) 0x09, TextMain, false));
                     }
                 }).start();
 
@@ -369,18 +386,27 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
 
     private void detailData(AbsTypeMod absTypeMod, View v, int i) {
         //url="file:///android_asset/video.mp4";
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         AbsTypeMod abs = absTypeMod;
         //图片
         if (abs instanceof ImageMod) {
             ImageMod item1 = (ImageMod) abs;
             byte[] fileB = readFile(v.getContext(), item1.getImagePath());
             byte[] data = Font16.byteMerger(new byte[]{item1.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item1.getColor(), (byte) item1.getModel()}, fileB);
-            dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item1.getId(), data, false));
+            dataMain = Font16.byteMerger(dataMain, UsbScanHelper.sendDataSSS((byte) item1.getId(), data, false));
+            if (BluetoothService.getInstance().isConnectBle())
+                BluetoothService.getInstance().sendData(UsbScanHelper.sendDataSSS((byte) item1.getId(), data, false));
         }
         //预定模式
         if (abs instanceof PresetMod) {
             PresetMod item2 = (PresetMod) abs;
-            dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item2.getId(), new byte[]{item2.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item2.getColor(), (byte) item2.getModel(), (byte) item2.getType()}, false));
+            dataMain = Font16.byteMerger(dataMain, UsbScanHelper.sendDataSSS((byte) item2.getId(), new byte[]{item2.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item2.getColor(), (byte) item2.getModel(), (byte) item2.getType()}, false));
+            if (BluetoothService.getInstance().isConnectBle())
+                BluetoothService.getInstance().sendData(UsbScanHelper.sendDataSSS((byte) item2.getId(), new byte[]{item2.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item2.getColor(), (byte) item2.getModel(), (byte) item2.getType()}, false));
         }
         //文本
         if (abs instanceof TextMod) {
@@ -389,13 +415,17 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                 try {
                     byte[] data1 = Font16.byteMerger(new byte[]{item3.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item3.getColor(), (byte) item3.getModel()}, item3.getText().getBytes("GB2312"));
                     byte[] data12 = new Font16(v.getContext()).getStringFontByte(item3.getText(), item3.getFontStyle());
-                    dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item3.getId(), data1, false));
+                    dataMain = Font16.byteMerger(dataMain, UsbScanHelper.sendDataSSS((byte) item3.getId(), data1, false));
                     TextMain = Font16.byteMerger(TextMain, data12);
+                    if (BluetoothService.getInstance().isConnectBle())
+                        BluetoothService.getInstance().sendData(UsbScanHelper.sendDataSSS((byte) item3.getId(), data1, false));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             } else {
-                dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item3.getId(), new byte[]{item3.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item3.getColor(), (byte) item3.getModel()}, false));
+                dataMain = Font16.byteMerger(dataMain, UsbScanHelper.sendDataSSS((byte) item3.getId(), new byte[]{item3.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item3.getColor(), (byte) item3.getModel()}, false));
+                if (BluetoothService.getInstance().isConnectBle())
+                    BluetoothService.getInstance().sendData(UsbScanHelper.sendDataSSS((byte) item3.getId(), new byte[]{item3.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item3.getColor(), (byte) item3.getModel()}, false));
             }
         }
         //预定图
@@ -403,7 +433,9 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
             ImageFontMod item4 = (ImageFontMod) abs;
             byte[] fileB = readFile(v.getContext(), item4.getImagePath());
             byte[] data = Font16.byteMerger(new byte[]{item4.isCheck() ? (byte) 0x01 : (byte) 0x00, (byte) item4.getColor(), (byte) item4.getModel()}, fileB);
-            dataMain = Font16.byteMerger(dataMain, ScanHelper.sendDataSSS((byte) item4.getId(), data, false));
+            dataMain = Font16.byteMerger(dataMain, UsbScanHelper.sendDataSSS((byte) item4.getId(), data, false));
+            if (BluetoothService.getInstance().isConnectBle())
+                BluetoothService.getInstance().sendData(UsbScanHelper.sendDataSSS((byte) item4.getId(), data, false));
         }
     }
 

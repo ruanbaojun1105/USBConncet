@@ -7,7 +7,7 @@
     android:gravity="center_vertical"
     >
 
-    <com.hwx.usbconnect.usbconncet.utils.SmoothCheckBox
+    <com.hwx.usbconnect.usbconncet.ui.widget.SmoothCheckBox
         android:id="@+id/checkBox"
         android:layout_width="@dimen/check_width"
         android:layout_height="@dimen/check_width"
@@ -49,7 +49,7 @@
         </com.piotrek.customspinner.CustomSpinner>
     </LinearLayout>
 
-    <!--<com.hwx.usbconnect.usbconncet.utils.StateButton
+    <!--<com.hwx.usbconnect.usbconncet.ui.widget.StateButton
         android:id="@+id/different_radius_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

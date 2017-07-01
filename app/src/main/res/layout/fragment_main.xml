@@ -80,7 +80,7 @@
             android:gravity="bottom|center"
             android:layout_alignTop="@+id/updateData"/>
 
-        <com.hwx.usbconnect.usbconncet.utils.StateButton
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/updateData"
             android:layout_width="100dp"
             android:layout_height="wrap_content"

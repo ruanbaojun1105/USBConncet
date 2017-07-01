@@ -1,7 +1,6 @@
 package com.hwx.usbconnect.usbconncet.ui.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,18 +24,17 @@ import com.hwx.usbconnect.usbconncet.bean.AbsTypeMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bean.PresetMod;
 import com.hwx.usbconnect.usbconncet.bean.TextMod;
-import com.hwx.usbconnect.usbconncet.utils.HorizontalPicker;
+import com.hwx.usbconnect.usbconncet.ui.widget.HorizontalPicker;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 import com.hwx.usbconnect.usbconncet.utils.ScreenParamsUtil;
-import com.hwx.usbconnect.usbconncet.utils.StateButton;
 import com.piotrek.customspinner.CustomSpinner;
 import com.xw.repo.XEditText;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hwx.usbconnect.usbconncet.utils.SmoothCheckBox;
+import com.hwx.usbconnect.usbconncet.ui.widget.SmoothCheckBox;
 
 public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeMod, BaseViewHolder> {
 
@@ -237,8 +235,8 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
         final HorizontalPicker hpickerFont= (HorizontalPicker) view.findViewById(R.id.hpicker_font);
         List<HorizontalPicker.PickerItem> textItems = new ArrayList<>();
-        textItems.add(new HorizontalPicker.TextItem("宋体"));
-        textItems.add(new HorizontalPicker.TextItem("粗体"));
+        textItems.add(new HorizontalPicker.TextItem(mContext.getString(R.string.gtadtrtet)));
+        textItems.add(new HorizontalPicker.TextItem(mContext.getString(R.string.dtastdtrwqg)));
         hpickerFont.setItems(textItems,fontS);
 
         LinearLayout show_lin= (LinearLayout) view.findViewById(R.id.show_lin);
@@ -249,24 +247,19 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-            }
-        });
+        dialog.show();
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                LogUtils.e("setOnDismissListener---");
             }
         });
-        dialog.show();
         cancle_default.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
+                et.clearFocus();
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
                 if (dialog!=null&&dialog.isShowing())

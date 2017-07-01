@@ -2,13 +2,12 @@ package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
-import com.hwx.usbconnect.usbconncet.utils.HorizontalPicker;
+import com.hwx.usbconnect.usbconncet.ui.widget.HorizontalPicker;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.xw.repo.XEditText;
 
@@ -56,16 +55,16 @@ public class OnLineTextFragment extends SimpleFragment {
         //Glide.with(getActivity()).load(new ColorDrawable()).into(imageView);
         biucontainer.setMaxLines(2);
 //        biucontainer.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
-        send.setOnClickListener(new IClickListener() {
+        send.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onIClick(View v) {
+            public void onClick(View view) {
                 OnLineFragment fragment = (OnLineFragment) getParentFragment();
                 fragment.changeToOne(biucontainer.getText().toString(),hpickerFont.getSelectedIndex());
             }
         });
         List<HorizontalPicker.PickerItem> textItems = new ArrayList<>();
-        textItems.add(new HorizontalPicker.TextItem("宋体"));
-        textItems.add(new HorizontalPicker.TextItem("粗体"));
+        textItems.add(new HorizontalPicker.TextItem(mContext.getString(R.string.gtadtrtet)));
+        textItems.add(new HorizontalPicker.TextItem(mContext.getString(R.string.dtastdtrwqg)));
         hpickerFont.setItems(textItems,0);
     }
 

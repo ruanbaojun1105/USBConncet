@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.hwx.usbconnect.usbconncet.AppConfig;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.SpinnerItemAdapter;
-import com.hwx.usbconnect.usbconncet.utils.AppConfig;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
 
@@ -35,6 +35,7 @@ public class OnLineImageFragment extends SimpleFragment {
     RecyclerView rvList;
     @BindView(R.id.send)
     Button send;
+    SpinnerItemAdapter itemClickAdapter;
 
     public OnLineImageFragment() {
         // Required empty public constructor
@@ -56,6 +57,15 @@ public class OnLineImageFragment extends SimpleFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (itemClickAdapter!=null){
+            itemClickAdapter.setColor(((OnLineFragment)getParentFragment()).getLastColor());
+            itemClickAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     protected void initEventAndData() {
         initView();
     }
@@ -72,7 +82,7 @@ public class OnLineImageFragment extends SimpleFragment {
             ImageFontTag imageFontMod = new ImageFontTag(fileArr[i], fileArrname[i]);
             modList.add(imageFontMod);
         }
-        final SpinnerItemAdapter itemClickAdapter = new SpinnerItemAdapter(modList);
+        itemClickAdapter = new SpinnerItemAdapter(modList,((OnLineFragment)getParentFragment()).getLastColor());
         GridLayoutManager manager = new GridLayoutManager(getContext(),2);
         rvList.setLayoutManager(manager);
         rvList.setAdapter(itemClickAdapter);
@@ -98,19 +108,19 @@ public class OnLineImageFragment extends SimpleFragment {
             @Override
             protected void onIClick(View v) {
                 OnLineFragment fragment = (OnLineFragment) getParentFragment();
-                fragment.changeToOne(new byte[]{});
+                fragment.changeToOne(new byte[0]);
             }
         });
         if (modList.size() <6&& !AppConfig.getInstance().getBoolean("istip",false)) {
             AppConfig.getInstance().putBoolean("istip",true);
-            new AlertDialog.Builder(mContext).setMessage("当前本地资源太少，是否从服务器导入？")
+            new AlertDialog.Builder(mContext).setMessage(R.string.vkfajkddkt)
                     .setIcon(android.R.drawable.ic_dialog_info)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.dtaddssd, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             ((UsbMainActivity)mContext).toStarDownImage();
                         }
                     })
-                    .setNegativeButton("取消", null)
+                    .setNegativeButton(R.string.gdadtt, null)
                     .show();
         }
     }

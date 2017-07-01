@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
-
+    android:background="@color/actionbar_dark_grey"
+    >
     <ImageView
         android:id="@+id/iv_welcome_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:scaleType="fitXY"/>
-
     <TextView
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/bg_gray"
         android:textSize="16sp"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -22,31 +22,20 @@
         android:layout_gravity="bottom|center"
         android:gravity="center"
         android:text="@string/ttrta"
-        android:layout_marginBottom="39dp"
+        android:layout_marginBottom="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView" />
     <ImageView
         android:id="@+id/iv_welcome_te"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:alpha="0"
         android:scaleType="fitCenter"
         android:src="@drawable/tuoluo"
         android:layout_alignBottom="@+id/textView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="28dp"
-        android:layout_marginStart="28dp"
-        android:layout_alignTop="@+id/textView" />
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/iv_welcome_te"
-        android:layout_marginBottom="10dp">
+        android:layout_alignParentStart="true" />
 
-    </FrameLayout>
 </RelativeLayout>

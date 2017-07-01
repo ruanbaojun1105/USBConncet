@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
+    <uses-permission android:name="android.permission.sec.MDM_APP_MGMT"/>
 
 
     <!-- <uses-permission android:name="android.permission.HARDWARE_TEST" /> -->
@@ -27,7 +27,8 @@
         android:icon="@drawable/tuoluo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:hardwareAccelerated="true"
+        android:theme="@style/AppBaseTheme">
         <meta-data android:value="5923b6a807fe654fdf000a83" android:name="UMENG_APPKEY"/>
         <meta-data android:value="test" android:name="UMENG_CHANNEL"/>
         <activity android:name=".ui.activity.MainActivity"
@@ -38,6 +39,7 @@
             android:configChanges="keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:hardwareAccelerated="false"
             android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
         <activity
@@ -49,7 +51,7 @@
             android:screenOrientation="portrait"
             />
         <activity android:name=".ui.activity.BlueToothTTActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/NormalTheme"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             >
@@ -71,6 +73,9 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
+
+        <service android:name=".ui.brocast.TcpAIDLService"/>
+        <service android:name=".ui.brocast.TcpService"/>
     </application>
 
 </manifest>
