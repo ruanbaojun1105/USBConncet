@@ -8,13 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -50,6 +48,8 @@ public class BlueToothTTActivity extends SimpleActivity {
     RecyclerView lvBTDevices;
     @BindView(R.id.tiles_frame_layout)
     TilesFrameLayout mTilesFrameLayout;
+    @BindView(R.id.back_icon)
+    IconTextView backIcon;
     //<a href="http://wiley.iteye.com/blog/1179417">http://wiley.iteye.com/blog/1179417</a>
     private BleTextItemAdapter itemAdapter;
     private List<String> lstDevices = new ArrayList<String>();
@@ -85,6 +85,13 @@ public class BlueToothTTActivity extends SimpleActivity {
             }
         });
 
+        backIcon.setOnClickListener(new IClickListener() {
+            @Override
+            protected void onIClick(View v) {
+                finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
         btAdapt = BluetoothAdapter.getDefaultAdapter();// 初始化本机蓝牙功能
         btnSearch.setOnClickListener(new IClickListener() {
             @Override

@@ -106,7 +106,7 @@ public class Font16 {
 	private static String dotMatrixFont2 = "gbk2.dzk";//粗体
 	private int wordByteByDots = 32;//12*12/24----16*16/32
 	protected byte[] read16_DZK(int areaCode, int posCode,int fontStyle) {
-		LogUtils.e("读取字体"+(fontStyle<2?"宋体":"粗体"));
+//		LogUtils.e("读取字体"+(fontStyle<2?"宋体":"粗体"));
 		byte[] data = null;
 		try {
 			int area = areaCode - 0x81;

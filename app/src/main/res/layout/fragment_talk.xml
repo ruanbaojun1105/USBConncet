@@ -2,20 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
-    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="最新互动"
-        android:gravity="center_vertical"
-        android:textColor="@color/gray_1"
-        android:layout_gravity="center"
-        android:textStyle="bold"
-        android:textSize="10sp"
-        />
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_weight="3"
@@ -35,7 +23,7 @@
         android:minHeight="50dp"
         android:gravity="top"
         android:padding="5dp"
-        android:hint="互动话题输入"
+        android:hint="@string/vskjaj"
         android:background="@drawable/edittext_bbb"
         />
 
@@ -48,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="发送留言"
+            android:text="@string/vjrjt"
             android:layout_margin="5dp"
             app:radius="5dp"
             app:normalBackgroundColor="@color/colorPrimary"
@@ -62,7 +50,10 @@
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/talk_setname"
             android:layout_width="wrap_content"
-            android:padding="5dp"
+            android:paddingLeft="5dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
             android:layout_height="wrap_content"
             android:text="{fa-edit @color/white 22sp}"
             android:layout_gravity="bottom|right"

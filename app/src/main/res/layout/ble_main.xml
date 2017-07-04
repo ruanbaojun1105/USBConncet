@@ -45,23 +45,47 @@
         android:textColor="@color/white"
         android:id="@+id/icon_head"
         />
-    <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
-        android:id="@+id/btnSearch"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/vdrjtj"
-        android:textSize="18sp"
-        android:visibility="visible"
-        android:layout_margin="15dp"
-        android:textColor="@color/white"
-        app:normalStrokeColor="@color/white"
-        app:normalStrokeWidth="1px"
-        android:textStyle="bold"
-        app:normalBackgroundColor="@color/colorPrimary"
-        app:radius="5dp"
-        app:round="true"
-        app:pressedBackgroundColor="@color/gray_1"
-        />
+        android:orientation="horizontal">
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{fa-chevron-left}"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:padding="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/back_icon"
+            android:layout_alignTop="@+id/btnSearch"
+            android:layout_alignBottom="@+id/btnSearch" />
+        <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
+            android:id="@+id/btnSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/vdrjtj"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:textColor="@color/white"
+            app:normalStrokeColor="@color/white"
+            app:normalStrokeWidth="1px"
+            android:textStyle="bold"
+            app:normalBackgroundColor="@color/colorPrimary"
+            app:radius="5dp"
+            app:round="true"
+            app:pressedBackgroundColor="@color/gray_1"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_toRightOf="@+id/back_icon"
+            android:layout_toEndOf="@+id/back_icon" />
+    </RelativeLayout>
+
     <com.joanzapata.iconify.widget.IconTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

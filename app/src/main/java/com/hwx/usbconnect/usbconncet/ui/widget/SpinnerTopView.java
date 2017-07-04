@@ -85,7 +85,7 @@ public class SpinnerTopView extends View {
     private AnimatorSet animSet=null;
     private ObjectAnimator rotate=null;
     private ObjectAnimator fadeInOut=null;
-    private byte[] Picture1_ByteT=new byte[240];
+    private byte[] Picture1_ByteT=null;
     private int lastColor;
     private int prerent=1;//显示百分比精细度，越大越不清晰
 
@@ -227,6 +227,8 @@ public class SpinnerTopView extends View {
     }
 
     private void starAnim() {
+        if (Picture1_ByteT==null)
+            return;
         if (!animSet.isStarted()) {
             if (animSet.isPaused())
                 animSet.resume();

@@ -13,54 +13,54 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.sec.MDM_APP_MGMT"/>
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.sec.MDM_APP_MGMT" />
 
     <!-- <uses-permission android:name="android.permission.HARDWARE_TEST" /> -->
-
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/tuoluo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppBaseTheme">
-        <meta-data android:value="5923b6a807fe654fdf000a83" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="test" android:name="UMENG_CHANNEL"/>
-        <activity android:name=".ui.activity.MainActivity"
-            android:launchMode="singleTask"
-            />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5923b6a807fe654fdf000a83" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="test" />
+
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.activity.UsbMainActivity"
             android:configChanges="keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
             android:hardwareAccelerated="false"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
             android:name=".ui.activity.USBMain2Activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activity.FTPMainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.activity.BlueToothTTActivity"
-            android:theme="@style/NormalTheme"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activity.BlueToothTTActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            >
-        </activity>
-        <activity android:name=".ui.activity.WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/NormalTheme"></activity>
+        <activity
+            android:name=".ui.activity.WelcomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -69,13 +69,17 @@
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
 
-        <service android:name=".ui.brocast.TcpAIDLService"/>
-        <service android:name=".ui.brocast.TcpService"/>
+        <service android:name=".ui.brocast.TcpAIDLService" />
+        <service android:name=".ui.brocast.TcpService" />
+
+        <activity android:name=".ui.activity.UseInfoActivity"
+            android:theme="@style/AppThemeNo"></activity>
     </application>
 
 </manifest>

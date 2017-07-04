@@ -5,9 +5,11 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
@@ -18,22 +20,31 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hwx.usbconnect.usbconncet.AppConfig;
 import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.IBackService;
 import com.hwx.usbconnect.usbconncet.MsgBackInterface;
@@ -42,24 +53,27 @@ import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.MessageTalk;
 import com.hwx.usbconnect.usbconncet.bean.MessageTalkMe;
 import com.hwx.usbconnect.usbconncet.bean.MessageTalkOther;
-import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
-import com.hwx.usbconnect.usbconncet.ui.brocast.CommandReceiver;
 import com.hwx.usbconnect.usbconncet.ftp.UtilsFTP;
+import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
 import com.hwx.usbconnect.usbconncet.ui.UsbScanHelper;
 import com.hwx.usbconnect.usbconncet.ui.adapter.MyFragmentPagerAdapter;
+import com.hwx.usbconnect.usbconncet.ui.brocast.CommandReceiver;
 import com.hwx.usbconnect.usbconncet.ui.brocast.TcpAIDLService;
 import com.hwx.usbconnect.usbconncet.ui.fragment.MainFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.OnLineFragment;
 import com.hwx.usbconnect.usbconncet.ui.fragment.TalkFragment;
 import com.hwx.usbconnect.usbconncet.ui.widget.AnimTextView;
+import com.hwx.usbconnect.usbconncet.ui.widget.StateButton;
 import com.hwx.usbconnect.usbconncet.utils.ACache;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
-import com.hwx.usbconnect.usbconncet.ui.widget.StateButton;
 import com.jaeger.library.StatusBarUtil;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 import com.umeng.analytics.MobclickAgent;
+import com.xw.repo.XEditText;
 
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -91,8 +105,14 @@ public class UsbMainActivity extends SimpleActivity {
     RelativeLayout mainContent;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigation;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
     //    @BindView(R.id.fab)
 //    FloatingActionButton fab;
+    private String name;
+
     private MyFragmentPagerAdapter mSectionsPagerAdapter;
     private List<Fragment> fragmentList = new ArrayList<>();
     public static UsbScanHelper mUsbScanHelper;
@@ -101,7 +121,7 @@ public class UsbMainActivity extends SimpleActivity {
 
     private IBackService iBackService;
     private Intent mServiceIntent;
-    private List<MessageTalk> msgList=new ArrayList<>();
+    private List<MessageTalk> msgList = new ArrayList<>();
     private ServiceConnection conn = new ServiceConnection() {
 
         @Override
@@ -116,8 +136,8 @@ public class UsbMainActivity extends SimpleActivity {
         }
     };
 
-    public boolean isTcpConnected(){
-        if (iBackService==null)
+    public boolean isTcpConnected() {
+        if (iBackService == null)
             return false;
         try {
             return iBackService.isConnect();
@@ -127,36 +147,34 @@ public class UsbMainActivity extends SimpleActivity {
         return false;
     }
 
-
-
-//    MsgInterface msgCallc;
-    public void setBackMsgCall(final MsgInterface msgCall){
+    //    MsgInterface msgCallc;
+    public void setBackMsgCall(final MsgInterface msgCall) {
 //        msgCallc=msgCall;
-        if (iBackService==null)
+        if (iBackService == null)
             return;
         try {//将聊天消息包裹一层再下发 用作数据恢复
             iBackService.getMessage(new MsgBackInterface() {
                 @Override
-                public void getBackMsg(String name,String msg) throws RemoteException {
-                    if (msg.startsWith("^")){
-                        msg=msg.replace("^","");
-                        msgList.add(new MessageTalkMe(name,msg));
-                    }else {
-                        String [] arr=msg.split(":");
-                        if (arr==null)
-                            msgList.add(new MessageTalkOther(name,"",msg));
-                        else if (arr.length<2)
-                            msgList.add(new MessageTalkOther(name,"",msg));
+                public void getBackMsg(String name, String msg) throws RemoteException {
+                    if (msg.startsWith("^")) {
+                        msg = msg.replace("^", "");
+                        msgList.add(new MessageTalkMe(name, msg));
+                    } else {
+                        String[] arr = msg.split(":");
+                        if (arr == null)
+                            msgList.add(new MessageTalkOther(name, "", msg));
+                        else if (arr.length < 2)
+                            msgList.add(new MessageTalkOther(name, "", msg));
                         else {
                             StringBuilder bu = new StringBuilder("");
                             for (int i = 1; i < arr.length; i++) {
                                 bu.append(arr[i]);
                             }
-                            msgList.add(new MessageTalkOther(name,arr[0].replace("\t","").replace("\n",""), bu.toString()));
+                            msgList.add(new MessageTalkOther(name, arr[0].replace("\t", "").replace("\n", ""), bu.toString()));
                         }
                     }
-                    if (msgCall!=null)
-                        msgCall.getBackMsg(name,msg);
+                    if (msgCall != null)
+                        msgCall.getBackMsg(name, msg);
                 }
 
                 @Override
@@ -173,29 +191,29 @@ public class UsbMainActivity extends SimpleActivity {
 //        msgList.add(new MessageTalkMe("测试",text));
 //        if (msgCallc!=null)
 //            msgCallc.getBackMsg("","");
-        if (iBackService==null)
+        if (iBackService == null)
             return;
         if (TextUtils.isEmpty(text))
             return;
         try {
             if (!iBackService.isConnect()) {
-                Snackbar.make(mViewPager, "There is a glitch in the server!",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mViewPager, "There is a glitch in the server!", Snackbar.LENGTH_SHORT).show();
                 //Toast.makeText(this, "There is a glitch in the server!", Toast.LENGTH_SHORT).show();
                 return;
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        iBackService.sendMessage(text);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    iBackService.sendMessage(text);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
-            }).start();
+            }
+        }).start();
 
     }
 
@@ -208,9 +226,10 @@ public class UsbMainActivity extends SimpleActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState==null)
+        name=AppConfig.getInstance().getString("talk_name","");
+        if (savedInstanceState == null)
             return;
-        msgList= (ArrayList<MessageTalk>) savedInstanceState.getSerializable("list");
+        msgList = (ArrayList<MessageTalk>) savedInstanceState.getSerializable("list");
     }
 
     public List<MessageTalk> getMsgList() {
@@ -231,7 +250,7 @@ public class UsbMainActivity extends SimpleActivity {
 
     @Override
     protected void setStatusBar() {
-        StatusBarUtil.setColor(UsbMainActivity.this,mContext.getResources().getColor(R.color.colorPrimary), 15);
+//        StatusBarUtil.setColor(UsbMainActivity.this,mContext.getResources().getColor(R.color.colorPrimary), 15);
     }
 
     @Override
@@ -239,6 +258,8 @@ public class UsbMainActivity extends SimpleActivity {
         super.onResume();
         MobclickAgent.onResume(this);
         //mUsbScanHelper.registerReceiver();
+        LogUtils.e("onResume");
+        bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -254,10 +275,10 @@ public class UsbMainActivity extends SimpleActivity {
         Process.killProcess(Process.myPid());
         System.exit(0);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
-        bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -271,19 +292,30 @@ public class UsbMainActivity extends SimpleActivity {
         int i = 3;
         LogUtils.e(i++ + "3");
         setSupportActionBar(toolbar);
+        StatusBarUtil.setTranslucent(this,0);
         mServiceIntent = new Intent(this, TcpAIDLService.class);
-        ACache aCache = ACache.get(mContext);
-        Object obj = aCache.getAsObject("msg_list_t");
-        if (obj!=null) {
-            msgList= (List<MessageTalk>) obj;
+//        StatusBarUtil.setTranslucentForImageView(this, 15, toolbar);
+//        StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, mContext.getResources().getColor(R.color.colorPrimary), 15);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.okfkkat,
+//                R.string.clean);
+//        drawerLayout.setDrawerListener(toggle);
+//        toggle.syncState();
+        initPage();
+        initUSB();
+        initBle();
+        initData();
+        if (!getPackageManager().hasSystemFeature("android.hardware.usb.host")) {
+            Toast.makeText(this, R.string.vadft, Toast.LENGTH_SHORT).show();
         }
+    }
 
+    private void initPage(){
         fragmentList.clear();
         fragmentList.add(OnLineFragment.newInstance());
         fragmentList.add(MainFragment.newInstance());
         fragmentList.add(TalkFragment.newInstance());
         //fragmentList.add(UseFragment.newInstance(getString(R.string.ddavv), getString(R.string.vavdgsdgsa)));
-        String[] aa = new String[]{getString(R.string.tew), getString(R.string.vdadg),getString(R.string.vedde), getString(R.string.vfahta)};
+        String[] aa = new String[]{getString(R.string.tew), getString(R.string.vdadg), getString(R.string.vedde), getString(R.string.vfahta)};
         mSectionsPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), aa, fragmentList);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -291,12 +323,15 @@ public class UsbMainActivity extends SimpleActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 //LogUtils.e("positionOffset"+positionOffset+"positionOffsetPixels"+positionOffsetPixels);
                 ((OnLineFragment) fragmentList.get(0)).setCleanAnim(true);
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm.isActive())
+                    imm.hideSoftInputFromWindow(mViewPager.getWindowToken(), 0);
             }
 
             @Override
             public void onPageSelected(int position) {
                 //if (!isLinePage())
-                    StatusBarUtil.setColor(UsbMainActivity.this,mContext.getResources().getColor(R.color.colorPrimary),15);
+//                StatusBarUtil.setColor(UsbMainActivity.this, mContext.getResources().getColor(R.color.colorPrimary), 15);
             }
 
             @Override
@@ -305,8 +340,67 @@ public class UsbMainActivity extends SimpleActivity {
             }
         });
         tabs.setupWithViewPager(mViewPager);
+    }
+    private void initData(){
+        if (TextUtils.isEmpty(AppConfig.getInstance().getString("talk_name",""))){
+            String imei = null;
+            try {
+                imei = ((TelephonyManager) mContext.getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                imei="";
+            }
+            AppConfig.getInstance().putString("talk_name",imei.substring((imei.length()>6?imei.length()-6:0)));
+        }
+        name=AppConfig.getInstance().getString("talk_name","");
+        TextView text_name= (TextView) navigation.getHeaderView(0).findViewById(R.id.text_name);
+        text_name.setText(name);
 
-        icon_text.setText("{fa-circle-o-notch spin}");
+        ACache aCache = ACache.get(mContext);
+        Object obj = aCache.getAsObject("msg_list_t");
+        if (obj != null) {
+            msgList.clear();
+            msgList = (List<MessageTalk>) obj;
+        }
+        navigation.getMenu().findItem(R.id.nav_info).setIcon(
+                new IconDrawable(this, FontAwesomeIcons.fa_info_circle)
+                        .colorRes(R.color.colormain6)
+                        .actionBarSize());
+        navigation.getMenu().findItem(R.id.nav_about).setIcon(
+                new IconDrawable(this, FontAwesomeIcons.fa_circle_thin)
+                        .colorRes(R.color.light_orange)
+                        .actionBarSize());
+        navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_info:
+                        startActivity(new Intent(mContext,UseInfoActivity.class));
+                        break;
+                    case R.id.nav_about:
+                        new AlertDialog.Builder(mContext).setTitle("关于我们")
+                                .setMessage("勇往直前，一马当先。")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .setNegativeButton("取消", null)
+                                .show();
+                        break;
+                }
+                drawerLayout.closeDrawers();
+                return false;
+            }
+        });
+        View.OnClickListener clickListener=new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+                drawerLayout.closeDrawers();
+            }
+        };
+        navigation.getHeaderView(0).setOnClickListener(clickListener);
+        navigation.getHeaderView(0).findViewById(R.id.icon_head).setOnClickListener(clickListener);
         iconDowload.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
@@ -320,14 +414,9 @@ public class UsbMainActivity extends SimpleActivity {
                 return true;
             }
         });
-        init();
-        initBle();
-        if (!getPackageManager().hasSystemFeature("android.hardware.usb.host")) {
-            Toast.makeText(this, R.string.vadft, Toast.LENGTH_SHORT).show();
-        }
     }
 
-    private void init() {
+    private void initUSB() {
         mUsbScanHelper = new UsbScanHelper(this, icon_text);
 //        mUsbScanHelper.setScanListener(new UsbScanHelper.ScanListener() {
 //            @Override
@@ -345,6 +434,7 @@ public class UsbMainActivity extends SimpleActivity {
                 mUsbScanHelper.startScan(mUsbScanHelper.checkScanDevice(Constants.DEVICE_VIDS, Constants.DEVICE_PIDS));
             }
         });
+        icon_text.setText("{fa-circle-o-notch spin}");
         icon_text.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -357,6 +447,7 @@ public class UsbMainActivity extends SimpleActivity {
     public boolean isOffLinePage() {
         return mViewPager.getCurrentItem() == 1;
     }
+
     public boolean isLinePage() {
         return mViewPager.getCurrentItem() == 0;
     }
@@ -407,7 +498,7 @@ public class UsbMainActivity extends SimpleActivity {
         ble_icon_text.bringToFront();
         ble_icon_text.setText("{fa-bluetooth @color/red}");
         ObjectAnimator rotation = ObjectAnimator.ofFloat(ble_icon_text, "rotation", 0f, 360f);
-        ObjectAnimator fadeInOut = ObjectAnimator.ofFloat(ble_icon_text, "alpha", 1f, 0f, 1f);
+        ObjectAnimator fadeInOut = ObjectAnimator.ofFloat(ble_icon_text, "alpha", 1f, 0f, 0.8f);
         final AnimatorSet animSet = new AnimatorSet();
         animSet.play(rotation).with(fadeInOut);
         animSet.setDuration(3000);
@@ -497,6 +588,44 @@ public class UsbMainActivity extends SimpleActivity {
         }.regiest();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void showDialog() {
+        final XEditText et=new XEditText(mContext);
+        et.setDisableEmoji(true);
+        et.setMaxLines(1);
+        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
+        et.setHint(AppConfig.getInstance().getString("talk_name",""));
+        new AlertDialog.Builder(mContext)
+                .setIcon(new IconDrawable(mContext, FontAwesomeIcons.fa_edit))
+                .setTitle(R.string.tetea)
+                .setView(et)
+                .setPositiveButton(R.string.dtaddssd, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                        final String input = et.getText().toString();
+                        if (TextUtils.isEmpty(input))
+                            return;
+                        name=input;
+                        AppConfig.getInstance().putString("talk_name",input);
+                        TextView text_name= (TextView) navigation.getHeaderView(0).findViewById(R.id.text_name);
+                        text_name.setText(name);
+                    }
+                })
+                .setNegativeButton(R.string.dadttsadts, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+                    }
+                })
+                .show();
+    }
+
     public void toStarDownImage() {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -553,6 +682,7 @@ public class UsbMainActivity extends SimpleActivity {
                         @Override
                         public void run() {
                             info_text.setText("error");
+                            Snackbar.make(info_text,"Time out",Snackbar.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     });
@@ -638,20 +768,24 @@ public class UsbMainActivity extends SimpleActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if ((System.currentTimeMillis() - exitTime) > 1200) {
-                Toast.makeText(mContext, R.string.vkohaskjltk, Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-                ACache aCache = ACache.get(mContext);
-                //List<MessageTalk> list=msgList.subList(msgList.size()>20?(msgList.size()-20):0,msgList.size());
-                aCache.put("msg_list_t", (Serializable) msgList,2 * ACache.TIME_DAY);//2天
-                unbindService(conn);
-                BluetoothService.getInstance().stop();
-                mUsbScanHelper.unregisterReceiver();
-                mUsbScanHelper.stopScan();
-                MobclickAgent.onKillProcess(mContext);//如果开发者调用
-                Process.killProcess(Process.myPid());
-                System.exit(0);
+            if (drawerLayout.isDrawerOpen(Gravity.LEFT)){
+                drawerLayout.closeDrawers();
+            }else {
+                if ((System.currentTimeMillis() - exitTime) > 1200) {
+                    Toast.makeText(mContext, R.string.vkohaskjltk, Toast.LENGTH_SHORT).show();
+                    exitTime = System.currentTimeMillis();
+                } else {
+                    ACache aCache = ACache.get(mContext);
+                    //List<MessageTalk> list=msgList.subList(msgList.size()>20?(msgList.size()-20):0,msgList.size());
+                    aCache.put("msg_list_t", (Serializable) msgList, 2 * ACache.TIME_DAY);//2天
+                    unbindService(conn);
+                    BluetoothService.getInstance().stop();
+                    mUsbScanHelper.unregisterReceiver();
+                    mUsbScanHelper.stopScan();
+                    MobclickAgent.onKillProcess(mContext);//如果开发者调用
+                    Process.killProcess(Process.myPid());
+                    System.exit(0);
+                }
             }
             LogUtils.e("~~~~~~~~~onback");
             return true;

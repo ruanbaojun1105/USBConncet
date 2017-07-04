@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
@@ -61,7 +62,6 @@ public class TcpAIDLService extends Service {
 							mHandler.removeCallbacks(heartBeatRunnable);
 							if (mReadThread!=null)
 								mReadThread.release();
-							releaseLastSocket(mSocket);
 							new InitSocketThread().start();
 						}
 					}
@@ -148,6 +148,10 @@ public class TcpAIDLService extends Service {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (ConnectException e){
+			LogUtils.e("初始化socket异常，30秒后再次发起重连");
+			mHandler.postDelayed(heartBeatRunnable, 30000);
+			e.printStackTrace();
+		}  catch (SocketException e){
 			LogUtils.e("初始化socket异常，30秒后再次发起重连");
 			mHandler.postDelayed(heartBeatRunnable, 30000);
 			e.printStackTrace();

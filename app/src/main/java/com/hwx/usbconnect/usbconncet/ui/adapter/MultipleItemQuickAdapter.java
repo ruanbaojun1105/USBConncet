@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -58,17 +59,15 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
         scb.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
-                Log.d("SmoothCheckBox", String.valueOf(isChecked));
                 item.setCheck(isChecked);
             }
         });
 
         final CustomSpinner colorSpinner1 = helper.getView(R.id.spinner1);
         colorSpinner1.initializeStringValues(new String[]{
-                mContext.getString(R.string.vaddf),
-                mContext.getString(R.string.vaf),
-                mContext.getString(R.string.vafg),
-                mContext.getString(R.string.gaf)},mContext.getString(R.string.vfag));
+                mContext.getString(R.string.vaddf),mContext.getString(R.string.tagfd),
+                mContext.getString(R.string.vaf),mContext.getString(R.string.jkgasjks),mContext.getString(R.string.vakjjtr),mContext.getString(R.string.vakjkse),mContext.getString(R.string.vaksddf),
+                mContext.getString(R.string.vafg)},mContext.getString(R.string.vfag));
         colorSpinner1.setSpinnerEventsListener(new CustomSpinner.OnSpinnerEventsListener() {
             @Override
             public void onSpinnerOpened() {
@@ -223,13 +222,13 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<AbsTypeM
 
         final View view=View.inflate(mContext,R.layout.type_main_text_dialog, null);
         final XEditText et= (XEditText) view.findViewById(R.id.biucontainer);
-       /* et.setDisableEmoji(true);
+       et.setDisableEmoji(true);
         //final EditText et = new EditText(activity);
-        et.setMaxLines(5);
-        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});*/
+        et.setMaxLines(2);
+        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
         if (!TextUtils.isEmpty(content)) {
             et.setText(content);
-            et.setSelection(content.length());
+            et.setSelection(content.length()>50?50:content.length());
         }
         //et.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
 

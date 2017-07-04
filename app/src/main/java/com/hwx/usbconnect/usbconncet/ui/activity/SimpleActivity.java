@@ -33,12 +33,11 @@ public abstract class SimpleActivity extends SupportActivity {
         setContentView(getLayout());
         mUnBinder = ButterKnife.bind(this);
         mContext = this;
-        setStatusBar();
         initEventAndData();
     }
 
     protected void setStatusBar() {
-        StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary));
+        StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary),15);
     }
 
     protected void setToolBar(Toolbar toolbar, String title) {

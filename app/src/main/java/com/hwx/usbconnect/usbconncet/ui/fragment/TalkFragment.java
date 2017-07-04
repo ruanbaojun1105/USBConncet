@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -22,8 +23,10 @@ import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.hwx.usbconnect.usbconncet.AppConfig;
 import com.hwx.usbconnect.usbconncet.R;
@@ -66,7 +69,6 @@ public class TalkFragment extends SimpleFragment {
     private TalkMulItemAdapter itemAdapter;
 
     public TalkFragment() {
-        // Required empty public constructor
     }
 
     public static TalkFragment newInstance() {
@@ -98,6 +100,7 @@ public class TalkFragment extends SimpleFragment {
                 refreshList(msg);
             }
         });
+        talkRecycleview.smoothScrollToPosition((((UsbMainActivity)mActivity).getMsgList()).size());
     }
 
     @Override
@@ -120,23 +123,20 @@ public class TalkFragment extends SimpleFragment {
         ScollLinearLayoutManager manager =new ScollLinearLayoutManager(mContext);
         //manager.setSpeedSlow(0.3f);
         itemAdapter.openLoadAnimation();
+        TextView head=new TextView(mContext);
+        head.setTextColor(Color.GRAY);
+        head.setText(R.string.adatewq);
+        head.setGravity(Gravity.CENTER);
+        itemAdapter.addHeaderView(head);
         talkRecycleview.setLayoutManager(manager);
         talkRecycleview.setAdapter(itemAdapter);
-        talkRecycleview.smoothScrollToPosition(itemAdapter.getData().size());
         talkSends.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
                 String text = talkEdit.getText().toString();
                 if (TextUtils.isEmpty(text))
                     return;
-                String imei = null;
-                try {
-                    imei = ((TelephonyManager) mContext.getSystemService(TELEPHONY_SERVICE)).getDeviceId();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    imei="";
-                }
-                String name=AppConfig.getInstance().getString("talk_name",imei.substring((imei.length()>6?imei.length()-6:0)));
+                String name=((UsbMainActivity)mActivity).getName();
                 ((UsbMainActivity)mActivity).sendMessage(name+":"+text);
                 talkEdit.setText("");
                 InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -146,41 +146,11 @@ public class TalkFragment extends SimpleFragment {
         talkSetname.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                showDialog();
+                ((UsbMainActivity)mActivity).showDialog();
             }
         });
     }
 
-    private void showDialog() {
-        final XEditText et=new XEditText(mContext);
-        et.setDisableEmoji(true);
-        et.setMaxLines(1);
-        et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
-        et.setHint(AppConfig.getInstance().getString("talk_name",""));
-        new AlertDialog.Builder(mActivity)
-                .setIcon(new IconDrawable(mContext, FontAwesomeIcons.fa_edit))
-                .setTitle(R.string.tetea)
-                .setView(et)
-                .setPositiveButton(R.string.dtaddssd, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                        final String input = et.getText().toString();
-                        if (TextUtils.isEmpty(input))
-                            return;
-                        AppConfig.getInstance().putString("talk_name",input);
-                    }
-                })
-                .setNegativeButton(R.string.dadttsadts, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                    }
-                })
-                .show();
-    }
 
     void refreshList(final String message){
         LogUtils.e("get msg:"+message);
@@ -189,12 +159,10 @@ public class TalkFragment extends SimpleFragment {
                 @Override
                 public void run() {
                     if (talkRecycleview.getScrollState() == RecyclerView.SCROLL_STATE_IDLE && !talkRecycleview.isComputingLayout()) {
-                        //itemAdapter.addData(itemAdapter.getData().size(), message);
                         itemAdapter.notifyDataSetChanged();
                         talkRecycleview.smoothScrollToPosition(itemAdapter.getData().size());
                     } else {
                         itemAdapter.notifyDataSetChanged();
-                        //itemAdapter.addData(message);
                     }
                 }
             });
