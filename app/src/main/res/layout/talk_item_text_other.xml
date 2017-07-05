@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.guanaj.easyswipemenulibrary.EasySwipeMenuLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:contentView="@+id/content"
+    app:rightMenuView="@+id/right">
+    <LinearLayout
+        android:id="@+id/right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_light"
+        android:orientation="horizontal">
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_bright"
+            android:padding="20dp"
+            android:text="{fa-trash @color/red} 删除" />
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/right_menu_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_dark"
+            android:padding="20dp"
+            android:text="{fa-trash @color/red} 复制" />
+    </LinearLayout>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/content"
     >
 
     <com.joanzapata.iconify.widget.IconTextView
@@ -65,3 +92,4 @@
 
     </LinearLayout>
 </RelativeLayout>
+    </com.guanaj.easyswipemenulibrary.EasySwipeMenuLayout>
