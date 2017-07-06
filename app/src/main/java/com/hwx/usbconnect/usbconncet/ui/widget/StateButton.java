@@ -141,7 +141,8 @@ public class StateButton extends IconButton {
         mStateBackground.addState(states[1], mPressedBackground);
         mStateBackground.addState(states[3], mUnableBackground);
         mStateBackground.addState(states[2], mNormalBackground);
-        setBackgroundDrawable(mStateBackground);
+        setBackground(mStateBackground);
+        //setBackgroundDrawable(mStateBackground);
         a.recycle();
     }
 

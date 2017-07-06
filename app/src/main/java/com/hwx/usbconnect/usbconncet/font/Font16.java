@@ -62,7 +62,7 @@ public class Font16 {
 	public byte[] getStringAndFont(String str,int fontStyle) {
 		int[] code = null;
 		byte[] res=new byte[0];
-
+		str=str.replace("\n","").replace("\r","").replace("\t","").replace("\b","");
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) < 0x80) {
 				code = getByteCode(str.substring(i, i + 1));
@@ -83,7 +83,7 @@ public class Font16 {
 	public byte[] getStringFontByte(String str,int fontStyle) {
 		int[] code = null;
 		byte[] res=new byte[0];
-
+		str=str.replace("\n","").replace("\r","").replace("\t","").replace("\b","");
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) < 0x80) {
 				code = getByteCode(str.substring(i, i + 1));

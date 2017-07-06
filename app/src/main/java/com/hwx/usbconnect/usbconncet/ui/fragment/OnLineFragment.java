@@ -109,10 +109,10 @@ public class OnLineFragment extends SimpleFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPause() {
+        super.onPause();
+        setCleanAnim(true);
     }
-
 
     @Override
     protected int getLayoutId() {
@@ -357,6 +357,7 @@ public class OnLineFragment extends SimpleFragment {
             spinnerTopView.setPicture1_ByteT(Picture1_ByteT);
         }
     }
+
     private void setFixed(boolean isFixed) {
         this.isFixed=isFixed;
         for (View v : views) {
@@ -416,19 +417,25 @@ public class OnLineFragment extends SimpleFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                byte[] fff = new Font16(mContext).getStringAndFont(text, fontStyle);
+                if (fff.length == 0)
+                    return;
+                Picture1_ByteT = new byte[240];
+                for (int i = 0; i < fff.length; i++) {
+                    if (i == 240) {
+                        break;
+                    }
+                    Picture1_ByteT[i] = fff[i];
+                }
+                fragment.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setPicture1_ByteT(Picture1_ByteT, 1);
+                    }
+                });
             }
         }).start();
-        byte[] fff = new Font16(mContext).getStringAndFont(text, fontStyle);
-        if (fff.length == 0)
-            return;
-        Picture1_ByteT = new byte[240];
-        for (int i = 0; i < fff.length; i++) {
-            if (i == 240) {
-                break;
-            }
-            Picture1_ByteT[i] = fff[i];
-        }
-        setPicture1_ByteT(Picture1_ByteT, 1);
         /*for (View v : views) {
             SpinnerTopView spinnerTopView = (SpinnerTopView) v;
             spinnerTopView.setText(text);
@@ -448,6 +455,7 @@ public class OnLineFragment extends SimpleFragment {
         if (Picture1_ByteT != null)
             setPicture1_ByteT(Picture1_ByteT);
     }
+
     public void setThisCleanAnim(boolean isCleanAnim) {
         setThisCleanAnim(isCleanAnim ? -1 : viewpager.getCurrentItem());
     }
@@ -462,7 +470,6 @@ public class OnLineFragment extends SimpleFragment {
             }
         }
     }
-
 
     public void setCleanAnim(boolean cleanAnim) {
         for (View v : views) {
@@ -499,7 +506,6 @@ public class OnLineFragment extends SimpleFragment {
             transaction.commit();
         }
     }
-
 
     boolean isStopAuto=true;//是否停止自动
     /**

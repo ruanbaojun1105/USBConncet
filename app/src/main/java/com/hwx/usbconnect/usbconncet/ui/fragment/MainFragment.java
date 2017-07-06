@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -14,10 +16,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.andview.refreshview.XRefreshView;
 import com.hwx.usbconnect.usbconncet.AppConfig;
 import com.hwx.usbconnect.usbconncet.Constants;
 import com.hwx.usbconnect.usbconncet.R;
@@ -26,8 +31,8 @@ import com.hwx.usbconnect.usbconncet.bean.ImageFontMod;
 import com.hwx.usbconnect.usbconncet.bean.ImageMod;
 import com.hwx.usbconnect.usbconncet.bean.PresetMod;
 import com.hwx.usbconnect.usbconncet.bean.TextMod;
-import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
 import com.hwx.usbconnect.usbconncet.font.Font16;
+import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
 import com.hwx.usbconnect.usbconncet.ui.UsbScanHelper;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
@@ -48,6 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import me.weyye.hipermission.HiPermission;
 import me.weyye.hipermission.PermissionCallback;
 import me.weyye.hipermission.PermissionItem;
@@ -58,12 +65,14 @@ import me.weyye.hipermission.PermissionItem;
  * create an instance of this fragment.
  */
 public class MainFragment extends SimpleFragment implements View.OnClickListener {
-    @BindView(R.id.rv_list)
-    RecyclerView mRecyclerView;
     @BindView(R.id.clean)
     IconTextView iconTextView;
     @BindView(R.id.updateData)
     Button updateData;
+    @BindView(R.id.recycleview)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.xrefreshview)
+    XRefreshView xrefreshview;
     private MultipleItemQuickAdapter multipleItemAdapter;
 
     public MainFragment() {
@@ -97,7 +106,9 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         if (!HiPermission.checkPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
             permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "SD write permission", R.drawable.permission_ic_storage));
-            permissionItems.add(new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "SD read permission", R.drawable.permission_ic_storage));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                permissionItems.add(new PermissionItem(Manifest.permission.READ_EXTERNAL_STORAGE, "SD read permission", R.drawable.permission_ic_storage));
+            }
             permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "Read Phone permission", R.drawable.permission_ic_phone));
             HiPermission.create(mContext).title(getString(R.string.vdatdta)).permissions(permissionItems)
                     .filterColor(ResourcesCompat.getColor(mContext.getResources(), R.color.colorPrimary, mContext.getTheme()))//permission icon color
@@ -114,6 +125,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                         public void onFinish() {
                             LogUtils.e("所有权限申请完成");
                             updaData();
+                            ((UsbMainActivity) mActivity).initData();
                         }
 
                         @Override
@@ -126,8 +138,10 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                             Log.i("", "onGuarantee");
                         }
                     });
-        }else
+        } else {
             updaData();
+            ((UsbMainActivity) mActivity).initData();
+        }
     }
 
     public void updaData() {
@@ -136,6 +150,11 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
         new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
                 String[] fileArr = getFileAll(mContext, new File(itemPath), false, false);
                 String[] fileArrname = getFileAll(mContext, new File(itemPath), true, false);
@@ -148,6 +167,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                         @Override
                         public void run() {
                             multipleItemAdapter.notifyDataSetChanged();
+                            xrefreshview.stopRefresh();
                         }
                     });
                 }
@@ -167,8 +187,8 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                 ACache aCache = ACache.get(mContext);
                 Object obj = aCache.getAsObject(Constants.SAVE_DATA_KEY);
                 String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
-                String[] fileArr = getFileAll(mContext,new File(itemPath), false, false);
-                String[] fileArrname = getFileAll(mContext,new File(itemPath), true, false);
+                String[] fileArr = getFileAll(mContext, new File(itemPath), false, false);
+                String[] fileArrname = getFileAll(mContext, new File(itemPath), true, false);
                 if (obj == null) {
                     data.add(new ImageFontMod(fileArr, fileArrname));
                     data.add(new ImageFontMod(fileArr, fileArrname));
@@ -194,6 +214,19 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                     public void run() {
                         mRecyclerView.setLayoutManager(manager);
                         mRecyclerView.setAdapter(multipleItemAdapter);
+                        TalkFragment.setRefreshView(mContext,xrefreshview);
+                        xrefreshview.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
+                            @Override
+                            public void onRefresh(boolean isPullDown) {
+                                updaData();
+                            }
+
+                            @Override
+                            public void onLoadMore(boolean isSilence) {
+                                xrefreshview.stopLoadMore();
+                            }
+                        });
                     }
                 });
             }
@@ -223,8 +256,8 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
             public void run() {
                 ACache aCache = ACache.get(getContext());
                 String itemPath = getInnerSDCardPath() + "/HWX-SPINNER/";
-                String[] fileArr = getFileAll(mContext,new File(itemPath), false, false);
-                String[] fileArrname = getFileAll(mContext,new File(itemPath), true, false);
+                String[] fileArr = getFileAll(mContext, new File(itemPath), false, false);
+                String[] fileArrname = getFileAll(mContext, new File(itemPath), true, false);
                 final List<AbsTypeMod> data = new ArrayList<>();
                 data.add(new ImageFontMod(fileArr, fileArrname));
                 data.add(new ImageFontMod(fileArr, fileArrname));
@@ -276,7 +309,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
      *
      * @return
      */
-    public static String[] getFileAll(Context context,File file, boolean isName, boolean isCheck) {
+    public static String[] getFileAll(Context context, File file, boolean isName, boolean isCheck) {
         if (file == null)
             return new String[]{};
         if (!file.exists()) {
@@ -330,7 +363,7 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                         .show();
                 break;
             case R.id.updateData:
-                if (com.hwx.usbconnect.usbconncet.Constants.isOpenLim) {
+                if (Constants.isOpenLim) {
                     int a = AppConfig.getInstance().getInt("success", 1);
                     if (a > 20) {
                         new AlertDialog.Builder(mContext).setMessage(R.string.ftdttt)
@@ -353,11 +386,11 @@ public class MainFragment extends SimpleFragment implements View.OnClickListener
                         aCache.put(Constants.SAVE_DATA_KEY, (Serializable) listAbs);
                         dataMain = new byte[0];
                         TextMain = new byte[0];
-                        if (!UsbMainActivity.mUsbScanHelper.isScanConn()&& !BluetoothService.getInstance().isConnectBle()) {
+                        if (!UsbMainActivity.mUsbScanHelper.isScanConn() && !BluetoothService.getInstance().isConnectBle()) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ((UsbMainActivity)mContext).setIcon_text("{fa-usb @color/red}");//错误
+                                    ((UsbMainActivity) mContext).setIcon_text("{fa-usb @color/red}");//错误
                                     Toast.makeText(getActivity(), R.string.dsttaat, Toast.LENGTH_SHORT).show();
                                 }
                             });

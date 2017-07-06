@@ -250,7 +250,8 @@ public class UsbMainActivity extends SimpleActivity {
 
     @Override
     protected void setStatusBar() {
-//        StatusBarUtil.setColor(UsbMainActivity.this,mContext.getResources().getColor(R.color.colorPrimary), 15);
+//        StatusBarUtil.setColorForDrawerLayout(this,drawerLayout,mContext.getResources().getColor(R.color.colorPrimary), 15);
+//        StatusBarUtil.setColor(UsbMainActivity.this,mContext.getResources().getColor(R.color.colorPrimary), 0);
     }
 
     @Override
@@ -292,7 +293,9 @@ public class UsbMainActivity extends SimpleActivity {
         int i = 3;
         LogUtils.e(i++ + "3");
         setSupportActionBar(toolbar);
-        StatusBarUtil.setTranslucent(this,0);
+        //StatusBarUtil.setColorForDrawerLayout(this,drawerLayout,mContext.getResources().getColor(R.color.colorPrimary), 0);
+        //StatusBarUtil.setTranslucent(this,0);
+        setStatusBar();
         mServiceIntent = new Intent(this, TcpAIDLService.class);
 //        StatusBarUtil.setTranslucentForImageView(this, 15, toolbar);
 //        StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, mContext.getResources().getColor(R.color.colorPrimary), 15);
@@ -341,7 +344,8 @@ public class UsbMainActivity extends SimpleActivity {
         });
         tabs.setupWithViewPager(mViewPager);
     }
-    private void initData(){
+
+    public void initData(){
         if (TextUtils.isEmpty(AppConfig.getInstance().getString("talk_name",""))){
             String imei = null;
             try {
@@ -466,7 +470,7 @@ public class UsbMainActivity extends SimpleActivity {
                     List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
                     permissionItems.add(new PermissionItem(Manifest.permission.ACCESS_FINE_LOCATION, getString(R.string.vdtetet), R.drawable.permission_ic_location));
                     permissionItems.add(new PermissionItem(Manifest.permission.ACCESS_COARSE_LOCATION, getString(R.string.vdtetet), R.drawable.permission_ic_location));
-                    HiPermission.create(mContext).title("").permissions(permissionItems)
+                    HiPermission.create(mContext).title("BLE request").permissions(permissionItems)
                             .filterColor(ResourcesCompat.getColor(mContext.getResources(), R.color.colorPrimary, mContext.getTheme()))//permission icon color
                             .msg(getString(R.string.tseesta))
                             .style(R.style.PermissionBlueStyle)

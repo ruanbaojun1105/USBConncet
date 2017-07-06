@@ -15,11 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.andview.refreshview.XRefreshView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.ui.BluetoothService;
 import com.hwx.usbconnect.usbconncet.ui.adapter.BleTextItemAdapter;
+import com.hwx.usbconnect.usbconncet.ui.fragment.TalkFragment;
 import com.hwx.usbconnect.usbconncet.ui.widget.StateButton;
 import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
@@ -42,14 +44,12 @@ import butterknife.ButterKnife;
 public class BlueToothTTActivity extends SimpleActivity {
     @BindView(R.id.icon_head)
     IconTextView iconHead;
-    @BindView(R.id.btnSearch)
-    StateButton btnSearch;
-    @BindView(R.id.lvDevices)
-    RecyclerView lvBTDevices;
     @BindView(R.id.tiles_frame_layout)
     TilesFrameLayout mTilesFrameLayout;
-    @BindView(R.id.back_icon)
-    IconTextView backIcon;
+    @BindView(R.id.recycleview)
+    RecyclerView lvBTDevices;
+    @BindView(R.id.xrefreshview)
+    XRefreshView xrefreshview;
     //<a href="http://wiley.iteye.com/blog/1179417">http://wiley.iteye.com/blog/1179417</a>
     private BleTextItemAdapter itemAdapter;
     private List<String> lstDevices = new ArrayList<String>();
@@ -85,22 +85,8 @@ public class BlueToothTTActivity extends SimpleActivity {
             }
         });
 
-        backIcon.setOnClickListener(new IClickListener() {
-            @Override
-            protected void onIClick(View v) {
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
-        });
         btAdapt = BluetoothAdapter.getDefaultAdapter();// 初始化本机蓝牙功能
-        btnSearch.setOnClickListener(new IClickListener() {
-            @Override
-            protected void onIClick(View v) {
-                searchBle();
-            }
-        });
-
-        // ListView及其数据源 适配器  
+        // ListView及其数据源 适配器
         itemAdapter = new BleTextItemAdapter(lstDevices);
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         itemAdapter.openLoadAnimation();
@@ -131,8 +117,29 @@ public class BlueToothTTActivity extends SimpleActivity {
                 }
             }
         });
-        searchBle();
-        // ========================================================  
+        TalkFragment.setRefreshView(mContext,xrefreshview);
+        xrefreshview.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
+            @Override
+            public void onRefresh(boolean isPullDown) {
+                searchBle();
+                lvBTDevices.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFinishing()&&xrefreshview!=null){
+                            xrefreshview.stopRefresh();
+                        }
+                    }
+                },5000);
+            }
+
+            @Override
+            public void onLoadMore(boolean isSilence) {
+                xrefreshview.stopLoadMore();
+            }
+        });
+        xrefreshview.startRefresh();
+        // ========================================================
         //if (btAdapt.getState() == BluetoothAdapter.STATE_OFF)// 读取蓝牙状态并显示
         // ============================================================
         // 注册Receiver来获取蓝牙设备相关的结果  
@@ -221,7 +228,6 @@ public class BlueToothTTActivity extends SimpleActivity {
             Toast.makeText(BlueToothTTActivity.this, R.string.vrrete, Toast.LENGTH_SHORT)
                     .show();
             btAdapt.enable();
-            btnSearch.setVisibility(View.VISIBLE);
             return;
         }
         if (btAdapt.isDiscovering())
@@ -237,6 +243,7 @@ public class BlueToothTTActivity extends SimpleActivity {
         setTitle(getString(R.string.vbrt) + btAdapt.getAddress());
         btAdapt.startDiscovery();
     }
+
 
     @Deprecated
     private class RefushReceiver extends BroadcastReceiver {

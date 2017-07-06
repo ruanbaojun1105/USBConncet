@@ -39,6 +39,9 @@ public abstract class SimpleActivity extends SupportActivity {
     protected void setStatusBar() {
         StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary),15);
     }
+    protected void setStatusBar(int a) {
+        StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary),a);
+    }
 
     protected void setToolBar(Toolbar toolbar, String title) {
         toolbar.setTitle(title);

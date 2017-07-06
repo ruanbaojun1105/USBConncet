@@ -9,9 +9,9 @@ android {
     }*/
     defaultConfig {
         applicationId "com.hwx.usbconnect.usbconncet"
-        minSdkVersion 15
+        minSdkVersion 16//4.1
         targetSdkVersion 25
-        versionCode 20
+        versionCode 25
         versionName "2.0"
     }
     lintOptions {
@@ -37,7 +37,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile files('libs/commons-net-3.1.jar')//ftp上传下载包
     //umeng
-    // (v4.5)
     //权限请求
     //fragment的基库
     compile project(':ColorPalette')
@@ -67,4 +66,7 @@ dependencies {
     compile 'com.yalantis:starwarstiles:0.1.1'
     compile 'com.github.florent37:expectanim:1.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    //滑动删除
+    compile 'com.github.anzaizai:EasySwipeMenuLayout:1.0.6'
+    compile 'com.huxq17.xrefreshview:xrefreshview:3.6.9'
 }

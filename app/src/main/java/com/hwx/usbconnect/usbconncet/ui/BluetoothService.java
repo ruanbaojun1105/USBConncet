@@ -22,6 +22,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -267,25 +268,36 @@ public class BluetoothService {
 	/**
 	 *发送数据
 	 */
-	public void sendData(byte function,byte[] content,boolean isAutoSafeCode) {
+	public void sendData(final byte function,final byte[] content,final boolean isAutoSafeCode) {
 		if (instance==null||mState!=3){
 			return ;
 		}
-		isAutoSafeCode=false;//所有都自动算出来
-		byte[] head=new byte[]{starCode,addrCode,function,(byte) (content.length/256),(byte) (content.length%256)};
-		byte safe=safeCode;
-		if (isAutoSafeCode)
-			safe=checkSafeCod(content);
-		safe=safeCode;//固定
-		byte[] end=new byte[]{safe,endCode[0],endCode[1]};
-		List<byte[]> list=new ArrayList<byte[]>();
-		list.add(head);
-		list.add(content);
-		list.add(end);
+		Runnable runnable=new Runnable() {
+			@Override
+			public void run() {
+				byte[] head=new byte[]{starCode,addrCode,function,(byte) (content.length/256),(byte) (content.length%256)};
+				byte safe=safeCode;
+				if (isAutoSafeCode)
+					safe=checkSafeCod(content);
+				safe=safeCode;//固定
+				byte[] end=new byte[]{safe,endCode[0],endCode[1]};
+				List<byte[]> list=new ArrayList<byte[]>();
+				list.add(head);
+				list.add(content);
+				list.add(end);
 
-		byte[] a=sysCopy(list);
-		write(a);
-		Log.e("dd:","number code ："+function+" 's data send is "+mConnectedThread==null?"error!":"ok!");
+				byte[] a=sysCopy(list);
+				write(a);
+				LogUtils.e("dd:","number code ："+function+" 's data send is "+mConnectedThread==null?"error!":"ok!");
+			}
+		};
+		if (Looper.myLooper() == Looper.getMainLooper()) {
+			LogUtils.e("UI主线程");
+			new Thread(runnable).start();
+		} else {
+			LogUtils.e("非UI主线程");
+			runnable.run();
+		}
 	}
 	public static byte checkSafeCod(byte[] data){
 		byte safeCode=0;
@@ -358,9 +370,9 @@ public class BluetoothService {
 				}
 				try {
 					mmSocket.connect();
-					if (BuildConfig.DEBUG) Log.d(TAG, "connected");
+					LogUtils.d(TAG+ "connected");
 				} catch (IOException e1) {
-					Log.e(TAG, "connect to bluetooth device failed");
+					LogUtils.e(TAG, "connect to bluetooth device failed");
 					try {
 						mmSocket.close();
 						connectionFailed();
@@ -386,7 +398,7 @@ public class BluetoothService {
 		byte[] data_buffer=new byte[0];
 
 		public ConnectedThread(BluetoothSocket socket) {
-			Log.d(TAG, "create ConnectedThread");
+			LogUtils.d(TAG+ "create ConnectedThread");
 			mmSocket = socket;
 			InputStream tmpIn = null;
 			OutputStream tmpOut = null;
@@ -396,7 +408,7 @@ public class BluetoothService {
 				tmpIn = socket.getInputStream();
 				tmpOut = socket.getOutputStream();
 			} catch (IOException e) {
-				Log.e(TAG, "temp sockets not created", e);
+				LogUtils.e(TAG+"temp sockets not created", e);
 			}
 
 			mmInStream = tmpIn;
@@ -412,7 +424,7 @@ public class BluetoothService {
 			while (true) {
 				synchronized (lock) {
 					try {
-						Log.e("bt", "read:" + StringHexUtils.hexStr2Str(StringHexUtils.Bytes2HexString(buffer)));
+						LogUtils.e("bt", "read:" + StringHexUtils.hexStr2Str(StringHexUtils.Bytes2HexString(buffer)));
 						// Read from the InputStream
 						bytes = mmInStream.read(buffer);
 						fact_size+=bytes;

@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <android.support.v7.widget.RecyclerView
+    <include
+        layout="@layout/base_recycler"
         android:layout_width="match_parent"
         android:layout_weight="3"
         android:layout_height="0dp"
-        android:id="@+id/talk_recycleview"
         />
     <com.xw.repo.XEditText
         android:layout_width="match_parent"
@@ -16,7 +16,10 @@
         android:id="@+id/talk_edit"
         android:textColorHint="@color/gray_1"
         android:textColor="@color/blue_t"
-        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp"
         android:maxHeight="100dp"
         android:maxLines="5"
         android:maxLength="300"
@@ -30,14 +33,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        >
         <com.hwx.usbconnect.usbconncet.ui.widget.StateButton
             android:id="@+id/talk_sends"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/vjrjt"
-            android:layout_margin="5dp"
             app:radius="5dp"
             app:normalBackgroundColor="@color/colorPrimary"
             app:normalTextColor="@color/white"
@@ -50,9 +57,8 @@
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/talk_setname"
             android:layout_width="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:layout_height="wrap_content"
             android:text="{fa-edit @color/white 22sp}"

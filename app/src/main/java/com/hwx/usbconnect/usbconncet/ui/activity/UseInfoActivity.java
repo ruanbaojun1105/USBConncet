@@ -18,7 +18,7 @@ public class UseInfoActivity extends SimpleActivity {
     @Override
     protected void initEventAndData() {
         setToolBar((Toolbar)findViewById(R.id.toolbar),getString(R.string.ddavv));
-        setStatusBar();
+        setStatusBar(0);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, UseFragment.newInstance(getString(R.string.ddavv), getString(R.string.vavdgsdgsa))).commit();
     }
 }

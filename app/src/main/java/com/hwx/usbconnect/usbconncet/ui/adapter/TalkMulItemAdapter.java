@@ -21,6 +21,8 @@ public class TalkMulItemAdapter extends BaseMultiItemQuickAdapter<MessageTalk, B
         addItemType(2, R.layout.talk_item_text_other);
     }
 
+
+
     @Override
     protected void convert(BaseViewHolder helper, MessageTalk item) {
         helper.setText(R.id.text,item.getMessage());

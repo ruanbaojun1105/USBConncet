@@ -43,7 +43,7 @@
             android:hardwareAccelerated="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".ui.activity.USBMain2Activity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -55,7 +55,7 @@
             android:name=".ui.activity.BlueToothTTActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/NormalTheme"></activity>
+            android:theme="@style/NormalTheme"/>
         <activity
             android:name=".ui.activity.WelcomeActivity"
             android:launchMode="singleTask"
@@ -79,7 +79,7 @@
         <service android:name=".ui.brocast.TcpService" />
 
         <activity android:name=".ui.activity.UseInfoActivity"
-            android:theme="@style/AppThemeNo"></activity>
+            android:theme="@style/AppThemeNo"/>
     </application>
 
 </manifest>

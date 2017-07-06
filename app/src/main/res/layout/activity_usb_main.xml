@@ -14,11 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/actionbar_dark_grey"
+        android:fitsSystemWindows="true"
         >
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="60dp"
             android:background="@color/colorPrimary"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"
@@ -33,7 +34,7 @@
                 app:tabIndicatorColor="@color/white"
                 app:tabBackground="@color/colorPrimary"
                 app:tabMode="fixed"
-                app:tabGravity="center"
+                app:tabGravity="fill"
                 android:background="@color/colorPrimary"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
@@ -94,8 +95,8 @@
         app:itemIconTint="@color/blue"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/activity_main_drawer"
-        app:itemBackground="@color/blue_t_alph"
-        android:background="@color/actionbar_selected"
+        app:itemBackground="@color/grey_spinner"
+        android:background="@color/grey_spinner"
         app:itemTextColor="@color/white"
         />
 

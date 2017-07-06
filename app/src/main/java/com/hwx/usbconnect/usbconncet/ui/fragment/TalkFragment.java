@@ -1,55 +1,42 @@
 package com.hwx.usbconnect.usbconncet.ui.fragment;
 
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.TelephonyManager;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.hwx.usbconnect.usbconncet.AppConfig;
+import com.andview.refreshview.XRefreshView;
+import com.hwx.usbconnect.usbconncet.MsgInterface;
 import com.hwx.usbconnect.usbconncet.R;
 import com.hwx.usbconnect.usbconncet.bean.MessageTalk;
 import com.hwx.usbconnect.usbconncet.ui.activity.SimpleFragment;
 import com.hwx.usbconnect.usbconncet.ui.activity.UsbMainActivity;
 import com.hwx.usbconnect.usbconncet.ui.adapter.TalkMulItemAdapter;
+import com.hwx.usbconnect.usbconncet.ui.widget.CustomFooterView;
 import com.hwx.usbconnect.usbconncet.ui.widget.ScollLinearLayoutManager;
-import com.hwx.usbconnect.usbconncet.utils.IClickListener;
+import com.hwx.usbconnect.usbconncet.ui.widget.SmileyHeaderView;
 import com.hwx.usbconnect.usbconncet.ui.widget.StateButton;
-import com.hwx.usbconnect.usbconncet.MsgInterface;
+import com.hwx.usbconnect.usbconncet.utils.IClickListener;
 import com.hwx.usbconnect.usbconncet.utils.LogUtils;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.xw.repo.XEditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-
-import static android.content.Context.TELEPHONY_SERVICE;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,10 +49,12 @@ public class TalkFragment extends SimpleFragment {
     XEditText talkEdit;
     @BindView(R.id.talk_sends)
     StateButton talkSends;
-    @BindView(R.id.talk_recycleview)
+    @BindView(R.id.recycleview)
     RecyclerView talkRecycleview;
     @BindView(R.id.talk_setname)
     IconTextView talkSetname;
+    @BindView(R.id.xrefreshview)
+    XRefreshView xrefreshview;
     private TalkMulItemAdapter itemAdapter;
 
     public TalkFragment() {
@@ -94,36 +83,31 @@ public class TalkFragment extends SimpleFragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((UsbMainActivity)mActivity).setBackMsgCall(new MsgInterface() {
+        ((UsbMainActivity) mActivity).setBackMsgCall(new MsgInterface() {
             @Override
             public void getBackMsg(String name, String msg) {
                 refreshList(msg);
             }
         });
-        talkRecycleview.smoothScrollToPosition((((UsbMainActivity)mActivity).getMsgList()).size());
+        talkRecycleview.smoothScrollToPosition((((UsbMainActivity) mActivity).getMsgList()).size());
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (itemAdapter!=null&&talkRecycleview!=null) {
+        if (itemAdapter != null && talkRecycleview != null) {
             List<MessageTalk> list = ((UsbMainActivity) mActivity).getMsgList();
             itemAdapter.setNewData(list);
             talkRecycleview.smoothScrollToPosition(list.size());
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
     private void initView() {
-        itemAdapter = new TalkMulItemAdapter(((UsbMainActivity)mActivity).getMsgList());
-        ScollLinearLayoutManager manager =new ScollLinearLayoutManager(mContext);
+        itemAdapter = new TalkMulItemAdapter(((UsbMainActivity) mActivity).getMsgList());
+        ScollLinearLayoutManager manager = new ScollLinearLayoutManager(mContext);
         //manager.setSpeedSlow(0.3f);
         itemAdapter.openLoadAnimation();
-        TextView head=new TextView(mContext);
+        TextView head = new TextView(mContext);
         head.setTextColor(Color.GRAY);
         head.setText(R.string.adatewq);
         head.setGravity(Gravity.CENTER);
@@ -136,8 +120,8 @@ public class TalkFragment extends SimpleFragment {
                 String text = talkEdit.getText().toString();
                 if (TextUtils.isEmpty(text))
                     return;
-                String name=((UsbMainActivity)mActivity).getName();
-                ((UsbMainActivity)mActivity).sendMessage(name+":"+text);
+                String name = ((UsbMainActivity) mActivity).getName();
+                ((UsbMainActivity) mActivity).sendMessage(name + ":" + text);
                 talkEdit.setText("");
                 InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(talkEdit.getWindowToken(), 0);
@@ -146,14 +130,34 @@ public class TalkFragment extends SimpleFragment {
         talkSetname.setOnClickListener(new IClickListener() {
             @Override
             protected void onIClick(View v) {
-                ((UsbMainActivity)mActivity).showDialog();
+                ((UsbMainActivity) mActivity).showDialog();
+            }
+        });
+        setRefreshView(mContext,xrefreshview);
+    }
+
+    public static void setRefreshView(final Context context, final XRefreshView view){
+        view.setPullLoadEnable(true);
+        view.setPinnedTime(0);
+        view.setCustomHeaderView(new SmileyHeaderView(context));
+        view.setCustomFooterView(new CustomFooterView(context));
+        view.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
+            @Override
+            public void onRefresh(boolean isPullDown) {
+                view.stopRefresh();
+            }
+
+            @Override
+            public void onLoadMore(boolean isSilence) {
+                view.stopLoadMore();
             }
         });
     }
 
 
-    void refreshList(final String message){
-        LogUtils.e("get msg:"+message);
+    void refreshList(final String message) {
+        LogUtils.e("get msg:" + message);
         if (talkRecycleview != null && itemAdapter != null) {
             talkRecycleview.post(new Runnable() {
                 @Override
@@ -168,6 +172,7 @@ public class TalkFragment extends SimpleFragment {
             });
         }
     }
+
 
     /*@Deprecated
     class MessageBackReciver extends BroadcastReceiver {
